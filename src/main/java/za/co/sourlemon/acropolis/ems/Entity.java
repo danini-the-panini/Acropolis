@@ -26,13 +26,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import za.co.sourlemon.acropolis.ems.id.EntityID;
+import za.co.sourlemon.acropolis.ems.id.Identifiable;
 
 /**
  *
  * @author daniel
  */
-public class Entity
+public class Entity implements Identifiable<EntityID>
 {
     // keeps track of how many entities there are, for debug purposes
 
@@ -44,7 +45,7 @@ public class Entity
     private Map<Class, Object> components = new HashMap<>();
     private Map<Class<? extends Event>, List<Event>> events = new HashMap<>();
     private Pool source;
-    private final UUID id = UUID.randomUUID();
+    private final EntityID id = new EntityID();
 
     public Entity()
     {
@@ -203,7 +204,8 @@ public class Entity
         return name;
     }
 
-    public UUID getId()
+    @Override
+    public final EntityID getId()
     {
         return id;
     }

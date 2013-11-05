@@ -21,15 +21,16 @@
  */
 package za.co.sourlemon.acropolis.ems;
 
-import java.util.UUID;
+import za.co.sourlemon.acropolis.ems.id.Identifiable;
+import za.co.sourlemon.acropolis.ems.id.SystemID;
 
 /**
  *
  * @author daniel
  */
-public abstract class ISystem
+public abstract class ISystem implements Identifiable<SystemID>
 {
-    private final UUID id = UUID.randomUUID();
+    private final SystemID id = new SystemID();
 
     public boolean init()
     {
@@ -42,7 +43,8 @@ public abstract class ISystem
     {
     }
 
-    public final UUID getId()
+    @Override
+    public final SystemID getId()
     {
         return id;
     }

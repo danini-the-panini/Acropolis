@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import za.co.sourlemon.acropolis.ems.id.EntityID;
+import za.co.sourlemon.acropolis.ems.id.ThreadID;
 
 /**
  *
@@ -36,12 +38,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Engine implements EntityListener
 {
 
-    private final HashMap<UUID, SystemThread> threads = new HashMap<>();
+    private final HashMap<ThreadID, SystemThread> threads = new HashMap<>();
     private final Collection<SystemThread> threadsToAdd = new ArrayList<>();
-    private final Collection<UUID> threadsToRemove = new ArrayList<>();
-    private final HashMap<UUID, Entity> entities = new HashMap<>();
+    private final Collection<ThreadID> threadsToRemove = new ArrayList<>();
+    private final HashMap<EntityID, Entity> entities = new HashMap<>();
     private final Collection<Entity> toAdd = new ArrayList<>();
-    private final Collection<UUID> toRemove = new ArrayList<>();
+    private final Collection<EntityID> toRemove = new ArrayList<>();
     private final Collection<EntityComponent> componentsAdded = new ArrayList<>();
     private final Collection<EntityComponent> componentsRemoved = new ArrayList<>();
     private final Map<Class, Object> globals = new HashMap<>();
@@ -239,9 +241,14 @@ public class Engine implements EntityListener
         }
     }
     
-    public SystemThread getThread(UUID id)
+    public SystemThread getThread(ThreadID id)
     {
         return threads.get(id);
+    }
+    
+    public Entity getEntity(EntityID id)
+    {
+        return entities.get(id);
     }
     
     public void update()
@@ -258,7 +265,7 @@ public class Engine implements EntityListener
 
     private void postUpdate()
     {
-        for (UUID e : toRemove)
+        for (EntityID e : toRemove)
         {
             removeEntityUnsafe(entities.get(e));
         }
@@ -269,7 +276,7 @@ public class Engine implements EntityListener
         }
         toAdd.clear();
         
-        for (UUID e : threadsToRemove)
+        for (ThreadID e : threadsToRemove)
         {
             removeThreadUnsafe(threads.get(e));
         }

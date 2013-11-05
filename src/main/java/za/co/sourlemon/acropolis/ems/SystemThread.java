@@ -30,19 +30,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import za.co.sourlemon.acropolis.ems.id.Identifiable;
+import za.co.sourlemon.acropolis.ems.id.SystemID;
+import za.co.sourlemon.acropolis.ems.id.ThreadID;
 
 /**
  *
  * @author Daniel
  */
-public abstract class SystemThread
+public abstract class SystemThread implements Identifiable<ThreadID>
 {
-    protected final Map<UUID, ISystem> systems = new HashMap<>();
+    protected final Map<SystemID, ISystem> systems = new HashMap<>();
     private final Collection<ISystem> toAdd = new ArrayList<>();
-    private final Collection<UUID> toRemove = new ArrayList<>();
+    private final Collection<SystemID> toRemove = new ArrayList<>();
     protected final AtomicBoolean updating = new AtomicBoolean(false);
     private boolean shuttingDown = false;
-    private final UUID id = UUID.randomUUID();
+    private final ThreadID id = new ThreadID();
 
     public final void addSystem(ISystem system)
     {
@@ -54,7 +57,8 @@ public abstract class SystemThread
         addSystemUnsafe(system);
     }
 
-    public UUID getId()
+    @Override
+    public final ThreadID getId()
     {
         return id;
     }
@@ -107,7 +111,7 @@ public abstract class SystemThread
         }
         toAdd.clear();
 
-        for (UUID s : toRemove)
+        for (SystemID s : toRemove)
         {
             removeSystemUnsafe(systems.get(s));
         }
