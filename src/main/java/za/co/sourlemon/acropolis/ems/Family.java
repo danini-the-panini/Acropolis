@@ -95,14 +95,13 @@ public class Family
             
             try
             {
-                Node node = (Node)nodeClass.newInstance(); 
+                Node node = (Node)nodeClass.getDeclaredConstructor(Entity.class).newInstance(entity); 
 
                 for (Map.Entry<Class, Field> e : components.entrySet())
                 {
                     e.getValue().set(node, entity.getComponent(e.getKey()));
                 }
                 
-                node.entity = entity;
                 entities.put(entity, node);
                 nodes.add(node);
             }

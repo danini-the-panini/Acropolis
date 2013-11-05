@@ -25,7 +25,18 @@
  *
  * @author daniel
  */
-public class Node
+public abstract class Node
 {
-    public Entity entity;
+    private final Entity entity;
+
+    public Node(Entity entity)
+    {
+        this.entity = entity;
+    }
+
+    public Entity getEntity()
+    {
+        return entity;
+    }
+    
 }
