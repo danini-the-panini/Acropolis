@@ -36,12 +36,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Engine implements EntityListener
 {
 
-    private final HashMap<UUID, ISystem> systems = new HashMap<>();
+    private final HashMap<UUID, SystemThread> threads = new HashMap<>();
+    private final Collection<SystemThread> threadsToAdd = new ArrayList<>();
+    private final Collection<UUID> threadsToRemove = new ArrayList<>();
     private final HashMap<UUID, Entity> entities = new HashMap<>();
     private final Collection<Entity> toAdd = new ArrayList<>();
     private final Collection<UUID> toRemove = new ArrayList<>();
-    private final Collection<ISystem> systemsToAdd = new ArrayList<>();
-    private final Collection<ISystem> systemsToRemove = new ArrayList<>();
     private final Collection<EntityComponent> componentsAdded = new ArrayList<>();
     private final Collection<EntityComponent> componentsRemoved = new ArrayList<>();
     private final Map<Class, Object> globals = new HashMap<>();
@@ -201,54 +201,55 @@ public class Engine implements EntityListener
         }
         return family.getNodeList();
     }
+    
 
-    public void addSystem(ISystem system)
+    public final void addThread(SystemThread thread)
     {
         if (updating.get())
         {
-            systemsToAdd.add(system);
+            threadsToAdd.add(thread);
             return;
         }
-        addSystemUnsafe(system);
+        addThreadUnsafe(thread);
     }
 
-    private void addSystemUnsafe(ISystem system)
+    private void addThreadUnsafe(SystemThread thread)
     {
-        if (system.init(this))
+        if (thread.init())
         {
-            systems.put(system.getId(), system);
+            threads.put(thread.getId(), thread);
         }
     }
     
-    public void removeSystem(ISystem system)
+    public final void removeThread(SystemThread thread)
     {
         if (updating.get())
         {
-            systemsToRemove.add(system);
+            threadsToRemove.add(thread.getId());
             return;
         }
-        removeSystemUnsafe(system);        
+        removeThreadUnsafe(thread);        
     }
 
-    private void removeSystemUnsafe(ISystem system)
+    private void removeThreadUnsafe(SystemThread thread)
     {
-        if (systems.remove(system.getId()) != null)
+        if (threads.remove(thread.getId()) != null)
         {
-            system.destroy();
+            thread.shutDown();
         }
     }
-
-    public boolean containsSystem(ISystem system)
+    
+    public SystemThread getThread(UUID id)
     {
-        return systems.containsValue(system);
+        return threads.get(id);
     }
-
-    public void update(float t, float dt)
+    
+    public void update()
     {
         updating.set(true);
-        for (ISystem s : systems.values())
+        for (SystemThread s : threads.values())
         {
-            s.update(t, dt);
+            s.update(this);
         }
         updating.set(false);
 
@@ -267,18 +268,17 @@ public class Engine implements EntityListener
             addEntityUnsafe(e);
         }
         toAdd.clear();
-
-        for (ISystem s : systemsToAdd)
+        
+        for (UUID e : threadsToRemove)
         {
-            addSystemUnsafe(s);
+            removeThreadUnsafe(threads.get(e));
         }
-        systemsToAdd.clear();
-
-        for (ISystem s : systemsToRemove)
+        threadsToRemove.clear();
+        for (SystemThread e : threadsToAdd)
         {
-            removeSystemUnsafe(s);
+            addThreadUnsafe(e);
         }
-        systemsToRemove.clear();
+        threadsToAdd.clear();
 
         for (EntityComponent ec : componentsAdded)
         {
@@ -305,11 +305,11 @@ public class Engine implements EntityListener
             shuttingDown = true;
         }
         
-        for (ISystem s : systems.values())
+        for (SystemThread s : threads.values())
         {
-            s.destroy();
+            s.shutDown();
         }
 
-        systems.clear();
+        threads.clear();
     }
 }

@@ -73,7 +73,6 @@
     </dependencies>
     
     <modules>
-        <module>tokyo</module>
     <module>athens</module>
   </modules>
 </project>

@@ -29,19 +29,18 @@ import java.util.UUID;
  */
 public abstract class ISystem
 {
-
-    protected Engine engine;
     private final UUID id = UUID.randomUUID();
 
-    public boolean init(Engine engine)
+    public boolean init()
     {
-        this.engine = engine;
         return true;
     }
 
-    public abstract void update(float t, float dt);
+    public abstract void update(Engine engine, double time, double dt);
 
-    public abstract void destroy();
+    public void destroy()
+    {
+    }
 
     public final UUID getId()
     {
