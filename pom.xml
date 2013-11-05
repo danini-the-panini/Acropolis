@@ -74,5 +74,6 @@
     
     <modules>
     <module>athens</module>
-  </modules>
+        <module>tokyo</module>
+    </modules>
 </project>
