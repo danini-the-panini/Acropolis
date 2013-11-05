@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -35,10 +36,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Engine implements EntityListener
 {
 
-    private final Collection<ISystem> systems = new ArrayList<>();
-    private final Collection<Entity> entities = new ArrayList<>();
+    private final HashMap<UUID, ISystem> systems = new HashMap<>();
+    private final HashMap<UUID, Entity> entities = new HashMap<>();
     private final Collection<Entity> toAdd = new ArrayList<>();
-    private final Collection<Entity> toRemove = new ArrayList<>();
+    private final Collection<UUID> toRemove = new ArrayList<>();
     private final Collection<ISystem> systemsToAdd = new ArrayList<>();
     private final Collection<ISystem> systemsToRemove = new ArrayList<>();
     private final Collection<EntityComponent> componentsAdded = new ArrayList<>();
@@ -46,6 +47,7 @@ public class Engine implements EntityListener
     private final Map<Class, Object> globals = new HashMap<>();
     private final Map<Class, Family> families = new HashMap<>();
     private final AtomicBoolean updating = new AtomicBoolean(false);
+    private boolean shuttingDown = false;
 
     private class EntityComponent
     {
@@ -65,9 +67,15 @@ public class Engine implements EntityListener
         if (updating.get())
         {
             toAdd.add(entity);
+            toRemove.remove(entity.getId());
             return;
         }
-        entities.add(entity);
+        addEntityUnsafe(entity);
+    }
+
+    private void addEntityUnsafe(Entity entity)
+    {
+        entities.put(entity.getId(), entity);
         entity.addEntityListener(this);
         for (Family family : families.values())
         {
@@ -76,7 +84,7 @@ public class Engine implements EntityListener
 
         for (Entity dep : entity.dependents)
         {
-            addEntity(dep);
+            addEntityUnsafe(dep);
         }
     }
 
@@ -84,23 +92,34 @@ public class Engine implements EntityListener
     {
         if (updating.get())
         {
-            toRemove.add(entity);
+            toRemove.add(entity.getId());
+            toAdd.remove(entity);
             return;
         }
-        entity.removeEntityListener(this);
+        removeEntityUnsafe(entity);
+    }
 
+    private void removeEntityUnsafe(Entity entity)
+    {
+        entity.removeEntityListener(this);
+        
         for (Family family : families.values())
         {
             family.removeEntity(entity);
         }
 
-        entities.remove(entity);
+        entities.remove(entity.getId());
         entity.returnToSource();
 
         for (Entity dep : entity.dependents)
         {
-            removeEntity(dep);
+            removeEntityUnsafe(dep);
         }
+    }
+    
+    public void removeEntity(UUID id)
+    {
+        removeEntity(entities.get(id));
     }
 
     public void addGlobal(Object global)
@@ -136,12 +155,16 @@ public class Engine implements EntityListener
         if (updating.get())
         {
             componentsAdded.add(new EntityComponent(entity, componentClass));
-        } else
+            return;
+        }
+        componentAddedUnsafe(entity, componentClass);
+    }
+
+    private void componentAddedUnsafe(Entity entity, Class componentClass)
+    {
+        for (Family family : families.values())
         {
-            for (Family family : families.values())
-            {
-                family.componentAddedToEntity(entity, componentClass);
-            }
+            family.componentAddedToEntity(entity, componentClass);
         }
     }
 
@@ -151,12 +174,16 @@ public class Engine implements EntityListener
         if (updating.get())
         {
             componentsRemoved.add(new EntityComponent(entity, componentClass));
-        } else
+            return;
+        }
+        componentRemovedUnsafe(entity, componentClass);
+    }
+
+    private void componentRemovedUnsafe(Entity entity, Class componentClass)
+    {
+        for (Family family : families.values())
         {
-            for (Family family : families.values())
-            {
-                family.componentRemovedFromEntity(entity, componentClass);
-            }
+            family.componentRemovedFromEntity(entity, componentClass);
         }
     }
 
@@ -166,7 +193,7 @@ public class Engine implements EntityListener
         if (family == null)
         {
             family = new Family(nodeClass);
-            for (Entity entity : entities)
+            for (Entity entity : entities.values())
             {
                 family.newEntity(entity);
             }
@@ -180,24 +207,46 @@ public class Engine implements EntityListener
         if (updating.get())
         {
             systemsToAdd.add(system);
-        } else
+            return;
+        }
+        addSystemUnsafe(system);
+    }
+
+    private void addSystemUnsafe(ISystem system)
+    {
+        if (system.init(this))
         {
-            if (system.init(this))
-            {
-                systems.add(system);
-            }
+            systems.put(system.getId(), system);
+        }
+    }
+    
+    public void removeSystem(ISystem system)
+    {
+        if (updating.get())
+        {
+            systemsToRemove.add(system);
+            return;
+        }
+        removeSystemUnsafe(system);        
+    }
+
+    private void removeSystemUnsafe(ISystem system)
+    {
+        if (systems.remove(system.getId()) != null)
+        {
+            system.destroy();
         }
     }
 
     public boolean containsSystem(ISystem system)
     {
-        return systems.contains(system);
+        return systems.containsValue(system);
     }
 
     public void update(float t, float dt)
     {
         updating.set(true);
-        for (ISystem s : systems)
+        for (ISystem s : systems.values())
         {
             s.update(t, dt);
         }
@@ -208,56 +257,55 @@ public class Engine implements EntityListener
 
     private void postUpdate()
     {
-        for (Entity e : toRemove)
+        for (UUID e : toRemove)
         {
-            removeEntity(e);
+            removeEntityUnsafe(entities.get(e));
         }
         toRemove.clear();
         for (Entity e : toAdd)
         {
-            addEntity(e);
+            addEntityUnsafe(e);
         }
         toAdd.clear();
 
         for (ISystem s : systemsToAdd)
         {
-            addSystem(s);
+            addSystemUnsafe(s);
         }
         systemsToAdd.clear();
 
         for (ISystem s : systemsToRemove)
         {
-            removeSystem(s);
+            removeSystemUnsafe(s);
         }
         systemsToRemove.clear();
 
         for (EntityComponent ec : componentsAdded)
         {
-            componentAdded(ec.entity, ec.component);
+            componentAddedUnsafe(ec.entity, ec.component);
         }
         componentsAdded.clear();
 
         for (EntityComponent ec : componentsRemoved)
         {
-            componentRemoved(ec.entity, ec.component);
+            componentRemovedUnsafe(ec.entity, ec.component);
         }
         componentsRemoved.clear();
-    }
-
-    public void removeSystem(ISystem system)
-    {
-        if (updating.get())
+        
+        if (shuttingDown)
         {
-            systemsToRemove.add(system);
-        } else if (systems.remove(system))
-        {
-            system.destroy();
+            shutDown();
         }
     }
 
     public void shutDown()
     {
-        for (ISystem s : systems)
+        if (updating.get())
+        {
+            shuttingDown = true;
+        }
+        
+        for (ISystem s : systems.values())
         {
             s.destroy();
         }

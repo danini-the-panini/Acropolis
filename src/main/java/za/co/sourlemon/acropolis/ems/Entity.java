@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *
@@ -43,6 +44,7 @@ public class Entity
     private Map<Class, Object> components = new HashMap<>();
     private Map<Class<? extends Event>, List<Event>> events = new HashMap<>();
     private Pool source;
+    private final UUID id = UUID.randomUUID();
 
     public Entity()
     {
@@ -200,4 +202,10 @@ public class Entity
     {
         return name;
     }
+
+    public UUID getId()
+    {
+        return id;
+    }
+    
 }

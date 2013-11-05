@@ -19,15 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package za.co.sourlemon.acropolis.ems;
+package za.co.sourlemon.acropolis.ems;
+
+import java.util.UUID;
 
 /**
  *
  * @author daniel
  */
-public interface ISystem
+public abstract class ISystem
 {
-    public boolean init(Engine engine);
-    public void update(float t, float dt);
-    public void destroy();
+
+    protected Engine engine;
+    private final UUID id = UUID.randomUUID();
+
+    public boolean init(Engine engine)
+    {
+        this.engine = engine;
+        return true;
+    }
+
+    public abstract void update(float t, float dt);
+
+    public abstract void destroy();
+
+    public final UUID getId()
+    {
+        return id;
+    }
 }
