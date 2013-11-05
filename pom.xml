@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>za.co.sourlemon</groupId>
     <artifactId>Acropolis</artifactId>
@@ -11,11 +11,17 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <natives.version>0.0.7</natives.version>
-        <lwjgl.version>2.9.0</lwjgl.version>
         <junit.version>4.11</junit.version>
         <compiler.version>3.1</compiler.version>
-        <jglm.version>0.1-SNAPSHOT</jglm.version>
     </properties>
+    
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>http://http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     
     <build>
         <plugins>
@@ -64,15 +70,10 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.lwjgl.lwjgl</groupId>
-            <artifactId>lwjgl</artifactId>
-            <version>${lwjgl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.hackoeur</groupId>
-            <artifactId>jglm</artifactId>
-            <version>${jglm.version}</version>
-        </dependency>
     </dependencies>
+    
+    <modules>
+        <module>tokyo</module>
+    <module>athens</module>
+  </modules>
 </project>
