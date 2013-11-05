@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>za.co.sourlemon</groupId>
-    <artifactId>Acropolis</artifactId>
+    <artifactId>acropolis</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Acropolis</name>
-    <url>http://www.sourlemon.co.za/Acropolis</url>
+    <name>acropolis</name>
+    <url>http://www.sourlemon.co.za/acropolis</url>
   
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,8 +72,4 @@
         </dependency>
     </dependencies>
     
-    <modules>
-    <module>athens</module>
-        <module>tokyo</module>
-    </modules>
 </project>
