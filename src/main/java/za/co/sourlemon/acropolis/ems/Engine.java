@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package za.co.sourlemon.acropolis.ems;
+package za.co.sourlemon.acropolis.ems;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,22 +32,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author daniel
  */
-public class Engine implements EntityListener, FlagManager
+public class Engine implements EntityListener
 {
 
-    private Collection<ISystem> logicSystems = new ArrayList<ISystem>();
-    private Collection<ISystem> systems = new ArrayList<ISystem>();
-    private Collection<Entity> entities = new ArrayList<Entity>();
-    private Collection<Entity> toAdd = new ArrayList<Entity>();
-    private Collection<Entity> toRemove = new ArrayList<Entity>();
-    private Collection<ISystem> systemsToAdd = new ArrayList<ISystem>();
-    private Collection<ISystem> logicSystemsToAdd = new ArrayList<ISystem>();
-    private Collection<ISystem> systemsToRemove = new ArrayList<ISystem>();
-    private Collection<EntityComponent> componentsAdded = new ArrayList<EntityComponent>();
-    private Collection<EntityComponent> componentsRemoved = new ArrayList<EntityComponent>();
-    private Map<Class, Object> globals = new HashMap<Class, Object>();
-    private Map<Class, Family> families = new HashMap<Class, Family>();
-    private Map<Flag, Boolean> flags = new HashMap<Flag, Boolean>();
+    private Collection<ISystem> logicSystems = new ArrayList<>();
+    private Collection<ISystem> systems = new ArrayList<>();
+    private Collection<Entity> entities = new ArrayList<>();
+    private Collection<Entity> toAdd = new ArrayList<>();
+    private Collection<Entity> toRemove = new ArrayList<>();
+    private Collection<ISystem> systemsToAdd = new ArrayList<>();
+    private Collection<ISystem> logicSystemsToAdd = new ArrayList<>();
+    private Collection<ISystem> systemsToRemove = new ArrayList<>();
+    private Collection<EntityComponent> componentsAdded = new ArrayList<>();
+    private Collection<EntityComponent> componentsRemoved = new ArrayList<>();
+    private Map<Class, Object> globals = new HashMap<>();
+    private Map<Class, Family> families = new HashMap<>();
     private AtomicBoolean updating = new AtomicBoolean(false);
 
     private class EntityComponent
@@ -125,10 +124,7 @@ public class Engine implements EntityListener, FlagManager
             {
                 global = globalClass.newInstance();
                 addGlobal(global);
-            } catch (InstantiationException ex)
-            {
-                ex.printStackTrace(System.err);
-            } catch (IllegalAccessException ex)
+            } catch (InstantiationException | IllegalAccessException ex)
             {
                 ex.printStackTrace(System.err);
             }
@@ -208,7 +204,7 @@ public class Engine implements EntityListener, FlagManager
             }
         }
     }
-    
+
     public boolean containsSystem(ISystem system)
     {
         return systems.contains(system) || logicSystems.contains(system);
@@ -355,17 +351,5 @@ public class Engine implements EntityListener, FlagManager
             hash = 41 * hash + (this.source != null ? this.source.hashCode() : 0);
             return hash;
         }
-    }
-
-    @Override
-    public boolean getFlag(Object source, int symbol)
-    {
-        return flags.get(new Flag(source, symbol)) == Boolean.TRUE;
-    }
-
-    @Override
-    public void setFlag(Object source, int symbol, boolean value)
-    {
-        flags.put(new Flag(source, symbol), value);
     }
 }

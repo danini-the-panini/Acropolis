@@ -33,7 +33,7 @@ import java.util.Map;
 public class Constants
 {
 
-    private static final Map<String, Map<String, Object>> constants = new HashMap<String, Map<String, Object>>();
+    private static final Map<String, Map<String, Object>> constants = new HashMap<>();
 
     /**
      * Add the values of the entity to the constants map.
@@ -46,18 +46,9 @@ public class Constants
         Map<String, Object> map = constants.get(type);
         if (map == null)
         {
-            map = new HashMap<String, Object>();
+            map = new HashMap<>();
         }
         add(map, entity);
-
-        //// DEBUG
-        System.out.println("##### CONSTANTS FOR [" + type + "] #####");
-        for (Map.Entry<String, Object> e : map.entrySet())
-        {
-            System.out.println("-> " + e.getKey() + " := " + e.getValue());
-        }
-        System.out.println("#####");
-        ////
 
         constants.put(type, map);
     }
@@ -80,7 +71,7 @@ public class Constants
                     }
                     map.put(name, field.get(o));
                 }
-            } catch (Exception ex)
+            } catch (SecurityException | IllegalArgumentException | IllegalAccessException ex)
             {
                 ex.printStackTrace(System.err);
             }

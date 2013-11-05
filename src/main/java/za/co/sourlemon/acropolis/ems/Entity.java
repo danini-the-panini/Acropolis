@@ -38,10 +38,10 @@ public class Entity
     private static int count = 0;
     public static final String DEFAULT_NAME = "entity";
     private String name; // for debug purposes
-    private Collection<EntityListener> listeners = new ArrayList<EntityListener>();
-    protected Collection<Entity> dependents = new ArrayList<Entity>();
-    private Map<Class, Object> components = new HashMap<Class, Object>();
-    private Map<Class<? extends Event>, List<Event>> events = new HashMap<Class<? extends Event>, List<Event>>();
+    private Collection<EntityListener> listeners = new ArrayList<>();
+    protected Collection<Entity> dependents = new ArrayList<>();
+    private Map<Class, Object> components = new HashMap<>();
+    private Map<Class<? extends Event>, List<Event>> events = new HashMap<>();
     private Pool source;
 
     public Entity()
@@ -159,7 +159,7 @@ public class Entity
         List<E> eventList = (List<E>) events.get(eventClass);
         if (eventList == null)
         {
-            eventList = new ArrayList<E>();
+            eventList = new ArrayList<>();
             events.put(eventClass, (List<Event>) eventList);
         }
         eventList.add(event);
@@ -170,7 +170,7 @@ public class Entity
         List<E> eventList = (List<E>) events.get(eventClass);
         if (eventList == null)
         {
-            eventList = new ArrayList<E>();
+            eventList = new ArrayList<>();
             events.put(eventClass, (List<Event>) eventList);
         }
         return eventList;

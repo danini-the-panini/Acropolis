@@ -34,9 +34,9 @@ import java.util.Map;
 public class Family
 {
     Class nodeClass;
-    Map<Class, Field> components = new HashMap<Class, Field>();
-    List<Node> nodes = new ArrayList<Node>();
-    Map<Entity, Node> entities = new HashMap<Entity, Node>();
+    Map<Class, Field> components = new HashMap<>();
+    List<Node> nodes = new ArrayList<>();
+    Map<Entity, Node> entities = new HashMap<>();
 
     public Family(Class nodeClass)
     {
