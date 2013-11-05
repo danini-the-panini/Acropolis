@@ -25,6 +25,7 @@
  * Interface for creating entities for the entity management system.
  * 
  * @author Daniel
+ * @param <R> the type of FactoryRequest this factory can accept
  */
 public interface Factory<R extends FactoryRequest>
 {

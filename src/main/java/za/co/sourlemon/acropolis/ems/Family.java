@@ -22,6 +22,7 @@
  package za.co.sourlemon.acropolis.ems;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +106,7 @@ public class Family
                 entities.put(entity, node);
                 nodes.add(node);
             }
-            catch (ReflectiveOperationException ex)
+            catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex)
             {
                 ex.printStackTrace(System.err);
             }
