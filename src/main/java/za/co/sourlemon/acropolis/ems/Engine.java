@@ -35,19 +35,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Engine implements EntityListener
 {
 
-    private Collection<ISystem> logicSystems = new ArrayList<>();
-    private Collection<ISystem> systems = new ArrayList<>();
-    private Collection<Entity> entities = new ArrayList<>();
-    private Collection<Entity> toAdd = new ArrayList<>();
-    private Collection<Entity> toRemove = new ArrayList<>();
-    private Collection<ISystem> systemsToAdd = new ArrayList<>();
-    private Collection<ISystem> logicSystemsToAdd = new ArrayList<>();
-    private Collection<ISystem> systemsToRemove = new ArrayList<>();
-    private Collection<EntityComponent> componentsAdded = new ArrayList<>();
-    private Collection<EntityComponent> componentsRemoved = new ArrayList<>();
-    private Map<Class, Object> globals = new HashMap<>();
-    private Map<Class, Family> families = new HashMap<>();
-    private AtomicBoolean updating = new AtomicBoolean(false);
+    private final Collection<ISystem> systems = new ArrayList<>();
+    private final Collection<Entity> entities = new ArrayList<>();
+    private final Collection<Entity> toAdd = new ArrayList<>();
+    private final Collection<Entity> toRemove = new ArrayList<>();
+    private final Collection<ISystem> systemsToAdd = new ArrayList<>();
+    private final Collection<ISystem> systemsToRemove = new ArrayList<>();
+    private final Collection<EntityComponent> componentsAdded = new ArrayList<>();
+    private final Collection<EntityComponent> componentsRemoved = new ArrayList<>();
+    private final Map<Class, Object> globals = new HashMap<>();
+    private final Map<Class, Family> families = new HashMap<>();
+    private final AtomicBoolean updating = new AtomicBoolean(false);
 
     private class EntityComponent
     {
@@ -177,20 +175,6 @@ public class Engine implements EntityListener
         return family.getNodeList();
     }
 
-    public void addLogicSystem(ISystem system)
-    {
-        if (updating.get())
-        {
-            logicSystemsToAdd.add(system);
-        } else
-        {
-            if (system.init(this))
-            {
-                logicSystems.add(system);
-            }
-        }
-    }
-
     public void addSystem(ISystem system)
     {
         if (updating.get())
@@ -207,19 +191,7 @@ public class Engine implements EntityListener
 
     public boolean containsSystem(ISystem system)
     {
-        return systems.contains(system) || logicSystems.contains(system);
-    }
-
-    public void updateLogic(float t, float dt)
-    {
-        updating.set(true);
-        for (ISystem s : logicSystems)
-        {
-            s.update(t, dt);
-        }
-        updating.set(false);
-
-        postUpdate();
+        return systems.contains(system);
     }
 
     public void update(float t, float dt)
@@ -252,11 +224,6 @@ public class Engine implements EntityListener
             addSystem(s);
         }
         systemsToAdd.clear();
-        for (ISystem s : logicSystemsToAdd)
-        {
-            addLogicSystem(s);
-        }
-        logicSystemsToAdd.clear();
 
         for (ISystem s : systemsToRemove)
         {
@@ -282,74 +249,19 @@ public class Engine implements EntityListener
         if (updating.get())
         {
             systemsToRemove.add(system);
-        } else
+        } else if (systems.remove(system))
         {
-            if (logicSystems.remove(system))
-            {
-                system.destroy();
-            } else if (systems.remove(system))
-            {
-                system.destroy();
-            }
+            system.destroy();
         }
     }
 
     public void shutDown()
     {
-        for (ISystem s : logicSystems)
-        {
-            s.destroy();
-        }
         for (ISystem s : systems)
         {
             s.destroy();
         }
 
-        logicSystems.clear();
         systems.clear();
-    }
-
-    class Flag
-    {
-
-        private Object source;
-        private int symbol;
-
-        public Flag(Object source, int symbol)
-        {
-            this.source = source;
-            this.symbol = symbol;
-        }
-
-        public Object getSource()
-        {
-            return source;
-        }
-
-        public int getSymbol()
-        {
-            return symbol;
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            if (obj instanceof Flag)
-            {
-                Flag other = (Flag) obj;
-                return other.symbol == symbol
-                        && source == null ? other.source == null : source.equals(other.source);
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            int hash = 7;
-            hash = 41 * hash + this.symbol;
-            hash = 41 * hash + (this.source != null ? this.source.hashCode() : 0);
-            return hash;
-        }
     }
 }
