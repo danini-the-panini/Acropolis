@@ -40,10 +40,10 @@ public class Entity implements Identifiable<EntityID>
     private static int count = 0;
     public static final String DEFAULT_NAME = "entity";
     private String name; // for debug purposes
-    private Collection<EntityListener> listeners = new ArrayList<>();
+    private final Collection<EntityListener> listeners = new ArrayList<>();
     protected Collection<Entity> dependents = new ArrayList<>();
-    private Map<Class, Object> components = new HashMap<>();
-    private Map<Class<? extends Event>, List<Event>> events = new HashMap<>();
+    private final Map<Class, Component> components = new HashMap<>();
+    private final Map<Class<? extends Event>, List<Event>> events = new HashMap<>();
     private Pool source;
     private final EntityID id = new EntityID();
 
@@ -86,7 +86,7 @@ public class Entity implements Identifiable<EntityID>
         listeners.remove(l);
     }
 
-    public void addComponent(Object component)
+    public void addComponent(Component component)
     {
         Class componentClass = component.getClass();
         components.put(componentClass, component);
@@ -97,7 +97,7 @@ public class Entity implements Identifiable<EntityID>
         }
     }
 
-    public void deepAddComponent(Object component)
+    public void deepAddComponent(Component component)
     {
         addComponent(component);
         for (Entity dep : dependents)
@@ -140,7 +140,7 @@ public class Entity implements Identifiable<EntityID>
         dependents.remove(entity);
     }
 
-    public <T> T getComponent(Class<T> componentClass)
+    public <T extends Component> T getComponent(Class<T> componentClass)
     {
         return (T) components.get(componentClass);
     }
@@ -150,9 +150,9 @@ public class Entity implements Identifiable<EntityID>
         return components.containsKey(componentClass);
     }
 
-    public Object[] getAllComponents()
+    public Component[] getAllComponents()
     {
-        return components.values().toArray();
+        return components.values().toArray(new Component[0]);
     }
 
     public <E extends Event> void addEvent(E event)

@@ -22,12 +22,14 @@
  package za.co.sourlemon.acropolis.athens.components;
 
 import com.hackoeur.jglm.Vec3;
+import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
  * @author daniel
  */
-public class Renderable {
+public class Renderable extends Component
+{
     
     public String type = "";
     public Vec3 colour = Vec3.VEC3_ZERO;

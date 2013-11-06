@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import za.co.sourlemon.acropolis.ems.id.EntityID;
 import za.co.sourlemon.acropolis.ems.id.ThreadID;
@@ -46,7 +45,7 @@ public class Engine implements EntityListener
     private final Collection<EntityID> toRemove = new ArrayList<>();
     private final Collection<EntityComponent> componentsAdded = new ArrayList<>();
     private final Collection<EntityComponent> componentsRemoved = new ArrayList<>();
-    private final Map<Class, Object> globals = new HashMap<>();
+    private final Map<Class, Component> globals = new HashMap<>();
     private final Map<Class, Family> families = new HashMap<>();
     private final AtomicBoolean updating = new AtomicBoolean(false);
     private boolean shuttingDown = false;
@@ -119,12 +118,12 @@ public class Engine implements EntityListener
         }
     }
     
-    public void removeEntity(UUID id)
+    public void removeEntity(EntityID id)
     {
         removeEntity(entities.get(id));
     }
 
-    public void addGlobal(Object global)
+    public void addGlobal(Component global)
     {
         globals.put(global.getClass(), global);
     }
@@ -134,7 +133,7 @@ public class Engine implements EntityListener
         globals.remove(globalClass);
     }
 
-    public <T> T getGlobal(Class<T> globalClass)
+    public <T extends Component> T getGlobal(Class<T> globalClass)
     {
         T global = (T) globals.get(globalClass);
         if (global == null)

@@ -23,12 +23,14 @@
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
+import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
  * @author daniel
  */
-public class Velocity {
+public class Velocity extends Component
+{
     
     public Vec3 velocity = Vec3.VEC3_ZERO; // velocity
     public Vec3 acceleration = Vec3.VEC3_ZERO; // acceleration

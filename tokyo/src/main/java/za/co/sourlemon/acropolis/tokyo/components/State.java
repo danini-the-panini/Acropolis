@@ -23,12 +23,13 @@
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
+import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
  * @author daniel
  */
-public class State
+public class State extends Component
 {
 
     /// PREVIOUS STATE ///
