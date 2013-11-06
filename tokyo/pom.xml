@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>za.co.sourlemon</groupId>
+        <artifactId>acropolis</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <groupId>za.co.sourlemon</groupId>
+    <artifactId>tokyo</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <name>tokyo</name>
+    <packaging>jar</packaging>
+    <url>http://www.sourlemon.co.za/acropolis/tokyo</url>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <natives.version>0.0.7</natives.version>
+        <junit.version>4.11</junit.version>
+        <compiler.version>3.1</compiler.version>
+        <ems.version>0.1-SNAPSHOT</ems.version>
+        <jglm.version>0.1-SNAPSHOT</jglm.version>
+    </properties>
+    
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler.version}</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.mavennatives</groupId>
+                <artifactId>maven-nativedependencies-plugin</artifactId>
+                <version>${natives.version}</version>
+                <executions>
+                    <execution>
+                        <id>unpacknatives</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <!--suppress MavenModelInspection (this line is for IDEA)-->
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <repositories>
+        <repository>
+            <id>mavenNatives</id>
+            <name>Maven Natives Repository</name>
+            <url>http://mavennatives.googlecode.com/svn/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>za.co.sourlemon</groupId>
+            <artifactId>ems</artifactId>
+            <version>${ems.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hackoeur</groupId>
+            <artifactId>jglm</artifactId>
+            <version>${jglm.version}</version>
+        </dependency>
+    </dependencies>
+</project>
