@@ -28,24 +28,12 @@ import za.co.sourlemon.acropolis.ems.id.SystemID;
  *
  * @author daniel
  */
-public abstract class ISystem implements Identifiable<SystemID>
+public interface ISystem extends Identifiable<SystemID>
 {
-    private final SystemID id = new SystemID();
 
-    public boolean init()
-    {
-        return true;
-    }
+    public boolean init();
 
-    public abstract void update(Engine engine, double time, double dt);
+    public void update(Engine engine, double time, double dt);
 
-    public void destroy()
-    {
-    }
-
-    @Override
-    public final SystemID getId()
-    {
-        return id;
-    }
+    public void destroy();
 }

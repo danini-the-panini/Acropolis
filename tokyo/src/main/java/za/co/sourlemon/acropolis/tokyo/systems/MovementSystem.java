@@ -24,8 +24,8 @@
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
 import java.util.List;
+import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
-import za.co.sourlemon.acropolis.ems.ISystem;
 import za.co.sourlemon.acropolis.tokyo.components.State;
 import za.co.sourlemon.acropolis.tokyo.components.Velocity;
 import za.co.sourlemon.acropolis.tokyo.nodes.MovementNode;
@@ -34,7 +34,7 @@ import za.co.sourlemon.acropolis.tokyo.nodes.MovementNode;
  *
  * @author daniel
  */
-public class MovementSystem extends ISystem
+public class MovementSystem extends AbstractSystem
 {
 
     @Override
@@ -85,7 +85,7 @@ public class MovementSystem extends ISystem
      * @param velocity
      * @param dt
      */
-    public static void integrate(State state, final Velocity velocity, final float dt)
+     private static void integrate(State state, final Velocity velocity, final float dt)
     {
         Derivative a = evaluate(state, velocity, 0.0f, new Derivative());
         Derivative b = evaluate(state, velocity, dt * 0.5f, a);
@@ -109,7 +109,7 @@ public class MovementSystem extends ISystem
      * @param derivative
      * @return
      */
-    public static Derivative evaluate(final State state, final Velocity velocity,
+    private static Derivative evaluate(final State state, final Velocity velocity,
             final float dt, final Derivative derivative)
     {
         //Vec3 pos = state.pos.add(derivative.dx.multiply(dt));
