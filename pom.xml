@@ -19,5 +19,6 @@
     <modules>
         <module>ems</module>
         <module>tokyo</module>
+        <module>athens</module>
     </modules>
 </project>
