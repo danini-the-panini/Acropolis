@@ -40,14 +40,14 @@ public abstract class AbstractCamera implements Camera
     /** Up direction from the camera. */
     public Vec3 up;
            
-    /** Matrix for OpenGL. */
-    public Mat4 view = null, projection = null;
+    /* Matrices for OpenGL. */
+    protected Mat4 view = null, projection = null;
     
-    /** The direction vector of the camera. Normalised. Do not modify. */
-    public Vec3 dir;
+    /* The direction vector of the camera. Normalised.*/
+    private Vec3 dir;
     
-    /** The right vector of the camera. Normalised. Do not modify. */
-    public Vec3 right;
+    /* The right vector of the camera. Normalised. */
+    private Vec3 right;
     
     /**
      * Creates a new camera object with the given initial properties.
@@ -101,5 +101,17 @@ public abstract class AbstractCamera implements Camera
         d = rot.multiply(d);
 
         at = eye.add(new Vec3(d.getX(),d.getY(),d.getZ()));
+    }
+
+    @Override
+    public Mat4 getView()
+    {
+        return view;
+    }
+
+    @Override
+    public Mat4 getProjection()
+    {
+        return projection;
     }
 }
