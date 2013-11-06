@@ -32,7 +32,9 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import za.co.sourlemon.acropolis.athens.meshes.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
+import za.co.sourlemon.acropolis.athens.shaders.Program;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.id.EntityID;
@@ -51,7 +53,7 @@ public class RenderSystem extends AbstractSystem
 
     private final int screenWidth, screenHeight;
     private final Map<EntityID, Mat4> worlds = new HashMap<>();
-    private final Map<Object /*Shader*/, Map<EntityID, Object /*Mesh*/>> objects = new HashMap<>();
+    private final Map<Program, Map<EntityID, Mesh>> objects = new HashMap<>();
 
     public RenderSystem(int screenWidth, int screenHeight)
     {
@@ -89,9 +91,9 @@ public class RenderSystem extends AbstractSystem
         {
             EntityID id = node.getEntity().getId();
             worlds.put(id, getMatrix(node.state));
-            Object /*Shader*/ shader = null; //resourceManager.getShader(node.renderable.shader);
-            Object /*Mesh*/ mesh = null;// resourceManager.getMesh(node.renderable.mesh);
-            Map<EntityID, Object /*Mesh*/> meshes = objects.get(shader);
+            Program shader = null; //resourceManager.getShader(node.renderable.shader);
+            Mesh mesh = null;// resourceManager.getMesh(node.renderable.mesh);
+            Map<EntityID, Mesh> meshes = objects.get(shader);
             if (meshes == null)
             {
                 meshes = new HashMap<>();
@@ -100,18 +102,18 @@ public class RenderSystem extends AbstractSystem
             meshes.put(id, mesh);
         }
         
-        for (Map.Entry<Object /*Shader*/, Map<EntityID, Object /*Mesh*/>> e : objects.entrySet())
+        for (Map.Entry<Program, Map<EntityID, Mesh>> e : objects.entrySet())
         {
-            Object /*Shader*/ shader = e.getKey();
-            // shader.use();
-            // shader.setView();
-            // shader.setProjection();
-            // shader.setSun();
-            for (Map.Entry<EntityID, Object /*Mesh*/> e2 : e.getValue().entrySet())
+            Program shader = e.getKey();
+            shader.use();
+            shader.setView(null);
+            shader.setProjection(null);
+            shader.setSun(null);
+            for (Map.Entry<EntityID, Mesh> e2 : e.getValue().entrySet())
             {
-                // shader.setWorld(worlds.get(e2.getKey()));
-                Object /*Mesh*/ mesh = e2.getValue();
-                // mesh.draw();
+                shader.setWorld(worlds.get(e2.getKey()));
+                Mesh mesh = e2.getValue();
+                mesh.draw();
             }
         }
     }
