@@ -14,6 +14,14 @@
     <packaging>jar</packaging>
     <url>http://www.sourlemon.co.za/acropolis/tokyo</url>
     
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>http://http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <natives.version>0.0.7</natives.version>
@@ -22,7 +30,6 @@
         <ems.version>0.1-SNAPSHOT</ems.version>
         <jglm.version>0.1-SNAPSHOT</jglm.version>
     </properties>
-    
     
     <build>
         <plugins>

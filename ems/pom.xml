@@ -14,13 +14,20 @@
     <packaging>jar</packaging>
     <url>http://www.sourlemon.co.za/acropolis/ems</url>
     
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>http://http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <natives.version>0.0.7</natives.version>
         <junit.version>4.11</junit.version>
         <compiler.version>3.1</compiler.version>
     </properties>
-    
     
     <build>
         <plugins>

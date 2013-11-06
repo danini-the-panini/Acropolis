@@ -7,6 +7,7 @@
     <packaging>pom</packaging>
     <name>acropolis</name>
     <url>http://www.sourlemon.co.za/acropolis</url>
+    
     <licenses>
         <license>
             <name>The MIT License (MIT)</name>
@@ -14,10 +15,9 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-  
     
-  <modules>
-    <module>ems</module>
-    <module>tokyo</module>
-  </modules>
+    <modules>
+        <module>ems</module>
+        <module>tokyo</module>
+    </modules>
 </project>
