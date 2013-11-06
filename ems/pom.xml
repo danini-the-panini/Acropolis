@@ -7,8 +7,8 @@
         <artifactId>acropolis</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
-    <groupId>za.co.sourlemon</groupId>
-    <artifactId>ems</artifactId>
+    <groupId>za.co.sourlemon.acropolis</groupId>
+    <artifactId>acropolis-ems</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>ems</name>
     <packaging>jar</packaging>

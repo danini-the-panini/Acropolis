@@ -7,8 +7,8 @@
         <artifactId>acropolis</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
-    <groupId>za.co.sourlemon</groupId>
-    <artifactId>tokyo</artifactId>
+    <groupId>za.co.sourlemon.acropolis</groupId>
+    <artifactId>acropolis-tokyo</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>tokyo</name>
     <packaging>jar</packaging>
@@ -79,8 +79,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>za.co.sourlemon</groupId>
-            <artifactId>ems</artifactId>
+            <groupId>za.co.sourlemon.acropolis</groupId>
+            <artifactId>acropolis-ems</artifactId>
             <version>${ems.version}</version>
         </dependency>
         <dependency>
