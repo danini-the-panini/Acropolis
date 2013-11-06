@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.athens.meshes;
+package za.co.sourlemon.acropolis.athens.mesh;
 
 import za.co.sourlemon.acropolis.athens.Resource;
 

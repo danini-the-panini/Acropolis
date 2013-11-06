@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.athens.shaders;
+package za.co.sourlemon.acropolis.athens.shader;
 
 import java.io.File;
 import org.lwjgl.opengl.GL20;
@@ -31,12 +31,12 @@ import org.lwjgl.opengl.GL20;
  *
  * @author Daniel
  */
-public class FragmentShader extends Shader
+public class VertexShader extends Shader
 {
 
-    public FragmentShader(File file)
+    public VertexShader(File file)
     {
-        super(file, GL20.GL_FRAGMENT_SHADER);
+        super(file, GL20.GL_VERTEX_SHADER);
     }
     
 }

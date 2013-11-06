@@ -19,42 +19,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.meshes;
-
-import za.co.sourlemon.acropolis.athens.mesh.WavefrontMesh;
-import org.junit.Test;
-import static org.junit.Assert.*;
+ package za.co.sourlemon.acropolis.athens.camera;
 
 /**
  *
  * @author Daniel
  */
-public class WavefrontMeshTest {
+public interface Camera
+{
+
+    /**
+     * Moves the camera forward.
+     * @param amount The amount to move by. Use a negative number for backwards.
+     */
+    void moveForward(float amount);
+
+    /**
+     * Move the camera to the right.
+     * @param amount The amount to move by. Use a negative number to move left.
+     */
+    void moveRight(float amount);
+
+    /**
+     * Rotate the camera.
+     * @param lateral The lateral (left-right) rotation.
+     * @param vertical The vertical (up-down) rotation.
+     */
+    void rotate(float lateral, float vertical);
+
+    /**
+     * Call this when you need the projection matrix updated.
+     * @param w The width of the scene.
+     * @param h The height of the scene.
+     */
+    void updateProjection(float w, float h);
+
+    /**
+     * Call this when you need the view matrix updated. Also updates the
+     * direction and right vectors.
+     */
+    void updateView();
     
-    @Test
-    public void testParseVertex() {
-        System.out.println("parse 'v'");
-        String string = "7";
-        int[] expResult = { 7, -1, -1};
-        int[] result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v/vt'");
-        string = "7/12";
-        expResult = new int[]{ 7, 12, -1};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v//vn'");
-        string = "7//12";
-        expResult = new int[]{ 7, -1, 12};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v/vt/vn'");
-        string = "7//12";
-        expResult = new int[]{ 7, -1, 12};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-    }
 }

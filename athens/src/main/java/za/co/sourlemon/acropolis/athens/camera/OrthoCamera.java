@@ -19,42 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.meshes;
+ package za.co.sourlemon.acropolis.athens.camera;
 
-import za.co.sourlemon.acropolis.athens.mesh.WavefrontMesh;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import com.hackoeur.jglm.Matrices;
+import com.hackoeur.jglm.Vec3;
 
 /**
  *
  * @author Daniel
  */
-public class WavefrontMeshTest {
-    
-    @Test
-    public void testParseVertex() {
-        System.out.println("parse 'v'");
-        String string = "7";
-        int[] expResult = { 7, -1, -1};
-        int[] result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v/vt'");
-        string = "7/12";
-        expResult = new int[]{ 7, 12, -1};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v//vn'");
-        string = "7//12";
-        expResult = new int[]{ 7, -1, 12};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v/vt/vn'");
-        string = "7//12";
-        expResult = new int[]{ 7, -1, 12};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
+public class OrthoCamera extends AbstractCamera
+{
+    public float ytop, ybottom, xleft, xright, znear, zfar;
+
+    public OrthoCamera(Vec3 eye, Vec3 at, Vec3 up, float top, float bottom,
+            float left, float right, float near, float far)
+    {
+        super(eye, at, up);
+        this.ytop = top;
+        this.ybottom = bottom;
+        this.xleft = left;
+        this.xright = right;
+        this.znear = near;
+        this.zfar = far;
     }
+
+    @Override
+    public void updateProjection(float w, float h)
+    {
+        projection = Matrices.ortho(xleft, xright, ybottom, ytop, znear, zfar);
+    }
+    
 }
