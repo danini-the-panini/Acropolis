@@ -31,7 +31,8 @@ import za.co.sourlemon.acropolis.ems.Component;
 public class Renderable extends Component
 {
     
-    public String type = "";
+    public String shader = "";
+    public String mesh = "";
     public Vec3 colour = Vec3.VEC3_ZERO;
     public float opacity = 1.0f;
 
@@ -39,9 +40,10 @@ public class Renderable extends Component
     {
     }
 
-    public Renderable(String type, Vec3 colour, float opacity)
+    public Renderable(String shader, String mesh, Vec3 colour, float opacity)
     {
-        this.type = type;
+        this.shader = shader;
+        this.mesh = mesh;
         this.colour = colour;
         this.opacity = opacity;
     }

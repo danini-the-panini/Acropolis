@@ -21,9 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package za.co.sourlemon.acropolis.athens.systems;
 
+import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Vec3;
+import static com.hackoeur.jglm.Matrices.*;
+import java.util.HashMap;
+import java.util.Map;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -31,6 +35,8 @@ import org.lwjgl.opengl.GL11;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
+import za.co.sourlemon.acropolis.ems.id.EntityID;
+import za.co.sourlemon.acropolis.tokyo.components.State;
 
 /**
  *
@@ -38,14 +44,20 @@ import za.co.sourlemon.acropolis.ems.Engine;
  */
 public class RenderSystem extends AbstractSystem
 {
+
+    public static final Vec3 X_AXIS = new Vec3(1, 0, 0);
+    public static final Vec3 Y_AXIS = new Vec3(0, 1, 0);
+    public static final Vec3 Z_AXIS = new Vec3(0, 0, 1);
+
     private final int screenWidth, screenHeight;
+    private final Map<EntityID, Mat4> worlds = new HashMap<>();
+    private final Map<Object /*Shader*/, Map<EntityID, Object /*Mesh*/>> objects = new HashMap<>();
 
     public RenderSystem(int screenWidth, int screenHeight)
     {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }
-    
 
     @Override
     public boolean init()
@@ -68,9 +80,57 @@ public class RenderSystem extends AbstractSystem
     @Override
     public void update(Engine engine, double time, double dt)
     {
+        for (Map m : objects.values())
+        {
+            m.clear();
+        }
+        
         for (RenderNode node : engine.getNodeList(RenderNode.class))
         {
+            EntityID id = node.getEntity().getId();
+            worlds.put(id, getMatrix(node.state));
+            Object /*Shader*/ shader = null; //resourceManager.getShader(node.renderable.shader);
+            Object /*Mesh*/ mesh = null;// resourceManager.getMesh(node.renderable.mesh);
+            Map<EntityID, Object /*Mesh*/> meshes = objects.get(shader);
+            if (meshes == null)
+            {
+                meshes = new HashMap<>();
+                objects.put(shader, meshes);
+            }
+            meshes.put(id, mesh);
         }
+        
+        for (Map.Entry<Object /*Shader*/, Map<EntityID, Object /*Mesh*/>> e : objects.entrySet())
+        {
+            Object /*Shader*/ shader = e.getKey();
+            // shader.use();
+            // shader.setView();
+            // shader.setProjection();
+            // shader.setSun();
+            for (Map.Entry<EntityID, Object /*Mesh*/> e2 : e.getValue().entrySet())
+            {
+                // shader.setWorld(worlds.get(e2.getKey()));
+                Object /*Mesh*/ mesh = e2.getValue();
+                // mesh.draw();
+            }
+        }
+    }
+
+    private Mat4 getMatrix(State state)
+    {
+        Mat4 monkeyWorld = new Mat4(1f);
+
+        monkeyWorld = translate(monkeyWorld, state.pos);
+
+        monkeyWorld = rotate(monkeyWorld, state.rot.getX(), X_AXIS);
+        monkeyWorld = rotate(monkeyWorld, state.rot.getZ(), Z_AXIS);
+        monkeyWorld = rotate(monkeyWorld, state.rot.getY(), Y_AXIS);
+        // don't ask...
+        monkeyWorld = rotate(monkeyWorld, state.rot.getW(), X_AXIS);
+
+        monkeyWorld = scale(monkeyWorld, state.scale);
+
+        return monkeyWorld;
     }
 
     @Override
@@ -78,5 +138,5 @@ public class RenderSystem extends AbstractSystem
     {
         Display.destroy();
     }
-    
+
 }
