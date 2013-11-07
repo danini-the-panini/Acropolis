@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package za.co.sourlemon.acropolis.athens.mesh;
 
 import com.hackoeur.jglm.Vec3;
@@ -38,6 +37,7 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class WavefrontMesh implements Mesh
 {
+
     private final File file;
     private int handle = 0;
 
@@ -50,14 +50,13 @@ public class WavefrontMesh implements Mesh
     public void load() throws IOException
     {
         handle = glGenLists(1);
-        
+
         ArrayList<float[]> pos = new ArrayList<>(); // Read in vertices
         ArrayList<float[]> tex = new ArrayList<>(); // Read in texcoords
         ArrayList<float[]> norm = new ArrayList<>(); // Read in vertex normals. NOTE: these do not match 1:1 to vertices.
         ArrayList<int[][]> inds = new ArrayList<>(); // Vertex indices
-
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(file)))
         {
             String line;
             String[] list;
@@ -66,8 +65,9 @@ public class WavefrontMesh implements Mesh
                 if (line.startsWith("v "))
                 {
                     list = line.split(" ");
-		    // read X Y Z into vertex array
-                    pos.add(new float[]{
+                    // read X Y Z into vertex array
+                    pos.add(new float[]
+                    {
                         Float.parseFloat(list[1]),
                         Float.parseFloat(list[2]),
                         Float.parseFloat(list[3])
@@ -75,21 +75,23 @@ public class WavefrontMesh implements Mesh
                 } else if (line.startsWith("vt "))
                 {
                     list = line.split(" ");
-		    // Read X Y Z into normal array
-                    tex.add(new float[]{
+                    // Read X Y Z into normal array
+                    tex.add(new float[]
+                    {
                         Float.parseFloat(list[1]),
                         Float.parseFloat(list[2])
                     });
                 } else if (line.startsWith("vn "))
                 {
                     list = line.split(" ");
-		    // Read X Y Z into normal array
+                    // Read X Y Z into normal array
                     Vec3 normal = new Vec3(
-                        Float.parseFloat(list[1]),
-                        Float.parseFloat(list[2]),
-                        Float.parseFloat(list[3])
+                            Float.parseFloat(list[1]),
+                            Float.parseFloat(list[2]),
+                            Float.parseFloat(list[3])
                     ).getUnitVector();
-                    norm.add(new float[]{
+                    norm.add(new float[]
+                    {
                         normal.getX(),
                         normal.getY(),
                         normal.getZ()
@@ -97,26 +99,22 @@ public class WavefrontMesh implements Mesh
                 } else if (line.startsWith("f "))
                 {
                     list = line.split(" ");
-                    
-                    int[][] primitive = new int[list.length-1][];
-                    
+
+                    int[][] primitive = new int[list.length - 1][];
+
                     for (int i = 1; i < list.length; i++)
                     {
-                        primitive[i-1] = parseVertex(list[i].trim());
+                        primitive[i - 1] = parseVertex(list[i].trim());
                     }
-                    
+
                     inds.add(primitive);
                 }
             }
         }
-        finally
-        {
-            br.close();
-        }
-        
+
         glNewList(handle, GL_COMPILE);
         {
-            for (int[][] v :inds)
+            for (int[][] v : inds)
             {
                 glBegin(v.length == 3 ? GL_TRIANGLES : GL_QUADS);
                 {
@@ -125,15 +123,15 @@ public class WavefrontMesh implements Mesh
                         float[] p;
                         if (v[i][1] != -1) // if there is a texcoord
                         {
-                            p = tex.get(v[i][1]-1);
+                            p = tex.get(v[i][1] - 1);
                             glTexCoord2f(p[0], p[1]);
                         }
                         if (v[i][2] != -1) // if there is a normal
                         {
-                            p = norm.get(v[i][2]-1);
+                            p = norm.get(v[i][2] - 1);
                             glNormal3f(p[0], p[1], p[2]);
                         }
-                        p = pos.get(v[i][0]-1);
+                        p = pos.get(v[i][0] - 1);
                         glVertex3f(p[0], p[1], p[2]); // emit vertex and all attributes
                     }
                 }
@@ -142,36 +140,47 @@ public class WavefrontMesh implements Mesh
         }
         glEndList();
     }
-    
+
     /**
-     * Parses a wavefront vertex (i.e. "face point") by extracting the relevant indices.
+     * Parses a wavefront vertex (i.e. "face point") by extracting the relevant
+     * indices.
+     *
      * @param string
-     * @return 
+     * @return
      */
     public static int[] parseVertex(String string)
     {
         int v, vt = -1, vn = -1;
-        
+
         int a = string.indexOf('/');
         int b = string.lastIndexOf('/');
-        if (b == a) b = -1; // if there is no second "/"
+        if (b == a)
+        {
+            b = -1; // if there is no second "/"
+        }
         if (a == -1) //                 "v"
+        {
             v = Integer.parseInt(string);
-        else //                         "v/..."
+        } else //                         "v/..."
         {
             v = Integer.parseInt(string.substring(0, a));
             if (b == -1) //             "v/vt"
-                vt = Integer.parseInt(string.substring(a+1));
-            else if (b == a+1) //       "v//vn"
-                vn = Integer.parseInt(string.substring(b+1));
-            else //                     "v/vt/vn"
             {
-                vt = Integer.parseInt(string.substring(a+1,b));
-                vn = Integer.parseInt(string.substring(b+1));
+                vt = Integer.parseInt(string.substring(a + 1));
+            } else if (b == a + 1) //       "v//vn"
+            {
+                vn = Integer.parseInt(string.substring(b + 1));
+            } else //                     "v/vt/vn"
+            {
+                vt = Integer.parseInt(string.substring(a + 1, b));
+                vn = Integer.parseInt(string.substring(b + 1));
             }
         }
-        
-        return new int[]{v, vt, vn};
+
+        return new int[]
+        {
+            v, vt, vn
+        };
     }
 
     @Override
@@ -183,6 +192,7 @@ public class WavefrontMesh implements Mesh
     @Override
     public void draw()
     {
+        glCallList(handle);
     }
-    
+
 }
