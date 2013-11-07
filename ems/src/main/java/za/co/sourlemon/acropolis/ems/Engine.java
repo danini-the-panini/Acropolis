@@ -21,6 +21,7 @@
  */
 package za.co.sourlemon.acropolis.ems;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -140,9 +141,9 @@ public class Engine implements EntityListener
         {
             try
             {
-                global = globalClass.newInstance();
+                global = globalClass.getConstructor().newInstance();
                 addGlobal(global);
-            } catch (InstantiationException | IllegalAccessException ex)
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException ex)
             {
                 ex.printStackTrace(System.err);
             }

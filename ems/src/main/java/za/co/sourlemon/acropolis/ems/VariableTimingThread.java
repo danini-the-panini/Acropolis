@@ -24,6 +24,8 @@
 
 package za.co.sourlemon.acropolis.ems;
 
+import static za.co.sourlemon.acropolis.ems.FixedTimingThread.NANOS_PER_SECOND_DOUBLE;
+
 /**
  *
  * @author Daniel
@@ -45,7 +47,7 @@ public class VariableTimingThread extends SystemThread
     public void update(Engine engine)
     {
         double newTime = System.nanoTime();
-        delta = newTime - currentTime;
+        delta = (newTime - currentTime) / NANOS_PER_SECOND_DOUBLE;
         currentTime = newTime;
         time += delta;
         updating.set(true);
