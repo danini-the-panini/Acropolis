@@ -32,6 +32,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import za.co.sourlemon.acropolis.athens.components.View;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
 import za.co.sourlemon.acropolis.athens.shader.Program;
@@ -87,6 +88,8 @@ public class RenderSystem extends AbstractSystem
             m.clear();
         }
         
+        // calculate the world matrix of each renderable,
+        // and add them to their respective "shader buckets"
         for (RenderNode node : engine.getNodeList(RenderNode.class))
         {
             EntityID id = node.getEntity().getId();
@@ -102,13 +105,16 @@ public class RenderSystem extends AbstractSystem
             meshes.put(id, mesh);
         }
         
+        View view = engine.getGlobal(View.class);
+        
+        // for each shader, draw each object that uses that shader
         for (Map.Entry<Program, Map<EntityID, Mesh>> e : objects.entrySet())
         {
             Program shader = e.getKey();
             shader.use();
-            shader.setView(null);
-            shader.setProjection(null);
-            shader.setSun(null);
+            shader.setView(view.view);
+            shader.setProjection(view.projection);
+            shader.setSun(null); // TODO!!!
             for (Map.Entry<EntityID, Mesh> e2 : e.getValue().entrySet())
             {
                 shader.setWorld(worlds.get(e2.getKey()));
