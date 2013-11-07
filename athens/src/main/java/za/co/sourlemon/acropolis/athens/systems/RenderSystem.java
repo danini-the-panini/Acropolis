@@ -32,6 +32,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.View;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
@@ -114,7 +115,7 @@ public class RenderSystem extends AbstractSystem
             shader.use();
             shader.setView(view.view);
             shader.setProjection(view.projection);
-            shader.setSun(null); // TODO!!!
+            shader.setSun(engine.getGlobal(Sun.class).location);
             for (Map.Entry<EntityID, Mesh> e2 : e.getValue().entrySet())
             {
                 shader.setWorld(worlds.get(e2.getKey()));
