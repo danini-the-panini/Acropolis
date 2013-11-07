@@ -35,6 +35,7 @@ import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.FixedTimingThread;
 import za.co.sourlemon.acropolis.ems.SystemThread;
+import za.co.sourlemon.acropolis.ems.VariableTimingThread;
 import za.co.sourlemon.acropolis.tokyo.components.State;
 import za.co.sourlemon.acropolis.tokyo.components.Velocity;
 import za.co.sourlemon.acropolis.tokyo.systems.MovementSystem;
@@ -60,8 +61,10 @@ public class TestAthens
 
                 logicThread.addSystem(new MovementSystem());
 
-                SystemThread renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);
-
+                SystemThread renderThread;
+                //renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);
+                renderThread = new VariableTimingThread();
+                
                 renderThread.addSystem(new PerspectiveCameraSystem());
                 renderThread.addSystem(new RenderSystem(800, 800));
 
