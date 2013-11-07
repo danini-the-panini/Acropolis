@@ -32,6 +32,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import za.co.sourlemon.acropolis.athens.ResourceManager;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.View;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
@@ -56,6 +57,7 @@ public class RenderSystem extends AbstractSystem
     private final int screenWidth, screenHeight;
     private final Map<EntityID, Mat4> worlds = new HashMap<>();
     private final Map<Program, Map<EntityID, Mesh>> objects = new HashMap<>();
+    private final ResourceManager resourceManager = new ResourceManager();
 
     public RenderSystem(int screenWidth, int screenHeight)
     {
@@ -95,13 +97,13 @@ public class RenderSystem extends AbstractSystem
         {
             EntityID id = node.getEntity().getId();
             worlds.put(id, getMatrix(node.state));
-            Program shader = null; //resourceManager.getShader(node.renderable.shader);
-            Mesh mesh = null;// resourceManager.getMesh(node.renderable.mesh);
-            Map<EntityID, Mesh> meshes = objects.get(shader);
+            Program program = resourceManager.getProgram(node.renderable.shader);
+            Mesh mesh = resourceManager.getMesh(node.renderable.mesh);
+            Map<EntityID, Mesh> meshes = objects.get(program);
             if (meshes == null)
             {
                 meshes = new HashMap<>();
-                objects.put(shader, meshes);
+                objects.put(program, meshes);
             }
             meshes.put(id, mesh);
         }
@@ -111,14 +113,14 @@ public class RenderSystem extends AbstractSystem
         // for each shader, draw each object that uses that shader
         for (Map.Entry<Program, Map<EntityID, Mesh>> e : objects.entrySet())
         {
-            Program shader = e.getKey();
-            shader.use();
-            shader.setView(view.view);
-            shader.setProjection(view.projection);
-            shader.setSun(engine.getGlobal(Sun.class).location);
+            Program program = e.getKey();
+            program.use();
+            program.setView(view.view);
+            program.setProjection(view.projection);
+            program.setSun(engine.getGlobal(Sun.class).location);
             for (Map.Entry<EntityID, Mesh> e2 : e.getValue().entrySet())
             {
-                shader.setWorld(worlds.get(e2.getKey()));
+                program.setWorld(worlds.get(e2.getKey()));
                 Mesh mesh = e2.getValue();
                 mesh.draw();
             }
@@ -145,6 +147,7 @@ public class RenderSystem extends AbstractSystem
     @Override
     public void destroy()
     {
+        resourceManager.unloadAll();
         Display.destroy();
     }
 
