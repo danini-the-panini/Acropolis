@@ -118,20 +118,20 @@ public class WavefrontMesh implements Mesh
             {
                 glBegin(v.length == 3 ? GL_TRIANGLES : GL_QUADS);
                 {
-                    for (int i = 0; i < v.length; i++)
+                    for (int[] v1 : v)
                     {
                         float[] p;
-                        if (v[i][1] != -1) // if there is a texcoord
+                        if (v1[1] != -1)
                         {
-                            p = tex.get(v[i][1] - 1);
+                            p = tex.get(v1[1] - 1);
                             glTexCoord2f(p[0], p[1]);
                         }
-                        if (v[i][2] != -1) // if there is a normal
+                        if (v1[2] != -1)
                         {
-                            p = norm.get(v[i][2] - 1);
+                            p = norm.get(v1[2] - 1);
                             glNormal3f(p[0], p[1], p[2]);
                         }
-                        p = pos.get(v[i][0] - 1);
+                        p = pos.get(v1[0] - 1);
                         glVertex3f(p[0], p[1], p[2]); // emit vertex and all attributes
                     }
                 }

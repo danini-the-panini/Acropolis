@@ -81,6 +81,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.lwjgl.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
             <groupId>za.co.sourlemon.acropolis</groupId>
             <artifactId>acropolis-ems</artifactId>
             <version>${ems.version}</version>
@@ -94,11 +99,6 @@
             <groupId>com.hackoeur</groupId>
             <artifactId>jglm</artifactId>
             <version>${jglm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lwjgl.lwjgl</groupId>
-            <artifactId>lwjgl</artifactId>
-            <version>${lwjgl.version}</version>
         </dependency>
     </dependencies>
 </project>

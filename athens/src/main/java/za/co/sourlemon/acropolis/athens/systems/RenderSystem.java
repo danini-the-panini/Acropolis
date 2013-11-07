@@ -31,8 +31,9 @@ import java.util.Map;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 import za.co.sourlemon.acropolis.athens.ResourceManager;
+import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.View;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
@@ -56,7 +57,7 @@ public class RenderSystem extends AbstractSystem
 
     private final int screenWidth, screenHeight;
     private final Map<EntityID, Mat4> worlds = new HashMap<>();
-    private final Map<Program, Map<EntityID, Mesh>> objects = new HashMap<>();
+    private final Map<Program, Map<EntityID, Renderable>> objects = new HashMap<>();
     private final ResourceManager resourceManager = new ResourceManager();
 
     public RenderSystem(int screenWidth, int screenHeight)
@@ -73,7 +74,9 @@ public class RenderSystem extends AbstractSystem
             Display.setDisplayMode(new DisplayMode(screenWidth, screenHeight));
             Display.create();
 
-            GL11.glClearColor(1, 1, 1, 1);
+            glClearColor(1, 1, 1, 1);
+            glEnable(GL_DEPTH_TEST);
+            glEnable(GL_CULL_FACE);
         } catch (LWJGLException ex)
         {
             System.err.println("Error creating display: " + ex.getMessage());
@@ -86,6 +89,8 @@ public class RenderSystem extends AbstractSystem
     @Override
     public void update(Engine engine, double time, double dt)
     {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
         for (Map m : objects.values())
         {
             m.clear();
@@ -97,34 +102,39 @@ public class RenderSystem extends AbstractSystem
         {
             EntityID id = node.getEntity().getId();
             worlds.put(id, getMatrix(node.state));
+            
             Program program = resourceManager.getProgram(node.renderable.shader);
-            Mesh mesh = resourceManager.getMesh(node.renderable.mesh);
-            Map<EntityID, Mesh> meshes = objects.get(program);
-            if (meshes == null)
+            Map<EntityID, Renderable> renderables = objects.get(program);
+            if (renderables == null)
             {
-                meshes = new HashMap<>();
-                objects.put(program, meshes);
+                renderables = new HashMap<>();
+                objects.put(program, renderables);
             }
-            meshes.put(id, mesh);
+            renderables.put(id, node.renderable);
         }
         
         View view = engine.getGlobal(View.class);
         
         // for each shader, draw each object that uses that shader
-        for (Map.Entry<Program, Map<EntityID, Mesh>> e : objects.entrySet())
+        for (Map.Entry<Program, Map<EntityID, Renderable>> e : objects.entrySet())
         {
             Program program = e.getKey();
             program.use();
             program.setView(view.view);
             program.setProjection(view.projection);
             program.setSun(engine.getGlobal(Sun.class).location);
-            for (Map.Entry<EntityID, Mesh> e2 : e.getValue().entrySet())
+            for (Map.Entry<EntityID, Renderable> e2 : e.getValue().entrySet())
             {
+                Renderable renderable = e2.getValue();
                 program.setWorld(worlds.get(e2.getKey()));
-                Mesh mesh = e2.getValue();
+                program.setColour(renderable.colour);
+                program.setOpacity(renderable.opacity);
+                Mesh mesh = resourceManager.getMesh(renderable.mesh);
                 mesh.draw();
             }
         }
+        
+        Display.update();
     }
 
     private Mat4 getMatrix(State state)

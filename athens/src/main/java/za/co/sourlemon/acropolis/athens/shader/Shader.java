@@ -95,35 +95,19 @@ public class Shader implements Resource
             throws IOException
     {
         String input = "";
-
-        BufferedReader br = null;
-        try
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(file)))
         {
-            br = new BufferedReader(new FileReader(file));
-
             String line;
             while ((line = br.readLine()) != null)
             {
                 input += line + "\n";
             }
-        } catch (IOException e)
-        {
-            if (br != null)
-            {
-                try
-                {
-                    br.close();
-                } catch (IOException ex)
-                {
-                }
-            }
-
-            return null;
         }
 
         return input;
     }
-    
+
     public void attachTo(int program)
     {
         glAttachObjectARB(program, shader);

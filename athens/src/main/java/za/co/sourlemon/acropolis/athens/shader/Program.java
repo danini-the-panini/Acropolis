@@ -39,7 +39,7 @@ public class Program implements Resource
 
     private final VertexShader vertexShader;
     private final FragmentShader fragmentShader;
-    private int program, view, projection, world, sun;
+    private int program, view, projection, world, sun, colour, opacity;
 
     public Program(VertexShader vertexShader, FragmentShader fragmentShader)
     {
@@ -86,6 +86,8 @@ public class Program implements Resource
         projection = findUniform("projection");
         world = findUniform("world");
         sun = findUniform("sun");
+        colour = findUniform("colour");
+        opacity = findUniform("opacity");
     }
 
     private int findUniform(String name)
@@ -123,6 +125,16 @@ public class Program implements Resource
     public void setSun(Vec3 v)
     {
         glUniform3ARB(sun, v.getBuffer());
+    }
+
+    public void setColour(Vec3 v)
+    {
+        glUniform3ARB(colour, v.getBuffer());
+    }
+
+    public void setOpacity(float f)
+    {
+        glUniform1fARB(opacity, f);
     }
 
     private static String getLogInfo(int obj)
