@@ -21,33 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package za.co.sourlemon.acropolis.athens.components;
 
-import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.Mat4;
 import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
- * @author daniel
+ * @author Daniel
  */
 public class Camera extends Component
 {
-    
-    /** Camera location. */
-    public Vec3 eye = Vec3.VEC3_ZERO;
-    /** Point that the camera is looking at. */
-    public Vec3 at = new Vec3(0,0,-1);
-    /** Up direction from the camera. */
-    public Vec3 up = new Vec3(0,1,0);
+    public Mat4 view = Mat4.MAT4_IDENTITY;
+    public Mat4 projection = Mat4.MAT4_IDENTITY;
 
     public Camera()
     {
     }
-    
-    public Camera(Vec3 eye, Vec3 at, Vec3 up)
+
+    public Camera(Mat4 view, Mat4 projection)
     {
-        this.eye = eye;
-        this.up = up;
-        this.at = at;
+        this.view = view;
+        this.projection = projection;
     }
+    
 }

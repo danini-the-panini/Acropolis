@@ -24,9 +24,9 @@
 
 package za.co.sourlemon.acropolis.athens.nodes;
 
-import za.co.sourlemon.acropolis.athens.components.Camera;
-import za.co.sourlemon.acropolis.athens.components.Orthographic;
 import za.co.sourlemon.acropolis.athens.components.View;
+import za.co.sourlemon.acropolis.athens.components.Orthographic;
+import za.co.sourlemon.acropolis.athens.components.Camera;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.Node;
 
@@ -42,7 +42,7 @@ public class OrthoCameraNode extends Node
         super(entity);
     }
     
-    public View view;
-    public Orthographic projection;
     public Camera camera;
+    public Orthographic projection;
+    public View view;
 }

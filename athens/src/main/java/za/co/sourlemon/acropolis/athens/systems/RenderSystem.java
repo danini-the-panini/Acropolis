@@ -35,7 +35,7 @@ import static org.lwjgl.opengl.GL11.*;
 import za.co.sourlemon.acropolis.athens.ResourceManager;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
-import za.co.sourlemon.acropolis.athens.components.View;
+import za.co.sourlemon.acropolis.athens.components.Camera;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
 import za.co.sourlemon.acropolis.athens.shader.Program;
@@ -113,15 +113,15 @@ public class RenderSystem extends AbstractSystem
             renderables.put(id, node.renderable);
         }
         
-        View view = engine.getGlobal(View.class);
+        Camera camera = engine.getGlobal(Camera.class);
         
         // for each shader, draw each object that uses that shader
         for (Map.Entry<Program, Map<EntityID, Renderable>> e : objects.entrySet())
         {
             Program program = e.getKey();
             program.use();
-            program.setView(view.view);
-            program.setProjection(view.projection);
+            program.setView(camera.view);
+            program.setProjection(camera.projection);
             program.setSun(engine.getGlobal(Sun.class).location);
             for (Map.Entry<EntityID, Renderable> e2 : e.getValue().entrySet())
             {

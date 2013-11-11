@@ -24,7 +24,7 @@
 package za.co.sourlemon.acropolis.athens.systems;
 
 import com.hackoeur.jglm.Matrices;
-import za.co.sourlemon.acropolis.athens.components.View;
+import za.co.sourlemon.acropolis.athens.components.Camera;
 import za.co.sourlemon.acropolis.athens.nodes.PerspectiveCameraNode;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
@@ -39,11 +39,11 @@ public class PerspectiveCameraSystem extends AbstractSystem
     @Override
     public void update(Engine engine, double time, double dt)
     {
-        View activeView = engine.getGlobal(View.class);
+        Camera activeCamera = engine.getGlobal(Camera.class);
 
         for (PerspectiveCameraNode node : engine.getNodeList(PerspectiveCameraNode.class))
         {
-            if (node.view != activeView)
+            if (node.camera != activeCamera)
             {
                 continue;
             }
@@ -51,10 +51,10 @@ public class PerspectiveCameraSystem extends AbstractSystem
 //            dir = at.subtract(eye).getUnitVector();
 //            right = dir.cross(up).getUnitVector();
 
-            node.view.view = Matrices.lookAt(node.camera.eye, node.camera.at,
-                    node.camera.up);
+            node.camera.view = Matrices.lookAt(node.view.eye, node.view.at,
+                    node.view.up);
             float aspect = 1.0f; //(float) w / (float) h; // <- TODO!!!
-            node.view.projection = Matrices.perspective(node.projection.fovY,
+            node.camera.projection = Matrices.perspective(node.projection.fovY,
                     aspect, node.projection.near, node.projection.far);
         }
     }
