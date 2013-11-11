@@ -24,7 +24,8 @@
 
 package za.co.sourlemon.acropolis.athens.nodes;
 
-import za.co.sourlemon.acropolis.athens.components.PerspectiveCamera;
+import za.co.sourlemon.acropolis.athens.components.Camera;
+import za.co.sourlemon.acropolis.athens.components.Perspective;
 import za.co.sourlemon.acropolis.athens.components.View;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.Node;
@@ -42,5 +43,6 @@ public class PerspectiveCameraNode extends Node
     }
     
     public View view;
-    public PerspectiveCamera camera;
+    public Perspective projection;
+    public Camera camera;
 }

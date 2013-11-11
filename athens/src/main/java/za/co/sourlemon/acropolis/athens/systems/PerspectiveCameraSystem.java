@@ -54,8 +54,8 @@ public class PerspectiveCameraSystem extends AbstractSystem
             node.view.view = Matrices.lookAt(node.camera.eye, node.camera.at,
                     node.camera.up);
             float aspect = 1.0f; //(float) w / (float) h; // <- TODO!!!
-            node.view.projection = Matrices.perspective(node.camera.fovY,
-                    aspect, node.camera.near, node.camera.far);
+            node.view.projection = Matrices.perspective(node.projection.fovY,
+                    aspect, node.projection.near, node.projection.far);
         }
     }
 

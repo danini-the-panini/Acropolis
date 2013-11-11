@@ -53,9 +53,9 @@ public class OrthoCameraSystem extends AbstractSystem
 
             node.view.view = Matrices.lookAt(node.camera.eye, node.camera.at,
                     node.camera.up);
-            node.view.projection = Matrices.ortho(node.camera.xleft,
-                    node.camera.xright, node.camera.ybottom, node.camera.ytop,
-                    node.camera.znear, node.camera.zfar);
+            node.view.projection = Matrices.ortho(node.projection.xleft,
+                    node.projection.xright, node.projection.ybottom, node.projection.ytop,
+                    node.projection.znear, node.projection.zfar);
         }
     }
 

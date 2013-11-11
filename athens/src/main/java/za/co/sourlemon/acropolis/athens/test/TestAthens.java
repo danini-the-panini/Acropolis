@@ -25,7 +25,8 @@ package za.co.sourlemon.acropolis.athens.test;
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
-import za.co.sourlemon.acropolis.athens.components.PerspectiveCamera;
+import za.co.sourlemon.acropolis.athens.components.Camera;
+import za.co.sourlemon.acropolis.athens.components.Perspective;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.View;
@@ -78,12 +79,15 @@ public class TestAthens
                 engine.addEntity(entity);
                 
                 Entity cameraEntity = new Entity();
-                PerspectiveCamera camera = new PerspectiveCamera(
+                Camera camera = new Camera(
                         new Vec3(3, 3, 2), // eye
                         new Vec3(0f, 0, 0f), // at
-                        new Vec3(0f, 1f, 0f), // up
+                        new Vec3(0f, 1f, 0f) // up
+                        );
+                Perspective projection = new Perspective(
                         45.0f, 0.1f, 100.0f);
                 cameraEntity.addComponent(camera);
+                cameraEntity.addComponent(projection);
                 View view = new View();
                 cameraEntity.addComponent(view);
                 engine.addEntity(cameraEntity);

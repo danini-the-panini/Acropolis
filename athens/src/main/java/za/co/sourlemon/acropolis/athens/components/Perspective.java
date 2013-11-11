@@ -31,31 +31,24 @@ import za.co.sourlemon.acropolis.ems.Component;
  *
  * @author Daniel
  */
-public class OrthoCamera extends Component
+public class Perspective extends Component
 {
-    /** Camera location. */
-    public Vec3 eye = Vec3.VEC3_ZERO;
-    /** Point that the camera is looking at. */
-    public Vec3 at = new Vec3(0,0,-1);
-    /** Up direction from the camera. */
-    public Vec3 up = new Vec3(0,1,0);
-    public float ytop = 1, ybottom = -1, xleft = -1, xright = 1, znear = 1, zfar = -1;
+    /** Vertical field-of-view. */
+    public float fovY = 45;
+    /** Near clipping plane. */
+    public float near = 1;
+    /** Far clipping plane. */
+    public float far = 100;
 
-    public OrthoCamera()
+    public Perspective()
     {
     }
 
-    public OrthoCamera(Vec3 eye, Vec3 at, Vec3 up, float ytop, float ybottom, float xleft, float xright, float znear, float zfar)
+    public Perspective(float fovY, float near, float far)
     {
-        this.eye = eye;
-        this.at = at;
-        this.up = up;
-        this.ytop = ytop;
-        this.ybottom = ybottom;
-        this.xleft = xleft;
-        this.xright = xright;
-        this.znear = znear;
-        this.zfar = zfar;
+        this.fovY = fovY;
+        this.near = near;
+        this.far = far;
     }
     
     
