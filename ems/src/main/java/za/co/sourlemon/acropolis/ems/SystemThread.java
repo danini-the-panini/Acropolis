@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package za.co.sourlemon.acropolis.ems;
 
 import java.util.ArrayList;
@@ -40,12 +39,19 @@ import za.co.sourlemon.acropolis.ems.id.ThreadID;
  */
 public abstract class SystemThread implements Identifiable<ThreadID>
 {
+
     protected final Map<SystemID, ISystem> systems = new HashMap<>();
     private final Collection<ISystem> toAdd = new ArrayList<>();
     private final Collection<SystemID> toRemove = new ArrayList<>();
     protected final AtomicBoolean updating = new AtomicBoolean(false);
     private boolean shuttingDown = false;
     private final ThreadID id = new ThreadID();
+
+    @Override
+    public final ThreadID getId()
+    {
+        return id;
+    }
 
     public final void addSystem(ISystem system)
     {
@@ -57,20 +63,11 @@ public abstract class SystemThread implements Identifiable<ThreadID>
         addSystemUnsafe(system);
     }
 
-    @Override
-    public final ThreadID getId()
-    {
-        return id;
-    }
-
     private void addSystemUnsafe(ISystem system)
     {
-        if (system.init())
-        {
-            systems.put(system.getId(), system);
-        }
+        systems.put(system.getId(), system);
     }
-    
+
     public final void removeSystem(ISystem system)
     {
         if (updating.get())
@@ -78,7 +75,7 @@ public abstract class SystemThread implements Identifiable<ThreadID>
             toRemove.add(system.getId());
             return;
         }
-        removeSystemUnsafe(system);        
+        removeSystemUnsafe(system);
     }
 
     private void removeSystemUnsafe(ISystem system)
@@ -88,21 +85,34 @@ public abstract class SystemThread implements Identifiable<ThreadID>
             system.destroy();
         }
     }
-    
+
     public final void updateFromEngine(Engine engine)
     {
         update(engine);
         postUpdate();
     }
-    
+
+    public final boolean initFromEngine(Engine engine)
+    {
+        for (ISystem system : systems.values())
+        {
+            if (!system.init(engine))
+            {
+                return false;
+            }
+        }
+
+        return init();
+    }
+
     public abstract boolean init();
-    
+
     public abstract void update(Engine engine);
-    
+
     public abstract double getAlpha();
-    
+
     public abstract double getTicksPerSecond();
-    
+
     private void postUpdate()
     {
         for (ISystem s : toAdd)
@@ -116,20 +126,20 @@ public abstract class SystemThread implements Identifiable<ThreadID>
             removeSystemUnsafe(systems.get(s));
         }
         toRemove.clear();
-        
+
         if (shuttingDown)
         {
             shutDown();
         }
     }
-    
+
     public final void shutDown()
     {
         if (updating.get())
         {
             shuttingDown = true;
         }
-        
+
         for (ISystem s : systems.values())
         {
             s.destroy();

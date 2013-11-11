@@ -124,7 +124,7 @@ public class Engine implements EntityListener
         removeEntity(entities.get(id));
     }
 
-    public void addGlobal(Component global)
+    public void setGlobal(Component global)
     {
         globals.put(global.getClass(), global);
     }
@@ -134,6 +134,13 @@ public class Engine implements EntityListener
         globals.remove(globalClass);
     }
 
+    /**
+     * Gets the global instance of the given component. Adds a new 
+     * instance of the global if it does not already exist.
+     * @param <T> the type of the global to retrieve
+     * @param globalClass the class of the global to retrieve
+     * @return the global instance of the global
+     */
     public <T extends Component> T getGlobal(Class<T> globalClass)
     {
         T global = (T) globals.get(globalClass);
@@ -142,7 +149,7 @@ public class Engine implements EntityListener
             try
             {
                 global = globalClass.getConstructor().newInstance();
-                addGlobal(global);
+                setGlobal(global);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException ex)
             {
                 ex.printStackTrace(System.err);
@@ -217,7 +224,7 @@ public class Engine implements EntityListener
 
     private void addThreadUnsafe(SystemThread thread)
     {
-        if (thread.init())
+        if (thread.initFromEngine(this))
         {
             threads.put(thread.getId(), thread);
         }

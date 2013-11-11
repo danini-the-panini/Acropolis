@@ -36,6 +36,7 @@ import za.co.sourlemon.acropolis.athens.ResourceManager;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
+import za.co.sourlemon.acropolis.athens.components.Window;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
 import za.co.sourlemon.acropolis.athens.shader.Program;
@@ -55,23 +56,18 @@ public class RenderSystem extends AbstractSystem
     public static final Vec3 Y_AXIS = new Vec3(0, 1, 0);
     public static final Vec3 Z_AXIS = new Vec3(0, 0, 1);
 
-    private final int screenWidth, screenHeight;
     private final Map<EntityID, Mat4> worlds = new HashMap<>();
     private final Map<Program, Map<EntityID, Renderable>> objects = new HashMap<>();
     private final ResourceManager resourceManager = new ResourceManager();
 
-    public RenderSystem(int screenWidth, int screenHeight)
-    {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-    }
-
     @Override
-    public boolean init()
+    public boolean init(Engine engine)
     {
+        Window window = engine.getGlobal(Window.class);
         try
         {
-            Display.setDisplayMode(new DisplayMode(screenWidth, screenHeight));
+            Display.setDisplayMode(new DisplayMode(window.width, window.height));
+            Display.setResizable(true);
             Display.create();
 
             glClearColor(1, 1, 1, 1);
@@ -89,6 +85,15 @@ public class RenderSystem extends AbstractSystem
     @Override
     public void update(Engine engine, double time, double dt)
     {
+        Window window = engine.getGlobal(Window.class);
+        window.closing = Display.isCloseRequested();
+        if (Display.wasResized())
+        {
+            window.width = Display.getWidth();
+            window.height = Display.getHeight();
+            glViewport(0, 0, window.width, window.height);
+        }
+        
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         for (Map m : objects.values())

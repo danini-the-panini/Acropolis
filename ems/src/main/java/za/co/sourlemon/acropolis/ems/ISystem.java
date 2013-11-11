@@ -31,7 +31,7 @@ import za.co.sourlemon.acropolis.ems.id.SystemID;
 public interface ISystem extends Identifiable<SystemID>
 {
 
-    public boolean init();
+    public boolean init(Engine engine);
 
     public void update(Engine engine, double time, double dt);
 

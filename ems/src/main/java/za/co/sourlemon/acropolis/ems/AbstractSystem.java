@@ -35,7 +35,7 @@ public abstract class AbstractSystem implements ISystem
     private final SystemID id = new SystemID();
 
     @Override
-    public boolean init()
+    public boolean init(Engine engine)
     {
         return true;
     }

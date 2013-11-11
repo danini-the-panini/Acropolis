@@ -30,6 +30,7 @@ import za.co.sourlemon.acropolis.athens.components.Perspective;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
+import za.co.sourlemon.acropolis.athens.components.Window;
 import za.co.sourlemon.acropolis.athens.systems.PerspectiveCameraSystem;
 import za.co.sourlemon.acropolis.athens.systems.RenderSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
@@ -67,7 +68,7 @@ public class TestAthens
                 renderThread = new VariableTimingThread();
                 
                 renderThread.addSystem(new PerspectiveCameraSystem());
-                renderThread.addSystem(new RenderSystem(800, 800));
+                renderThread.addSystem(new RenderSystem());
 
                 engine.addThread(logicThread);
                 engine.addThread(renderThread);
@@ -91,13 +92,15 @@ public class TestAthens
                 Camera view = new Camera();
                 cameraEntity.addComponent(view);
                 engine.addEntity(cameraEntity);
-                engine.addGlobal(view);
-                engine.addGlobal(new Sun(new Vec3(-2.47511f, 3.87557f, 3.17864f)));
+                engine.setGlobal(view);
+                engine.setGlobal(new Sun(new Vec3(-2.47511f, 3.87557f, 3.17864f)));
 
-                while (true)
+                Window window = engine.getGlobal(Window.class);
+                while (!window.closing)
                 {
                     engine.update();
                 }
+                engine.shutDown();
             }
 
         });
