@@ -23,6 +23,7 @@
  */
 package za.co.sourlemon.acropolis.athens.components;
 
+import org.lwjgl.input.Mouse;
 import za.co.sourlemon.acropolis.ems.Component;
 
 /**
@@ -31,10 +32,10 @@ import za.co.sourlemon.acropolis.ems.Component;
  */
 public class MouseComponent extends Component
 {
-    public boolean[] pressed;
-    public boolean[] released;
-    public boolean[] down;
+    public boolean[] pressed = new boolean[Mouse.getButtonCount()];
+    public boolean[] released = new boolean[Mouse.getButtonCount()];
+    public boolean[] down = new boolean[Mouse.getButtonCount()];
     
-    public int x, y;
-    public int dx, dy;
+    public int x = 0, y = 0;
+    public int dx = 0, dy = 0;
 }

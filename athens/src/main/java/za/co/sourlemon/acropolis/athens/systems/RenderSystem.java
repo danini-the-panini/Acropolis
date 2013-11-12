@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
@@ -38,6 +39,7 @@ import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
 import za.co.sourlemon.acropolis.athens.components.KeyboardComponent;
+import za.co.sourlemon.acropolis.athens.components.MouseComponent;
 import za.co.sourlemon.acropolis.athens.components.Window;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
@@ -101,7 +103,34 @@ public class RenderSystem extends AbstractSystem
         {
             int key = Keyboard.getEventKey();
             keyboard.pressed[key] = Keyboard.getEventKeyState();
-            keyboard.released[key] = !Keyboard.getEventKeyState();
+            keyboard.released[key] = !keyboard.pressed[key];
+        }
+        
+        MouseComponent mouse = engine.getGlobal(MouseComponent.class);
+        Mouse.poll();
+        for (int i = 0; i < Mouse.getButtonCount(); i++)
+        {
+            mouse.pressed[i] = false;
+            mouse.pressed[i] = false;
+            mouse.down[i] = Mouse.isButtonDown(i);
+            mouse.dx = 0;
+            mouse.dy = 0;
+        }
+        while (Mouse.next())
+        {
+            int btn = Mouse.getEventButton();
+            if (btn != -1)
+            {
+                mouse.pressed[btn] = Mouse.getEventButtonState();
+                mouse.released[btn] = !mouse.pressed[btn];
+            }
+            else
+            {
+                mouse.dx += Mouse.getEventDX();
+                mouse.dy += Mouse.getEventDY();
+            }
+            mouse.x = Mouse.getEventX();
+            mouse.y = Mouse.getEventY();
         }
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
