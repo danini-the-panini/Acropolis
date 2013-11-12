@@ -29,9 +29,12 @@ import za.co.sourlemon.acropolis.ems.Component;
  *
  * @author daniel
  */
-public class Keyboard extends Component
+public class MouseComponent extends Component
 {
     public boolean[] pressed;
     public boolean[] released;
     public boolean[] down;
+    
+    public int x, y;
+    public int dx, dy;
 }

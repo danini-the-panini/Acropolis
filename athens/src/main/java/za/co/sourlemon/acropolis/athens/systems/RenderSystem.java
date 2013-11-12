@@ -29,6 +29,7 @@ import static com.hackoeur.jglm.Matrices.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
@@ -36,6 +37,7 @@ import za.co.sourlemon.acropolis.athens.ResourceManager;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
+import za.co.sourlemon.acropolis.athens.components.KeyboardComponent;
 import za.co.sourlemon.acropolis.athens.components.Window;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
@@ -85,13 +87,21 @@ public class RenderSystem extends AbstractSystem
     @Override
     public void update(Engine engine, double time, double dt)
     {
-        Window window = engine.getGlobal(Window.class);
-        window.closing = Display.isCloseRequested();
-        if (Display.wasResized())
+        windowInfo(engine);
+        
+        KeyboardComponent keyboard = engine.getGlobal(KeyboardComponent.class);
+        Keyboard.poll();
+        for (int i = 0; i < Keyboard.getKeyCount(); i++)
         {
-            window.width = Display.getWidth();
-            window.height = Display.getHeight();
-            glViewport(0, 0, window.width, window.height);
+            keyboard.pressed[i] = false;
+            keyboard.released[i] = false;
+            keyboard.down[i] = Keyboard.isKeyDown(i);
+        }
+        while (Keyboard.next())
+        {
+            int key = Keyboard.getEventKey();
+            keyboard.pressed[key] = Keyboard.getEventKeyState();
+            keyboard.released[key] = !Keyboard.getEventKeyState();
         }
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -164,6 +174,18 @@ public class RenderSystem extends AbstractSystem
     {
         resourceManager.unloadAll();
         Display.destroy();
+    }
+
+    private void windowInfo(Engine engine)
+    {
+        Window window = engine.getGlobal(Window.class);
+        window.closing = Display.isCloseRequested();
+        if (Display.wasResized())
+        {
+            window.width = Display.getWidth();
+            window.height = Display.getHeight();
+            glViewport(0, 0, window.width, window.height);
+        }
     }
 
 }

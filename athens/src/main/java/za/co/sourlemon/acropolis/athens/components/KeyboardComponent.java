@@ -23,18 +23,16 @@
  */
 package za.co.sourlemon.acropolis.athens.components;
 
+import org.lwjgl.input.Keyboard;
 import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
  * @author daniel
  */
-public class Mouse extends Component
+public class KeyboardComponent extends Component
 {
-    public boolean[] pressed;
-    public boolean[] released;
-    public boolean[] down;
-    
-    public int x, y;
-    public int dx, dy;
+    public boolean[] pressed = new boolean[Keyboard.KEYBOARD_SIZE];
+    public boolean[] released = new boolean[Keyboard.KEYBOARD_SIZE];
+    public boolean[] down = new boolean[Keyboard.KEYBOARD_SIZE];
 }
