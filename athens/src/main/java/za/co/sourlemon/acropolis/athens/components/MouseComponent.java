@@ -38,4 +38,5 @@ public class MouseComponent extends Component
     
     public int x = 0, y = 0;
     public int dx = 0, dy = 0;
+    public float nx = 0, ny = 0;
 }

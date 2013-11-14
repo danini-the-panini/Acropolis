@@ -94,7 +94,7 @@ public class TestAthens
                 cameraEntity.addComponent(projection);
                 Camera view = new Camera();
                 cameraEntity.addComponent(view);
-                cameraEntity.addComponent(new NoClipCamera(5, 25, 0.2f));
+                cameraEntity.addComponent(new NoClipCamera(5, 25, 0.1f));
                 engine.addEntity(cameraEntity);
                 engine.setGlobal(view);
                 engine.setGlobal(new Sun(new Vec3(-2.47511f, 3.87557f, 3.17864f)));

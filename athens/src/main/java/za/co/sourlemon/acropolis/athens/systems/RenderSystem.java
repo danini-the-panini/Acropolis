@@ -89,7 +89,14 @@ public class RenderSystem extends AbstractSystem
     @Override
     public void update(Engine engine, double time, double dt)
     {
-        windowInfo(engine);
+        Window window = engine.getGlobal(Window.class);
+        window.closing = Display.isCloseRequested();
+        if (Display.wasResized())
+        {
+            window.width = Display.getWidth();
+            window.height = Display.getHeight();
+            glViewport(0, 0, window.width, window.height);
+        }
         
         KeyboardComponent keyboard = engine.getGlobal(KeyboardComponent.class);
         Keyboard.poll();
@@ -132,6 +139,8 @@ public class RenderSystem extends AbstractSystem
             mouse.x = Mouse.getEventX();
             mouse.y = Mouse.getEventY();
         }
+        mouse.nx = normalise(mouse.x, window.width);
+        mouse.ny = -normalise(mouse.y, window.height);
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -180,6 +189,11 @@ public class RenderSystem extends AbstractSystem
         
         Display.update();
     }
+    
+    private float normalise(int x, int length)
+    {
+        return (float)x/(float)length-(float)length*0.5f;
+    }
 
     private Mat4 getMatrix(State state)
     {
@@ -203,18 +217,6 @@ public class RenderSystem extends AbstractSystem
     {
         resourceManager.unloadAll();
         Display.destroy();
-    }
-
-    private void windowInfo(Engine engine)
-    {
-        Window window = engine.getGlobal(Window.class);
-        window.closing = Display.isCloseRequested();
-        if (Display.wasResized())
-        {
-            window.width = Display.getWidth();
-            window.height = Display.getHeight();
-            glViewport(0, 0, window.width, window.height);
-        }
     }
 
 }
