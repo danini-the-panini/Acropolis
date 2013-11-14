@@ -23,17 +23,35 @@
 
 uniform sampler2D tex;
 
-varying float ip;
+uniform mat4 projection;
+uniform mat4 world;
+uniform mat4 view;
+
+uniform vec3 sun;
+uniform vec3 eye;
 
 uniform vec3 colour;
 uniform float opacity;
 
+varying vec3 g_normal;
+varying vec3 g_position;
+
 void main()
 {
-    float u = gl_TexCoord[0].x;
-    float v = 1.0 - gl_TexCoord[0].y;
+    //float u = gl_TexCoord[0].x;
+    //float v = 1.0 - gl_TexCoord[0].y;
 
-    //gl_FragColor = vec4(texture2D(tex, vec2(u,v)).r*ip*colour,opacity);
+
+    float ia = 0.3f;
+    float id = 0.5f;
+    float is = 1.0f;
+    float s = 100.0f;
+
+    vec3 v = normalize(eye-g_position);
+    vec3 l = normalize(sun);
+    vec3 r = normalize(reflect(l,g_normal));
+
+    float ip = ia + max(dot(l,g_normal),0)*id + pow(max(dot(r,v),0),s)*is;
 
     gl_FragColor = vec4(ip * colour,opacity);
 }
