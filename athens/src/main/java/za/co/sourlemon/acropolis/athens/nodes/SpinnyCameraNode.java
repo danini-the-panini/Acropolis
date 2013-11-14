@@ -22,53 +22,25 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.ems;
+package za.co.sourlemon.acropolis.athens.nodes;
 
-import static za.co.sourlemon.acropolis.ems.FixedTimingThread.NANOS_PER_SECOND_DOUBLE;
+import za.co.sourlemon.acropolis.athens.components.SpinnyCamera;
+import za.co.sourlemon.acropolis.athens.components.View;
+import za.co.sourlemon.acropolis.ems.Entity;
+import za.co.sourlemon.acropolis.ems.Node;
 
 /**
  *
  * @author Daniel
  */
-public class VariableTimingThread extends SystemThread
+public class SpinnyCameraNode extends Node
 {
-    private double delta, time;
-    private long currentTimeNanos;
 
-    @Override
-    public boolean init()
+    public SpinnyCameraNode(Entity entity)
     {
-        currentTimeNanos = System.nanoTime();
-        delta = 0;
-        time = 0;
-        return true;
-    }
-
-    @Override
-    public void update(Engine engine)
-    {
-        long newTimeNanos = System.nanoTime();
-        delta = (double)(newTimeNanos - currentTimeNanos) / NANOS_PER_SECOND_DOUBLE;
-        currentTimeNanos = newTimeNanos;
-        time += delta;
-        updating.set(true);
-        for (ISystem s : systems.values())
-        {
-            s.update(engine, time, delta);
-        }
-        updating.set(false);
-    }
-
-    @Override
-    public double getAlpha()
-    {
-        return 0;
-    }
-
-    @Override
-    public double getTicksPerSecond()
-    {
-        return 1.0/delta;
+        super(entity);
     }
     
+    public SpinnyCamera camera;
+    public View view;
 }
