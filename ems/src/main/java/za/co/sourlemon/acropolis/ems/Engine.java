@@ -28,8 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import za.co.sourlemon.acropolis.ems.id.EntityID;
-import za.co.sourlemon.acropolis.ems.id.ThreadID;
+import za.co.sourlemon.acropolis.ems.id.ID;
 
 /**
  *
@@ -38,12 +37,12 @@ import za.co.sourlemon.acropolis.ems.id.ThreadID;
 public class Engine implements EntityListener
 {
 
-    private final HashMap<ThreadID, SystemThread> threads = new HashMap<>();
+    private final HashMap<ID<Thread>, SystemThread> threads = new HashMap<>();
     private final Collection<SystemThread> threadsToAdd = new ArrayList<>();
-    private final Collection<ThreadID> threadsToRemove = new ArrayList<>();
-    private final HashMap<EntityID, Entity> entities = new HashMap<>();
+    private final Collection<ID<Thread>> threadsToRemove = new ArrayList<>();
+    private final HashMap<ID<Entity>, Entity> entities = new HashMap<>();
     private final Collection<Entity> toAdd = new ArrayList<>();
-    private final Collection<EntityID> toRemove = new ArrayList<>();
+    private final Collection<ID<Entity>> toRemove = new ArrayList<>();
     private final Collection<EntityComponent> componentsAdded = new ArrayList<>();
     private final Collection<EntityComponent> componentsRemoved = new ArrayList<>();
     private final Map<Class, Component> globals = new HashMap<>();
@@ -119,7 +118,7 @@ public class Engine implements EntityListener
         }
     }
     
-    public void removeEntity(EntityID id)
+    public void removeEntity(ID<Entity> id)
     {
         removeEntity(entities.get(id));
     }
@@ -248,12 +247,12 @@ public class Engine implements EntityListener
         }
     }
     
-    public SystemThread getThread(ThreadID id)
+    public SystemThread getThread(ID<Thread> id)
     {
         return threads.get(id);
     }
     
-    public Entity getEntity(EntityID id)
+    public Entity getEntity(ID<Entity> id)
     {
         return entities.get(id);
     }
@@ -272,7 +271,7 @@ public class Engine implements EntityListener
 
     private void postUpdate()
     {
-        for (EntityID e : toRemove)
+        for (ID<Entity> e : toRemove)
         {
             removeEntityUnsafe(entities.get(e));
         }
@@ -283,7 +282,7 @@ public class Engine implements EntityListener
         }
         toAdd.clear();
         
-        for (ThreadID e : threadsToRemove)
+        for (ID<Thread> e : threadsToRemove)
         {
             removeThreadUnsafe(threads.get(e));
         }

@@ -24,7 +24,7 @@
 
 package za.co.sourlemon.acropolis.ems;
 
-import za.co.sourlemon.acropolis.ems.id.SystemID;
+import za.co.sourlemon.acropolis.ems.id.ID;
 
 /**
  *
@@ -32,7 +32,7 @@ import za.co.sourlemon.acropolis.ems.id.SystemID;
  */
 public abstract class AbstractSystem implements ISystem
 {
-    private final SystemID id = new SystemID();
+    private final ID<System> id = new ID<>();
 
     @Override
     public boolean init(Engine engine)
@@ -46,7 +46,7 @@ public abstract class AbstractSystem implements ISystem
     }
 
     @Override
-    public final SystemID getId()
+    public final ID<System> getId()
     {
         return id;
     }

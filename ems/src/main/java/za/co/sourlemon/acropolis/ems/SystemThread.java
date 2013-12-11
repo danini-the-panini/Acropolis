@@ -27,28 +27,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import za.co.sourlemon.acropolis.ems.id.Identifiable;
-import za.co.sourlemon.acropolis.ems.id.SystemID;
-import za.co.sourlemon.acropolis.ems.id.ThreadID;
+import za.co.sourlemon.acropolis.ems.id.ID;
 
 /**
  *
  * @author Daniel
  */
-public abstract class SystemThread implements Identifiable<ThreadID>
+public abstract class SystemThread implements Identifiable<ID<Thread>>
 {
 
-    protected final Map<SystemID, ISystem> systems = new HashMap<>();
+    protected final Map<ID<System>, ISystem> systems = new HashMap<>();
     private final Collection<ISystem> toAdd = new ArrayList<>();
-    private final Collection<SystemID> toRemove = new ArrayList<>();
+    private final Collection<ID<System>> toRemove = new ArrayList<>();
     protected final AtomicBoolean updating = new AtomicBoolean(false);
     private boolean shuttingDown = false;
-    private final ThreadID id = new ThreadID();
+    private final ID<Thread> id = new ID<Thread>();
 
     @Override
-    public final ThreadID getId()
+    public final ID<Thread> getId()
     {
         return id;
     }
@@ -121,7 +119,7 @@ public abstract class SystemThread implements Identifiable<ThreadID>
         }
         toAdd.clear();
 
-        for (SystemID s : toRemove)
+        for (ID<System> s : toRemove)
         {
             removeSystemUnsafe(systems.get(s));
         }

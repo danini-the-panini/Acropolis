@@ -29,7 +29,7 @@ import java.util.UUID;
  *
  * @author Daniel
  */
-public class ID
+public class ID<T>
 {
     private final UUID id = UUID.randomUUID();
 

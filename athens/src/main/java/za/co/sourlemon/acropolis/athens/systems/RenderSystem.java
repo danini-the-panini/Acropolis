@@ -46,7 +46,8 @@ import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
 import za.co.sourlemon.acropolis.athens.shader.Program;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
-import za.co.sourlemon.acropolis.ems.id.EntityID;
+import za.co.sourlemon.acropolis.ems.Entity;
+import za.co.sourlemon.acropolis.ems.id.ID;
 import za.co.sourlemon.acropolis.tokyo.components.State;
 
 /**
@@ -60,8 +61,8 @@ public class RenderSystem extends AbstractSystem
     public static final Vec3 Y_AXIS = new Vec3(0, 1, 0);
     public static final Vec3 Z_AXIS = new Vec3(0, 0, 1);
 
-    private final Map<EntityID, Mat4> worlds = new HashMap<>();
-    private final Map<Program, Map<EntityID, Renderable>> objects = new HashMap<>();
+    private final Map<ID<Entity>, Mat4> worlds = new HashMap<>();
+    private final Map<Program, Map<ID<Entity>, Renderable>> objects = new HashMap<>();
     private final ResourceManager resourceManager = new ResourceManager();
 
     @Override
@@ -153,11 +154,11 @@ public class RenderSystem extends AbstractSystem
         // and add them to their respective "shader buckets"
         for (RenderNode node : engine.getNodeList(RenderNode.class))
         {
-            EntityID id = node.getEntity().getId();
+            ID<Entity> id = node.getEntity().getId();
             worlds.put(id, getMatrix(node.state));
             
             Program program = resourceManager.getProgram(node.renderable.shader);
-            Map<EntityID, Renderable> renderables = objects.get(program);
+            Map<ID<Entity>, Renderable> renderables = objects.get(program);
             if (renderables == null)
             {
                 renderables = new HashMap<>();
@@ -169,14 +170,14 @@ public class RenderSystem extends AbstractSystem
         Camera camera = engine.getGlobal(Camera.class);
         
         // for each shader, draw each object that uses that shader
-        for (Map.Entry<Program, Map<EntityID, Renderable>> e : objects.entrySet())
+        for (Map.Entry<Program, Map<ID<Entity>, Renderable>> e : objects.entrySet())
         {
             Program program = e.getKey();
             program.use();
             program.setView(camera.view);
             program.setProjection(camera.projection);
             program.setSun(engine.getGlobal(Sun.class).location);
-            for (Map.Entry<EntityID, Renderable> e2 : e.getValue().entrySet())
+            for (Map.Entry<ID<Entity>, Renderable> e2 : e.getValue().entrySet())
             {
                 Renderable renderable = e2.getValue();
                 program.setWorld(worlds.get(e2.getKey()));

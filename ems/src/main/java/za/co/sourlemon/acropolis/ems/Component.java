@@ -24,19 +24,19 @@
 
 package za.co.sourlemon.acropolis.ems;
 
-import za.co.sourlemon.acropolis.ems.id.ComponentID;
+import za.co.sourlemon.acropolis.ems.id.ID;
 import za.co.sourlemon.acropolis.ems.id.Identifiable;
 
 /**
  *
  * @author Daniel
  */
-public class Component implements Identifiable<ComponentID>
+public class Component implements Identifiable<ID<Component>>
 {
-    private final ComponentID id = new ComponentID();
+    private final ID<Component> id = new ID<>();
 
     @Override
-    public ComponentID getId()
+    public ID<Component> getId()
     {
         return id;
     }

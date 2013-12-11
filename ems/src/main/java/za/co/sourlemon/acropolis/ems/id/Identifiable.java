@@ -29,7 +29,7 @@ package za.co.sourlemon.acropolis.ems.id;
  * @author Daniel
  * @param <T> the type of ID that identifies instances of this class.
  */
-public interface Identifiable<T extends ID>
+public interface Identifiable<T extends ID<?>>
 {
     public T getId();
 }

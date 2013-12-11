@@ -22,13 +22,13 @@
 package za.co.sourlemon.acropolis.ems;
 
 import za.co.sourlemon.acropolis.ems.id.Identifiable;
-import za.co.sourlemon.acropolis.ems.id.SystemID;
+import za.co.sourlemon.acropolis.ems.id.ID;
 
 /**
  *
  * @author daniel
  */
-public interface ISystem extends Identifiable<SystemID>
+public interface ISystem extends Identifiable<ID<System>>
 {
 
     public boolean init(Engine engine);

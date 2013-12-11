@@ -26,14 +26,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import za.co.sourlemon.acropolis.ems.id.EntityID;
+import za.co.sourlemon.acropolis.ems.id.ID;
 import za.co.sourlemon.acropolis.ems.id.Identifiable;
 
 /**
  *
  * @author daniel
  */
-public class Entity implements Identifiable<EntityID>
+public class Entity implements Identifiable<ID<Entity>>
 {
     // keeps track of how many entities there are, for debug purposes
 
@@ -45,7 +45,7 @@ public class Entity implements Identifiable<EntityID>
     private final Map<Class, Component> components = new HashMap<>();
     private final Map<Class<? extends Event>, List<Event>> events = new HashMap<>();
     private Pool source;
-    private final EntityID id = new EntityID();
+    private final ID<Entity> id = new ID<>();
 
     public Entity()
     {
@@ -205,7 +205,7 @@ public class Entity implements Identifiable<EntityID>
     }
 
     @Override
-    public final EntityID getId()
+    public final ID<Entity> getId()
     {
         return id;
     }
