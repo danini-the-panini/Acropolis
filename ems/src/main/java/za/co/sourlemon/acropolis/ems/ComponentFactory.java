@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Triforce - in association with the University of Pretoria and Epi-Use <Advance/>
+ * Copyright (c) 2013 Sour Lemon.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,30 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package za.co.sourlemon.acropolis.athens.components;
-
-import com.hackoeur.jglm.Vec3;
-import za.co.sourlemon.acropolis.ems.Component;
+ package za.co.sourlemon.acropolis.ems;
 
 /**
- *
- * @author daniel
+ * Interface for creating components for the entity management system.
+ * 
+ * @author Daniel
+ * @param <C> the type of component this factory produces
+ * @param <R> the type of FactoryRequest this factory can accept
  */
-public class Renderable extends Component
+public interface ComponentFactory<C extends Component, R extends FactoryRequest>
 {
-    public String shader = "";
-    public Vec3 colour = Vec3.VEC3_ZERO;
-    public float opacity = 1.0f;
-
-    public Renderable()
-    {
-    }
-
-    public Renderable(String shader, Vec3 colour, float opacity)
-    {
-        this.shader = shader;
-        this.colour = colour;
-        this.opacity = opacity;
-    }
-    
+    /**
+     * Creates an entity from the given factory request
+     * @param request the factory request i.e. blueprints for creating the component
+     * @return the created component
+     * @throws FactoryException if there was any exception with creating the component
+     */
+    public C create(R request);
 }

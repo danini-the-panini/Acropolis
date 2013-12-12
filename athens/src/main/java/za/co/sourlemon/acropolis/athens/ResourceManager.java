@@ -28,11 +28,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import za.co.sourlemon.acropolis.athens.components.MeshComponent;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
-import za.co.sourlemon.acropolis.athens.mesh.WavefrontMesh;
+import za.co.sourlemon.acropolis.athens.mesh.DisplaylistMesh;
 import za.co.sourlemon.acropolis.athens.shader.FragmentShader;
 import za.co.sourlemon.acropolis.athens.shader.Program;
 import za.co.sourlemon.acropolis.athens.shader.VertexShader;
+import za.co.sourlemon.acropolis.ems.Component;
+import za.co.sourlemon.acropolis.ems.id.ID;
 
 /**
  *
@@ -41,12 +44,10 @@ import za.co.sourlemon.acropolis.athens.shader.VertexShader;
 public class ResourceManager
 {
     public static final String SHADER_DIR = "shaders";
-    public static final String MESH_DIR = "meshes";
     public static final String VERTEX_NAME = "vertex";
     public static final String FRAGMENT_NAME = "fragment";
     public static final String SHADER_EXT = "glsl";
-    public static final String MESH_EXT = "obj";    
-    private final Map<String, Mesh> meshes = new HashMap<>();
+    private final Map<ID<Component>, Mesh> meshes = new HashMap<>();
     private final Map<String, Program> programs = new HashMap<>();
     
     public Program getProgram(String name)
@@ -69,12 +70,12 @@ public class ResourceManager
         return program;
     }
     
-    public Mesh getMesh(String name)
+    public Mesh getMesh(MeshComponent comp)
     {
-        Mesh mesh = meshes.get(name);
+        Mesh mesh = meshes.get(comp.getId());
         if (mesh == null)
         {
-            mesh = new WavefrontMesh(new File(MESH_DIR+"/"+name+"."+MESH_EXT));
+            mesh = new DisplaylistMesh(comp);
             try
             {
                 mesh.load();
@@ -82,7 +83,7 @@ public class ResourceManager
             {
                 ex.printStackTrace(System.err);
             }
-            meshes.put(name,mesh);
+            meshes.put(comp.getId(),mesh);
         }
         return mesh;
     }

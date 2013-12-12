@@ -62,7 +62,7 @@ public class RenderSystem extends AbstractSystem
     public static final Vec3 Z_AXIS = new Vec3(0, 0, 1);
 
     private final Map<ID<Entity>, Mat4> worlds = new HashMap<>();
-    private final Map<Program, Map<ID<Entity>, Renderable>> objects = new HashMap<>();
+    private final Map<Program, Map<ID<Entity>, RenderNode>> objects = new HashMap<>();
     private final ResourceManager resourceManager = new ResourceManager();
 
     @Override
@@ -158,32 +158,32 @@ public class RenderSystem extends AbstractSystem
             worlds.put(id, getMatrix(node.state));
             
             Program program = resourceManager.getProgram(node.renderable.shader);
-            Map<ID<Entity>, Renderable> renderables = objects.get(program);
+            Map<ID<Entity>, RenderNode> renderables = objects.get(program);
             if (renderables == null)
             {
                 renderables = new HashMap<>();
                 objects.put(program, renderables);
             }
-            renderables.put(id, node.renderable);
+            renderables.put(id, node);
         }
         
         Camera camera = engine.getGlobal(Camera.class);
         
         // for each shader, draw each object that uses that shader
-        for (Map.Entry<Program, Map<ID<Entity>, Renderable>> e : objects.entrySet())
+        for (Map.Entry<Program, Map<ID<Entity>, RenderNode>> e : objects.entrySet())
         {
             Program program = e.getKey();
             program.use();
             program.setView(camera.view);
             program.setProjection(camera.projection);
             program.setSun(engine.getGlobal(Sun.class).location);
-            for (Map.Entry<ID<Entity>, Renderable> e2 : e.getValue().entrySet())
+            for (Map.Entry<ID<Entity>, RenderNode> e2 : e.getValue().entrySet())
             {
-                Renderable renderable = e2.getValue();
+                RenderNode node = e2.getValue();
                 program.setWorld(worlds.get(e2.getKey()));
-                program.setColour(renderable.colour);
-                program.setOpacity(renderable.opacity);
-                Mesh mesh = resourceManager.getMesh(renderable.mesh);
+                program.setColour(node.renderable.colour);
+                program.setOpacity(node.renderable.opacity);
+                Mesh mesh = resourceManager.getMesh(node.mesh);
                 mesh.draw();
             }
         }

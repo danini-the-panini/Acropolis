@@ -19,42 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.meshes;
-
-import za.co.sourlemon.acropolis.athens.mesh.WavefrontMesh;
-import org.junit.Test;
-import static org.junit.Assert.*;
+ package za.co.sourlemon.acropolis.ems;
 
 /**
- *
+ * Interface for creating entities for the entity management system.
+ * 
  * @author Daniel
+ * @param <R> the type of FactoryRequest this factory can accept
  */
-public class WavefrontMeshTest {
-    
-    @Test
-    public void testParseVertex() {
-        System.out.println("parse 'v'");
-        String string = "7";
-        int[] expResult = { 7, -1, -1};
-        int[] result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v/vt'");
-        string = "7/12";
-        expResult = new int[]{ 7, 12, -1};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v//vn'");
-        string = "7//12";
-        expResult = new int[]{ 7, -1, 12};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-        
-        System.out.println("parse 'v/vt/vn'");
-        string = "7//12";
-        expResult = new int[]{ 7, -1, 12};
-        result = WavefrontMesh.parseVertex(string);
-        assertArrayEquals(expResult, result);
-    }
+public interface EntityFactory<R extends FactoryRequest>
+{
+    /**
+     * Creates an entity from the given factory request
+     * @param request the factory request i.e. blueprints for creating the entity
+     * @return the created entity
+     * @throws FactoryException if there was any exception with creating the entity
+     */
+    public Entity create(R request);
 }

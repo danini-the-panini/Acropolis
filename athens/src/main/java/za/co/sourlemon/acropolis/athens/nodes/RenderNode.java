@@ -21,6 +21,7 @@
  */
  package za.co.sourlemon.acropolis.athens.nodes;
 
+import za.co.sourlemon.acropolis.athens.components.MeshComponent;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.Node;
@@ -39,4 +40,5 @@ public class RenderNode extends Node
     
     public State state;
     public Renderable renderable;
+    public MeshComponent mesh;
 }

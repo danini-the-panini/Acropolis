@@ -32,6 +32,8 @@ import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
 import za.co.sourlemon.acropolis.athens.components.NoClipCamera;
 import za.co.sourlemon.acropolis.athens.components.Window;
+import za.co.sourlemon.acropolis.athens.factories.WavefrontFactory;
+import za.co.sourlemon.acropolis.athens.factories.WavefrontFactoryRequest;
 import za.co.sourlemon.acropolis.athens.systems.NoClipCameraSystem;
 import za.co.sourlemon.acropolis.athens.systems.PerspectiveCameraSystem;
 import za.co.sourlemon.acropolis.athens.systems.RenderSystem;
@@ -75,11 +77,14 @@ public class TestAthens
 
                 engine.addThread(logicThread);
                 engine.addThread(renderThread);
+                
+                WavefrontFactory wavefrontFactory = new WavefrontFactory();
 
                 Entity entity = new Entity();
                 entity.addComponent(new State());
                 entity.addComponent(new Velocity(Vec3.VEC3_ZERO, Vec3.VEC3_ZERO, new Vec4(0,45,0,0), Vec4.VEC4_ZERO));
-                entity.addComponent(new Renderable("monkey", "monkey", new Vec3(1, 0, 1), 1.0f));
+                entity.addComponent(new Renderable("monkey",new Vec3(1, 0, 1), 1.0f));
+                entity.addComponent(wavefrontFactory.create(new WavefrontFactoryRequest("monkey")));
                 engine.addEntity(entity);
                 
                 Entity cameraEntity = new Entity();
