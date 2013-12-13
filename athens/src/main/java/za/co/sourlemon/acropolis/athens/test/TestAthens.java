@@ -53,9 +53,17 @@ import za.co.sourlemon.acropolis.tokyo.systems.MovementSystem;
 public class TestAthens
 {
 
+    public static final Vec3 SUN_VEC = new Vec3(-2.47511f, 3.87557f, 3.17864f);
+    public static final View VIEW = new View(
+            new Vec3(3, 3, 2), // eye
+            new Vec3(0f, 0, 0f), // at
+            new Vec3(0f, 1f, 0f) // up
+    );
+    public static final Camera CAMERA = new Camera();
+    final static Engine engine = new Engine();
+
     public static void main(String[] args)
     {
-        final Engine engine = new Engine();
 
         Thread t = new Thread(new Runnable()
         {
@@ -63,46 +71,12 @@ public class TestAthens
             @Override
             public void run()
             {
-                SystemThread logicThread = new FixedTimingThread(1.0 / 60.0, 1.0 / 25.0);
-
-                logicThread.addSystem(new MovementSystem());
-
-                SystemThread renderThread;
-                //renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);
-                renderThread = new VariableTimingThread();
+                setupThreads();
                 
-                renderThread.addSystem(new PerspectiveCameraSystem());
-                renderThread.addSystem(new RenderSystem());
-                renderThread.addSystem(new NoClipCameraSystem());
+                engine.addEntity(createMonkey(new State()));
+                engine.addEntity(createCamera());
 
-                engine.addThread(logicThread);
-                engine.addThread(renderThread);
-                
-                WavefrontFactory wavefrontFactory = new WavefrontFactory();
-
-                Entity entity = new Entity();
-                entity.addComponent(new State());
-                entity.addComponent(new Velocity(Vec3.VEC3_ZERO, Vec3.VEC3_ZERO, new Vec4(0,45,0,0), Vec4.VEC4_ZERO));
-                entity.addComponent(new Renderable("monkey",new Vec3(1, 0, 1), 1.0f));
-                entity.addComponent(wavefrontFactory.create(new WavefrontFactoryRequest("monkey")));
-                engine.addEntity(entity);
-                
-                Entity cameraEntity = new Entity();
-                View camera = new View(
-                        new Vec3(3, 3, 2), // eye
-                        new Vec3(0f, 0, 0f), // at
-                        new Vec3(0f, 1f, 0f) // up
-                        );
-                Perspective projection = new Perspective(
-                        45.0f, 0.1f, 100.0f);
-                cameraEntity.addComponent(camera);
-                cameraEntity.addComponent(projection);
-                Camera view = new Camera();
-                cameraEntity.addComponent(view);
-                cameraEntity.addComponent(new NoClipCamera(5, 25, 0.1f));
-                engine.addEntity(cameraEntity);
-                engine.setGlobal(view);
-                engine.setGlobal(new Sun(new Vec3(-2.47511f, 3.87557f, 3.17864f)));
+                engine.setGlobal(new Sun(SUN_VEC));
 
                 Window window = engine.getGlobal(Window.class);
                 while (!window.closing)
@@ -113,14 +87,56 @@ public class TestAthens
             }
 
         });
-        
+
         t.start();
         try
         {
             t.join();
         } catch (InterruptedException ex)
-        {}
-        
+        {
+        }
+
         engine.shutDown();
+    }
+
+    private static Entity createMonkey(State state)
+    {
+        WavefrontFactory wavefrontFactory = new WavefrontFactory();
+        Entity entity = new Entity();
+        entity.addComponent(state);
+        entity.addComponent(new Velocity(Vec3.VEC3_ZERO, Vec3.VEC3_ZERO, new Vec4(0, 45, 0, 0), Vec4.VEC4_ZERO));
+        entity.addComponent(new Renderable("monkey", new Vec3(1, 0, 1), 1.0f));
+        entity.addComponent(wavefrontFactory.create(new WavefrontFactoryRequest("monkey")));
+        return entity;
+    }
+
+    private static Entity createCamera()
+    {
+        Entity cameraEntity = new Entity();
+        Perspective projection = new Perspective(
+                45.0f, 0.1f, 100.0f);
+        cameraEntity.addComponent(VIEW);
+        cameraEntity.addComponent(projection);
+        cameraEntity.addComponent(engine.getGlobal(Camera.class));
+        cameraEntity.addComponent(new NoClipCamera(5, 25, 0.1f));
+        return cameraEntity;
+    }
+
+    private static void setupThreads()
+    {
+        SystemThread logicThread = new FixedTimingThread(1.0 / 60.0, 1.0 / 25.0);
+
+        logicThread.addSystem(new MovementSystem());
+
+        SystemThread renderThread;
+        //renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);
+        renderThread = new VariableTimingThread();
+
+        renderThread.addSystem(new PerspectiveCameraSystem());
+        renderThread.addSystem(new RenderSystem());
+        renderThread.addSystem(new NoClipCameraSystem());
+
+        engine.addThread(logicThread);
+        engine.addThread(renderThread);
     }
 }
