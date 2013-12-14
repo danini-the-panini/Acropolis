@@ -50,7 +50,7 @@ public class HeightmapFactory implements ComponentFactory<Heightmap, HeightmapFa
             int w = image.getWidth();
             int l = image.getHeight();
             Heightmap hm = new Heightmap(w, l);
-            float[] data = image.getRaster().getSamples(0, 0, w, l, 0, new float[0]);
+            float[] data = image.getRaster().getSamples(0, 0, w, l, 0, new float[w*l]);
             int i;
             for (int x = 0; x < w; x++)
             {

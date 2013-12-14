@@ -23,6 +23,7 @@
  */
 package za.co.sourlemon.acropolis.athens.factories;
 
+import com.hackoeur.jglm.Vec3;
 import za.co.sourlemon.acropolis.athens.components.MeshComponent;
 import za.co.sourlemon.acropolis.ems.ComponentFactory;
 
@@ -40,52 +41,72 @@ public class HeightmapMeshFactory implements ComponentFactory<MeshComponent, Hei
     {
         MeshComponent mesh = new MeshComponent();
 
-        int w = request.heightmap.heights.length;
-        int h = request.heightmap.heights[0].length;
+        final int w = request.heightmap.heights.length;
+        final int h = request.heightmap.heights[0].length;
+
+        final float xStep = 1.0f / (float) w;
+        final float zStep = 1.0f / (float) h;
         
-        float xStep = 1.0f/(float)w;
-        float zStep = 1.0f/(float)h;
-        
+        final float[][] hm = request.heightmap.heights;
+
         float x, y, z, u, v, nx, ny, nz;
-        for (int i = 0; i < w; i++)
+        for (int j = 0; j < h; j++)
         {
-            for (int j = 0; j < h; j++)
+            for (int i = 0; i < w; i++)
             {
-                x = i*xStep+OFF;
-                z = j*zStep+OFF;
-                y = request.heightmap.heights[i][j]+OFF;
+                x = i * xStep + OFF;
+                z = j * zStep + OFF;
+                y = hm[i][j] + OFF;
                 mesh.pos.add(new float[]
                 {
                     x, y, z
                 });
-                u = i*xStep;
-                v = j*zStep;
+                u = i * xStep;
+                v = j * zStep;
                 mesh.tex.add(new float[]
                 {
                     u, v
                 });
                 // TODO: normals
-                nx = nz = 0;
-                ny = 1;
+                float Hx = hm[i < w - 1 ? i + 1 : i][j] - hm[i > 0 ? i - 1 : i][j];
+                if (i == 0 || i == w - 1)
+                {
+                    Hx *= 2;
+                }
+                Hx /= xStep;
+
+                float Hz = hm[i][j < h - 1 ? j + 1 : j] - hm[i][j > 0 ? j - 1 : j];
+                if (j == 0 || j == h - 1)
+                {
+                    Hz *= 2;
+                }
+                Hz /= zStep;
+                
+                Vec3 n = new Vec3(-Hx, 1.0f, -Hz).getUnitVector();
+                
                 mesh.norm.add(new float[]
                 {
-                    nx, ny, nz
+                    n.getX(), n.getY(), n.getZ()
                 });
             }
         }
         int a, b, c, d;
-        for (int i = 0; i < w-1; i++)
+        for (int j = 0; j < h - 1; j++)
         {
-            for (int j = 0; j < h-1; j++)
+            for (int i = 0; i < w - 1; i++)
             {
-                a = i+w*j;
-                b = a+1;
-                c = a+w;
-                d = c+1;
+                a = i + j*w;
+                b = a + 1;
+                c = b + w;
+                d = a + w;
                 mesh.inds.add(new int[][]
                 {
-                    {a,a,a},{b,b,b},{d,d,d},
-                    {b,b,b},{c,c,c},{d,d,d}
+                    {a, a, a},{c, c, c},{b, b, b}
+                    //{a, a, a},{b, b, b},{d, d, d}
+                });
+                mesh.inds.add(new int[][]
+                {
+                    {a, a, a},{d, d, d},{c, c, c}
                 });
             }
         }

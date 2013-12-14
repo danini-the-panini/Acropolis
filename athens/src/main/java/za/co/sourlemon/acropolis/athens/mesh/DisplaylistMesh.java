@@ -57,15 +57,15 @@ public class DisplaylistMesh implements Mesh
                         float[] p;
                         if (v1[1] != -1)
                         {
-                            p = mesh.tex.get(v1[1] - 1);
+                            p = mesh.tex.get(v1[1]);
                             glTexCoord2f(p[0], p[1]);
                         }
                         if (v1[2] != -1)
                         {
-                            p = mesh.norm.get(v1[2] - 1);
+                            p = mesh.norm.get(v1[2]);
                             glNormal3f(p[0], p[1], p[2]);
                         }
-                        p = mesh.pos.get(v1[0] - 1);
+                        p = mesh.pos.get(v1[0]);
                         glVertex3f(p[0], p[1], p[2]); // emit vertex and all attributes
                     }
                 }

@@ -35,25 +35,25 @@ public class WavefrontFactoryTest {
     public void testParseVertex() {
         System.out.println("parse 'v'");
         String string = "7";
-        int[] expResult = { 7, -1, -1};
+        int[] expResult = { 6, -1, -1};
         int[] result = WavefrontFactory.parseVertex(string);
         assertArrayEquals(expResult, result);
         
         System.out.println("parse 'v/vt'");
         string = "7/12";
-        expResult = new int[]{ 7, 12, -1};
+        expResult = new int[]{ 6, 11, -1};
         result = WavefrontFactory.parseVertex(string);
         assertArrayEquals(expResult, result);
         
         System.out.println("parse 'v//vn'");
         string = "7//12";
-        expResult = new int[]{ 7, -1, 12};
+        expResult = new int[]{ 6, -1, 11};
         result = WavefrontFactory.parseVertex(string);
         assertArrayEquals(expResult, result);
         
         System.out.println("parse 'v/vt/vn'");
-        string = "7//12";
-        expResult = new int[]{ 7, -1, 12};
+        string = "7/6/12";
+        expResult = new int[]{ 6, 5, 11};
         result = WavefrontFactory.parseVertex(string);
         assertArrayEquals(expResult, result);
     }

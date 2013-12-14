@@ -119,7 +119,7 @@ public class WavefrontFactory implements ComponentFactory<MeshComponent, Wavefro
      */
     public static int[] parseVertex(String string)
     {
-        int v, vt = -1, vn = -1;
+        int v, vt = 0, vn = 0;
 
         int a = string.indexOf('/');
         int b = string.lastIndexOf('/');
@@ -148,7 +148,7 @@ public class WavefrontFactory implements ComponentFactory<MeshComponent, Wavefro
 
         return new int[]
         {
-            v, vt, vn
+            v-1, vt-1, vn-1
         };
     }
 

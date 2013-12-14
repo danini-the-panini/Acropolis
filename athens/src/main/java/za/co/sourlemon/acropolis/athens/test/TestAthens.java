@@ -30,8 +30,13 @@ import za.co.sourlemon.acropolis.athens.components.Perspective;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
+import za.co.sourlemon.acropolis.athens.components.Heightmap;
 import za.co.sourlemon.acropolis.athens.components.NoClipCamera;
 import za.co.sourlemon.acropolis.athens.components.Window;
+import za.co.sourlemon.acropolis.athens.factories.HeightmapFactory;
+import za.co.sourlemon.acropolis.athens.factories.HeightmapFactoryRequest;
+import za.co.sourlemon.acropolis.athens.factories.HeightmapMeshFactory;
+import za.co.sourlemon.acropolis.athens.factories.HeightmapMeshFactoryRequest;
 import za.co.sourlemon.acropolis.athens.factories.WavefrontFactory;
 import za.co.sourlemon.acropolis.athens.factories.WavefrontFactoryRequest;
 import za.co.sourlemon.acropolis.athens.systems.NoClipCameraSystem;
@@ -73,8 +78,9 @@ public class TestAthens
             {
                 setupThreads();
                 
-                engine.addEntity(createMonkey(new State()));
                 engine.addEntity(createCamera());
+                engine.addEntity(createLand());
+                engine.addEntity(createMonkey(new State()));
 
                 engine.setGlobal(new Sun(SUN_VEC));
 
@@ -120,6 +126,19 @@ public class TestAthens
         cameraEntity.addComponent(engine.getGlobal(Camera.class));
         cameraEntity.addComponent(new NoClipCamera(5, 25, 0.1f));
         return cameraEntity;
+    }
+    
+    private static Entity createLand()
+    {
+        HeightmapFactory hmFactory = new HeightmapFactory();
+        HeightmapMeshFactory hmMeshFactory = new HeightmapMeshFactory();
+        Entity entity = new Entity();
+        entity.addComponent(new State(Vec3.VEC3_ZERO, Vec4.VEC4_ZERO, new Vec3(256,0.1f,256)));
+        Heightmap hm = hmFactory.create(new HeightmapFactoryRequest("hm1"));
+        entity.addComponent(hm);
+        entity.addComponent(hmMeshFactory.create(new HeightmapMeshFactoryRequest(hm)));
+        entity.addComponent(new Renderable("monkey", new Vec3(0,0.7f,0), 1.0f));
+        return entity;
     }
 
     private static void setupThreads()
