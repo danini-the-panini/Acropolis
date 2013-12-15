@@ -48,7 +48,7 @@ public class HeightmapMeshFactory implements ComponentFactory<MeshComponent, Hei
         final float zStep = 1.0f / (float) h;
         
         final float[][] hm = request.heightmap.heights;
-
+        
         float x, y, z, u, v;
         for (int j = 0; j < h; j++)
         {
@@ -67,7 +67,6 @@ public class HeightmapMeshFactory implements ComponentFactory<MeshComponent, Hei
                 {
                     u, v
                 });
-                // TODO: normals
                 float Hx = hm[i < w - 1 ? i + 1 : i][j] - hm[i > 0 ? i - 1 : i][j];
                 if (i == 0 || i == w - 1)
                 {

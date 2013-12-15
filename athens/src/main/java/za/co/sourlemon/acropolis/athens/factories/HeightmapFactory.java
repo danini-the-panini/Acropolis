@@ -49,15 +49,16 @@ public class HeightmapFactory implements ComponentFactory<Heightmap, HeightmapFa
             
             int w = image.getWidth();
             int l = image.getHeight();
+            final float max = (float)(1 << image.getColorModel().getComponentSize()[0]);
             Heightmap hm = new Heightmap(w, l);
-            float[] data = image.getRaster().getSamples(0, 0, w, l, 0, new float[w*l]);
+            int[] data = image.getRaster().getSamples(0, 0, w, l, 0, new int[w*l]);
             int i;
             for (int x = 0; x < w; x++)
             {
                 for (int z = 0; z < l; z++)
                 {
                     i = x+z*w;
-                    hm.heights[x][z] = data[i];
+                    hm.heights[x][z] = data[i]/max;
                 }
             }
             return hm;
