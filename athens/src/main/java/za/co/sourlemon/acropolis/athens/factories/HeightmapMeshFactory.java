@@ -49,7 +49,7 @@ public class HeightmapMeshFactory implements ComponentFactory<MeshComponent, Hei
         
         final float[][] hm = request.heightmap.heights;
 
-        float x, y, z, u, v, nx, ny, nz;
+        float x, y, z, u, v;
         for (int j = 0; j < h; j++)
         {
             for (int i = 0; i < w; i++)

@@ -51,7 +51,7 @@ public class OrthoCameraSystem extends AbstractSystem
 //            dir = at.subtract(eye).getUnitVector();
 //            right = dir.cross(up).getUnitVector();
 
-            node.camera.view = Matrices.lookAt(node.view.eye, node.view.at,
+            node.camera.viewMatrix = Matrices.lookAt(node.view.eye, node.view.at,
                     node.view.up);
             node.camera.projection = Matrices.ortho(node.projection.xleft,
                     node.projection.xright, node.projection.ybottom, node.projection.ytop,

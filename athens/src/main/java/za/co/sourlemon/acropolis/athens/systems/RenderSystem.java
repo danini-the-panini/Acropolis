@@ -174,9 +174,10 @@ public class RenderSystem extends AbstractSystem
         {
             Program program = e.getKey();
             program.use();
-            program.setView(camera.view);
+            program.setView(camera.viewMatrix);
             program.setProjection(camera.projection);
             program.setSun(engine.getGlobal(Sun.class).location);
+            program.setEye(camera.eye);
             for (Map.Entry<ID<Entity>, RenderNode> e2 : e.getValue().entrySet())
             {
                 RenderNode node = e2.getValue();

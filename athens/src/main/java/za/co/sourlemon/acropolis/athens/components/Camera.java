@@ -25,6 +25,7 @@
 package za.co.sourlemon.acropolis.athens.components;
 
 import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Vec3;
 import za.co.sourlemon.acropolis.ems.Component;
 
 /**
@@ -33,8 +34,10 @@ import za.co.sourlemon.acropolis.ems.Component;
  */
 public class Camera extends Component
 {
-    public Mat4 view = Mat4.MAT4_IDENTITY;
+    public Mat4 viewMatrix = Mat4.MAT4_IDENTITY;
     public Mat4 projection = Mat4.MAT4_IDENTITY;
+    
+    public Vec3 eye = Vec3.VEC3_ZERO;
 
     public Camera()
     {
@@ -42,7 +45,7 @@ public class Camera extends Component
 
     public Camera(Mat4 view, Mat4 projection)
     {
-        this.view = view;
+        this.viewMatrix = view;
         this.projection = projection;
     }
     

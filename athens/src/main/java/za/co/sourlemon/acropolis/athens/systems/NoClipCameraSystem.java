@@ -81,33 +81,33 @@ public class NoClipCameraSystem extends AbstractSystem
         }
     }
     
-    public void moveForward(View camera, Vec3 dir, float amount)
+    public void moveForward(View view, Vec3 dir, float amount)
     {
         Vec3 step = dir.multiply(amount);
         
-        camera.eye = camera.eye.add(step);
-        camera.at = camera.at.add(step);
+        view.eye = view.eye.add(step);
+        view.at = view.at.add(step);
     }
     
-    public void moveRight(View camera, Vec3 right, float amount)
+    public void moveRight(View view, Vec3 right, float amount)
     {
         Vec3 step = right.multiply(amount);
         
-        camera.eye = camera.eye.add(step);
-        camera.at = camera.at.add(step);
+        view.eye = view.eye.add(step);
+        view.at = view.at.add(step);
     }
     
-    public void rotate(View camera, Vec3 dir, Vec3 right, float lateral, float vertical)
+    public void rotate(View view, Vec3 dir, Vec3 right, float lateral, float vertical)
     {
         Vec4 d = new Vec4(dir.getX(), dir.getY(), dir.getZ(), 0.0f);
 
         Mat4 rot = new Mat4(1.0f);
         rot = Matrices.rotate(rot, vertical, right);
-        rot = Matrices.rotate(rot, lateral, camera.up);
+        rot = Matrices.rotate(rot, lateral, view.up);
 
         d = rot.multiply(d);
 
-        camera.at = camera.eye.add(new Vec3(d.getX(),d.getY(),d.getZ()));
+        view.at = view.eye.add(new Vec3(d.getX(),d.getY(),d.getZ()));
     }
 
     @Override
