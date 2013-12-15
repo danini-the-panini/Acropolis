@@ -37,6 +37,7 @@ import za.co.sourlemon.acropolis.athens.factories.HeightmapFactory;
 import za.co.sourlemon.acropolis.athens.factories.HeightmapFactoryRequest;
 import za.co.sourlemon.acropolis.athens.factories.HeightmapMeshFactory;
 import za.co.sourlemon.acropolis.athens.factories.HeightmapMeshFactoryRequest;
+import za.co.sourlemon.acropolis.athens.factories.RelaxedHeightmapFactory;
 import za.co.sourlemon.acropolis.athens.factories.WavefrontFactory;
 import za.co.sourlemon.acropolis.athens.factories.WavefrontFactoryRequest;
 import za.co.sourlemon.acropolis.athens.systems.NoClipCameraSystem;
@@ -130,7 +131,7 @@ public class TestAthens
     
     private static Entity createLand()
     {
-        HeightmapFactory hmFactory = new HeightmapFactory();
+        HeightmapFactory hmFactory = new RelaxedHeightmapFactory();
         HeightmapMeshFactory hmMeshFactory = new HeightmapMeshFactory();
         Entity entity = new Entity();
         entity.addComponent(new State(Vec3.VEC3_ZERO, Vec4.VEC4_ZERO, new Vec3(256,25,256)));
