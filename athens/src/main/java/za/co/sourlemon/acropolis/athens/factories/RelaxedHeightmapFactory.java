@@ -37,7 +37,7 @@ import static za.co.sourlemon.acropolis.athens.factories.HeightmapFactory.TEX_EX
  */
 public class RelaxedHeightmapFactory extends HeightmapFactory
 {
-    public static final int ITERATIONS = 25;
+    public static final int ITERATIONS = 100, FACTOR = 1;
     
     public static int clamp(int v, int min, int max)
     {
@@ -57,10 +57,10 @@ public class RelaxedHeightmapFactory extends HeightmapFactory
             int w = image.getWidth();
             int l = image.getHeight();
             int bits = image.getColorModel().getComponentSize()[0];
-            if (bits == 16)
-            {
-                return new HeightmapFactory().create(request);
-            }
+//            if (bits == 16)
+//            {
+//                return new HeightmapFactory().create(request);
+//            }
             Heightmap heightmap = new Heightmap(w, l);
             int[] data = image.getRaster().getSamples(0, 0, w, l, 0, new int[w * l]);
 
@@ -72,40 +72,41 @@ public class RelaxedHeightmapFactory extends HeightmapFactory
                 for (int z = 0; z < l; z++)
                 {
                     i = x + z * w;
-                    hm[x][z] = (data[i] << 8) | 0x77;
+                    hm[x][z] = (data[i] << 16) | 0xFFFF;
                 }
             }
             
             int avg;
             int top, ntop;
+            int n = (1 << FACTOR)+1;
+            int hn = n/2;
             for (int it = 0; it < ITERATIONS; it++)
             {
                 for (int x = 0; x < w; x++)
                 {
                     for (int z = 0; z < l; z++)
                     {
-                        // TODO: get rid of magic numbers!
                         avg = 0;
-                        top = hm[x][z] >> 8;
-                        for (int x2 = x-1; x2 <= x+1; x2++)
+                        top = hm[x][z] >> 16;
+                        for (int x2 = x-hn; x2 <= x+hn; x2++)
                         {
-                            for (int z2 = z-1; z2 <= z+1; z2++)
+                            for (int z2 = z-hn; z2 <= z+hn; z2++)
                             {
                                 avg += hm[clamp(x2,0,w)][clamp(z2,0,l)];
                             }
                         }
-                        avg /= (3*3);
+                        avg /= (n*n);
 
-                        ntop = avg >> 8;
-                        if (ntop > top) hm[x][z] = hm[x][z] | 0x00FF;
-                        else if (ntop < top) hm[x][z] = hm[x][z] & 0xFF00;
+                        ntop = avg >> 16;
+                        if (ntop > top) hm[x][z] = hm[x][z] | 0x00FFFF;
+                        else if (ntop < top) hm[x][z] = hm[x][z] & 0xFF0000;
                         else
                             hm[x][z] = avg;
                     }
                 }
             }
             
-            float max = (float)(1 << 16);
+            float max = (float)(1 << 24);
             
             for (int x = 0; x < w; x++)
             {

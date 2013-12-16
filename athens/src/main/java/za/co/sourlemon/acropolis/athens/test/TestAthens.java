@@ -134,7 +134,7 @@ public class TestAthens
         HeightmapFactory hmFactory = new RelaxedHeightmapFactory();
         HeightmapMeshFactory hmMeshFactory = new HeightmapMeshFactory();
         Entity entity = new Entity();
-        entity.addComponent(new State(Vec3.VEC3_ZERO, Vec4.VEC4_ZERO, new Vec3(256,25,256)));
+        entity.addComponent(new State(Vec3.VEC3_ZERO, Vec4.VEC4_ZERO, new Vec3(128,128,128)));
         Heightmap hm = hmFactory.create(new HeightmapFactoryRequest("hm1"));
         entity.addComponent(hm);
         entity.addComponent(hmMeshFactory.create(new HeightmapMeshFactoryRequest(hm)));
