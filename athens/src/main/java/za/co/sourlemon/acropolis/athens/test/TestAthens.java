@@ -112,7 +112,7 @@ public class TestAthens
         Entity entity = new Entity();
         entity.addComponent(state);
         entity.addComponent(new Velocity(Vec3.VEC3_ZERO, Vec3.VEC3_ZERO, new Vec4(0, 45, 0, 0), Vec4.VEC4_ZERO));
-        entity.addComponent(new Renderable("monkey", new Vec3(1, 0, 1), 1.0f));
+        entity.addComponent(new Renderable("pplighting", new Vec3(1, 0, 1), 1.0f));
         entity.addComponent(wavefrontFactory.create(new WavefrontFactoryRequest("monkey")));
         return entity;
     }
@@ -134,11 +134,11 @@ public class TestAthens
         HeightmapFactory hmFactory = new RelaxedHeightmapFactory();
         HeightmapMeshFactory hmMeshFactory = new HeightmapMeshFactory();
         Entity entity = new Entity();
-        entity.addComponent(new State(Vec3.VEC3_ZERO, Vec4.VEC4_ZERO, new Vec3(256,25,256)));
-        Heightmap hm = hmFactory.create(new HeightmapFactoryRequest("hm1"));
+        entity.addComponent(new State(Vec3.VEC3_ZERO, Vec4.VEC4_ZERO, new Vec3(128,128,128)));
+        Heightmap hm = hmFactory.create(new HeightmapFactoryRequest("hm2",0.1f));
         entity.addComponent(hm);
         entity.addComponent(hmMeshFactory.create(new HeightmapMeshFactoryRequest(hm)));
-        entity.addComponent(new Renderable("monkey", new Vec3(0,0.7f,0), 1.0f));
+        entity.addComponent(new Renderable("pvlighting", new Vec3(0,0.7f,0), 1.0f));
         return entity;
     }
 

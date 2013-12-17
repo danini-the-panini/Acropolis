@@ -33,10 +33,12 @@ import za.co.sourlemon.acropolis.ems.FactoryRequest;
 public class HeightmapFactoryRequest implements FactoryRequest
 {
     protected String heightmap;
+    protected float height;
 
-    public HeightmapFactoryRequest(String heightmap)
+    public HeightmapFactoryRequest(String heightmap, float height)
     {
         this.heightmap = heightmap;
+        this.height = height;
     }
     
 }

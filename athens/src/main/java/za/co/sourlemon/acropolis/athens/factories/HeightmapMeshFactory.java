@@ -56,7 +56,7 @@ public class HeightmapMeshFactory implements ComponentFactory<MeshComponent, Hei
             {
                 x = i * xStep + OFF;
                 z = j * zStep + OFF;
-                y = hm[i][j] + OFF;
+                y = hm[i][j];
                 mesh.pos.add(new float[]
                 {
                     x, y, z

@@ -58,7 +58,7 @@ public class HeightmapFactory implements ComponentFactory<Heightmap, HeightmapFa
                 for (int z = 0; z < l; z++)
                 {
                     i = x+z*w;
-                    hm.heights[x][z] = data[i]/max;
+                    hm.heights[x][z] = ((float)data[i]/max-0.5f)*request.height;
                 }
             }
             return hm;
