@@ -37,7 +37,7 @@ import static za.co.sourlemon.acropolis.athens.factories.HeightmapFactory.TEX_EX
  */
 public class RelaxedHeightmapFactory extends HeightmapFactory
 {
-    public static final int ITERATIONS = 50, FACTOR = 2;
+    public static final int ITERATIONS = 20, FACTOR = 2;
     
     public static int clamp(int v, int min, int max)
     {

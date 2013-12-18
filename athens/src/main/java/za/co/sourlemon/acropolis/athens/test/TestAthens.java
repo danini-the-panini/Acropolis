@@ -112,7 +112,7 @@ public class TestAthens
         Entity entity = new Entity();
         entity.addComponent(state);
         entity.addComponent(new Velocity(Vec3.VEC3_ZERO, Vec3.VEC3_ZERO, new Vec4(0, 45, 0, 0), Vec4.VEC4_ZERO));
-        entity.addComponent(new Renderable("pplighting", new Vec3(1, 0, 1), 1.0f));
+        entity.addComponent(new Renderable("pvlighting", new Vec3(1, 0, 1), 1.0f));
         entity.addComponent(wavefrontFactory.create(new WavefrontFactoryRequest("monkey")));
         return entity;
     }
@@ -121,7 +121,7 @@ public class TestAthens
     {
         Entity cameraEntity = new Entity();
         Perspective projection = new Perspective(
-                45.0f, 0.1f, 100.0f);
+                45.0f, 0.01f, 200.0f);
         cameraEntity.addComponent(VIEW);
         cameraEntity.addComponent(projection);
         cameraEntity.addComponent(engine.getGlobal(Camera.class));
