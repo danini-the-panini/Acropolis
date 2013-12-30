@@ -21,35 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.components;
+package za.co.sourlemon.acropolis.athens.systems;
 
 import com.hackoeur.jglm.Vec3;
-import za.co.sourlemon.acropolis.ems.Component;
+import za.co.sourlemon.acropolis.athens.components.View;
+import za.co.sourlemon.acropolis.athens.nodes.StereoNode;
+import za.co.sourlemon.acropolis.ems.AbstractSystem;
+import za.co.sourlemon.acropolis.ems.Engine;
 
 /**
  *
  * @author daniel
  */
-public class View extends Component
+public class StereoSystem extends AbstractSystem
 {
-    
-    /** View location. */
-    public Vec3 eye = Vec3.VEC3_ZERO;
-    /** Point that the camera is looking at. */
-    public Vec3 at = new Vec3(0,0,-1);
-    /** Up direction from the camera. */
-    public Vec3 up = new Vec3(0,1,0);
 
-    public View()
+    @Override
+    public void update(Engine engine, double time, double dt)
     {
+        for (StereoNode node : engine.getNodeList(StereoNode.class))
+        {
+            View left = node.stereo.left;
+            View right = node.stereo.right;
+            View center = node.center;
+            
+            left.up = right.up = center.up;
+            Vec3 off = center.at.subtract(center.eye).cross(center.up).getUnitVector().multiply(node.stereo.dist * 0.5f);
+            left.eye = center.eye.add(off.getNegated());
+            left.at = center.at.add(off.getNegated());
+            right.eye = center.eye.add(off);
+            right.at = center.at.add(off);
+        }
     }
-    
-    public View(Vec3 eye, Vec3 at, Vec3 up)
-    {
-        this.eye = eye;
-        this.up = up;
-        this.at = at;
-    }
-    
     
 }

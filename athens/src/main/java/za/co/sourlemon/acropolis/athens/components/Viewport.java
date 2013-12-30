@@ -23,32 +23,26 @@
  */
 package za.co.sourlemon.acropolis.athens.components;
 
-import com.hackoeur.jglm.Vec3;
 import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
  * @author daniel
  */
-public class View extends Component
+public class Viewport extends Component
 {
-    
-    /** View location. */
-    public Vec3 eye = Vec3.VEC3_ZERO;
-    /** Point that the camera is looking at. */
-    public Vec3 at = new Vec3(0,0,-1);
-    /** Up direction from the camera. */
-    public Vec3 up = new Vec3(0,1,0);
+    public float x = 0, y = 0, width = 1, height = 1;
 
-    public View()
+    public Viewport()
     {
     }
-    
-    public View(Vec3 eye, Vec3 at, Vec3 up)
+
+    public Viewport(float x, float y, float width, float height)
     {
-        this.eye = eye;
-        this.up = up;
-        this.at = at;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
     
     

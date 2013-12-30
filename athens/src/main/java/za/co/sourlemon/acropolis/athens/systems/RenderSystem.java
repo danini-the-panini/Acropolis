@@ -43,6 +43,7 @@ import za.co.sourlemon.acropolis.athens.components.MouseComponent;
 import za.co.sourlemon.acropolis.athens.components.Window;
 import za.co.sourlemon.acropolis.athens.mesh.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
+import za.co.sourlemon.acropolis.athens.nodes.ViewportNode;
 import za.co.sourlemon.acropolis.athens.shader.Program;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
@@ -71,8 +72,7 @@ public class RenderSystem extends AbstractSystem
         Window window = engine.getGlobal(Window.class);
         try
         {
-            Display.setDisplayMode(new DisplayMode(window.width, window.height));
-            Display.setResizable(true);
+            Display.setDisplayModeAndFullscreen(new DisplayMode(window.width, window.height));
             Display.create();
 
             glClearColor(1, 1, 1, 1);
@@ -96,7 +96,6 @@ public class RenderSystem extends AbstractSystem
         {
             window.width = Display.getWidth();
             window.height = Display.getHeight();
-            glViewport(0, 0, window.width, window.height);
         }
         
         KeyboardComponent keyboard = engine.getGlobal(KeyboardComponent.class);
@@ -167,25 +166,33 @@ public class RenderSystem extends AbstractSystem
             renderables.put(id, node);
         }
         
-        Camera camera = engine.getGlobal(Camera.class);
-        
-        // for each shader, draw each object that uses that shader
-        for (Map.Entry<Program, Map<ID<Entity>, RenderNode>> e : objects.entrySet())
+        for (ViewportNode vpnode : engine.getNodeList(ViewportNode.class))
         {
-            Program program = e.getKey();
-            program.use();
-            program.setView(camera.viewMatrix);
-            program.setProjection(camera.projection);
-            program.setSun(engine.getGlobal(Sun.class).location);
-            program.setEye(camera.eye);
-            for (Map.Entry<ID<Entity>, RenderNode> e2 : e.getValue().entrySet())
+            Camera camera = vpnode.camera;
+            glViewport(
+                    (int)(window.width*vpnode.viewport.x),
+                    (int)(window.height*vpnode.viewport.y),
+                    (int)(window.width*vpnode.viewport.width),
+                    (int)(window.height*vpnode.viewport.height));
+            
+            // for each shader, draw each object that uses that shader
+            for (Map.Entry<Program, Map<ID<Entity>, RenderNode>> e : objects.entrySet())
             {
-                RenderNode node = e2.getValue();
-                program.setWorld(worlds.get(e2.getKey()));
-                program.setColour(node.renderable.colour);
-                program.setOpacity(node.renderable.opacity);
-                Mesh mesh = resourceManager.getMesh(node.mesh);
-                mesh.draw();
+                Program program = e.getKey();
+                program.use();
+                program.setView(camera.viewMatrix);
+                program.setProjection(camera.projection);
+                program.setSun(engine.getGlobal(Sun.class).location);
+                program.setEye(camera.eye);
+                for (Map.Entry<ID<Entity>, RenderNode> e2 : e.getValue().entrySet())
+                {
+                    RenderNode node = e2.getValue();
+                    program.setWorld(worlds.get(e2.getKey()));
+                    program.setColour(node.renderable.colour);
+                    program.setOpacity(node.renderable.opacity);
+                    Mesh mesh = resourceManager.getMesh(node.mesh);
+                    mesh.draw();
+                }
             }
         }
         

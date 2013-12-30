@@ -21,35 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.components;
+package za.co.sourlemon.acropolis.athens.nodes;
 
-import com.hackoeur.jglm.Vec3;
-import za.co.sourlemon.acropolis.ems.Component;
+import za.co.sourlemon.acropolis.athens.components.Stereo;
+import za.co.sourlemon.acropolis.athens.components.View;
+import za.co.sourlemon.acropolis.ems.Entity;
+import za.co.sourlemon.acropolis.ems.Node;
 
 /**
  *
  * @author daniel
  */
-public class View extends Component
+public class StereoNode extends Node
 {
-    
-    /** View location. */
-    public Vec3 eye = Vec3.VEC3_ZERO;
-    /** Point that the camera is looking at. */
-    public Vec3 at = new Vec3(0,0,-1);
-    /** Up direction from the camera. */
-    public Vec3 up = new Vec3(0,1,0);
 
-    public View()
+    public StereoNode(Entity entity)
     {
+        super(entity);
     }
     
-    public View(Vec3 eye, Vec3 at, Vec3 up)
-    {
-        this.eye = eye;
-        this.up = up;
-        this.at = at;
-    }
-    
-    
+    public Stereo stereo;
+    public View center;
 }

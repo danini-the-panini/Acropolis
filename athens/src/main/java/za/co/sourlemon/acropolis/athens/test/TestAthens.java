@@ -32,6 +32,8 @@ import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
 import za.co.sourlemon.acropolis.athens.components.Heightmap;
 import za.co.sourlemon.acropolis.athens.components.NoClipCamera;
+import za.co.sourlemon.acropolis.athens.components.Stereo;
+import za.co.sourlemon.acropolis.athens.components.Viewport;
 import za.co.sourlemon.acropolis.athens.components.Window;
 import za.co.sourlemon.acropolis.athens.factories.HeightmapFactory;
 import za.co.sourlemon.acropolis.athens.factories.HeightmapFactoryRequest;
@@ -43,6 +45,7 @@ import za.co.sourlemon.acropolis.athens.factories.WavefrontFactoryRequest;
 import za.co.sourlemon.acropolis.athens.systems.NoClipCameraSystem;
 import za.co.sourlemon.acropolis.athens.systems.PerspectiveCameraSystem;
 import za.co.sourlemon.acropolis.athens.systems.RenderSystem;
+import za.co.sourlemon.acropolis.athens.systems.StereoSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.FixedTimingThread;
@@ -60,13 +63,18 @@ public class TestAthens
 {
 
     public static final Vec3 SUN_VEC = new Vec3(-2.47511f, 3.87557f, 3.17864f);
-    public static final View VIEW = new View(
+    public static final View STARTING_VIEW = new View(
             new Vec3(3, 3, 2), // eye
             new Vec3(0f, 0, 0f), // at
             new Vec3(0f, 1f, 0f) // up
     );
     public static final Camera CAMERA = new Camera();
     final static Engine engine = new Engine();
+    public static final Perspective PERSPECTIVE = new Perspective(
+                                 45.0f, 0.01f, 200.0f);
+    public static final Viewport LEFT_VIEWPORT = new Viewport(0, 0, 0.5f, 1.0f);
+    public static final Viewport RIGHT_VIEWPORT = new Viewport(0.5f, 0, 0.5f, 1.0f);
+    public static final float STEREO_DIST = 1.0f;
 
     public static void main(String[] args)
     {
@@ -77,15 +85,23 @@ public class TestAthens
             @Override
             public void run()
             {
+                Window window = engine.getGlobal(Window.class);
+                window.width = 1920;
+                window.height = 1080;
+                
                 setupThreads();
                 
-                engine.addEntity(createCamera());
+                Entity leftVP = createStereoViewport(LEFT_VIEWPORT);
+                Entity rightVP = createStereoViewport(RIGHT_VIEWPORT);
+                engine.addEntity(createStereoCamera(leftVP.getComponent(View.class),rightVP.getComponent(View.class)));
+                engine.addEntity(leftVP);
+                engine.addEntity(rightVP);
+//                engine.addEntity(createCamera());
                 engine.addEntity(createLand());
                 engine.addEntity(createMonkey(new State()));
 
                 engine.setGlobal(new Sun(SUN_VEC));
 
-                Window window = engine.getGlobal(Window.class);
                 while (!window.closing)
                 {
                     engine.update();
@@ -119,14 +135,33 @@ public class TestAthens
 
     private static Entity createCamera()
     {
-        Entity cameraEntity = new Entity();
-        Perspective projection = new Perspective(
-                45.0f, 0.01f, 200.0f);
-        cameraEntity.addComponent(VIEW);
-        cameraEntity.addComponent(projection);
-        cameraEntity.addComponent(engine.getGlobal(Camera.class));
-        cameraEntity.addComponent(new NoClipCamera(5, 25, 0.1f));
-        return cameraEntity;
+        Entity entity = new Entity();
+        entity.addComponent(new Camera());
+        entity.addComponent(PERSPECTIVE);
+        entity.addComponent(STARTING_VIEW);
+        entity.addComponent(new Viewport());
+        entity.addComponent(new NoClipCamera(5, 25, 0.1f));
+        return entity;
+    }
+    
+    private static Entity createStereoCamera(View left, View right)
+    {
+        Entity entity = new Entity();
+        entity.addComponent(STARTING_VIEW);
+        entity.addComponent(new Stereo(left, right, STEREO_DIST));
+        entity.addComponent(new Camera());
+        entity.addComponent(new NoClipCamera(5, 25, 0.1f));
+        return entity;
+    }
+    
+    private static Entity createStereoViewport(Viewport vp)
+    {
+        Entity entity = new Entity();
+        entity.addComponent(new Camera());
+        entity.addComponent(PERSPECTIVE);
+        entity.addComponent(new View());
+        entity.addComponent(vp);
+        return entity;
     }
     
     private static Entity createLand()
@@ -152,9 +187,10 @@ public class TestAthens
         //renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);
         renderThread = new VariableTimingThread();
 
-        renderThread.addSystem(new PerspectiveCameraSystem());
         renderThread.addSystem(new RenderSystem());
         renderThread.addSystem(new NoClipCameraSystem());
+        renderThread.addSystem(new StereoSystem());
+        renderThread.addSystem(new PerspectiveCameraSystem());
 
         engine.addThread(logicThread);
         engine.addThread(renderThread);

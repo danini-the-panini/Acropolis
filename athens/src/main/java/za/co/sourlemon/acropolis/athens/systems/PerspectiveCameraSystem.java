@@ -40,27 +40,21 @@ public class PerspectiveCameraSystem extends AbstractSystem
     @Override
     public void update(Engine engine, double time, double dt)
     {
-        Camera activeCamera = engine.getGlobal(Camera.class);
         Window window = engine.getGlobal(Window.class);
 
         for (PerspectiveCameraNode node : engine.getNodeList(PerspectiveCameraNode.class))
         {
-            if (node.camera == activeCamera)
-            {
-            
-    //            dir = at.subtract(eye).getUnitVector();
-    //            right = dir.cross(up).getUnitVector();
 
-                node.camera.viewMatrix = Matrices.lookAt(node.view.eye, node.view.at,
-                        node.view.up);
-                float aspect = (float)window.width/(float)window.height;
-                node.camera.projection = Matrices.perspective(node.projection.fovY,
-                        aspect, node.projection.near, node.projection.far);
-                
-                node.camera.eye = node.view.eye;
-                
-                break;
-            }
+//            dir = at.subtract(eye).getUnitVector();
+//            right = dir.cross(up).getUnitVector();
+
+            node.camera.viewMatrix = Matrices.lookAt(node.view.eye, node.view.at,
+                    node.view.up);
+            float aspect = (float)window.width/(float)window.height;
+            node.camera.projection = Matrices.perspective(node.projection.fovY,
+                    aspect, node.projection.near, node.projection.far);
+
+            node.camera.eye = node.view.eye;
         }
     }
 
