@@ -204,14 +204,14 @@ public class TestAthens
     private static void setupThreads()
     {
         SystemThread logicThread;
-//        logicThread = new FixedTimingThread(1.0 / 60.0, 1.0 / 25.0);
-        logicThread = new VariableTimingThread();
+        logicThread = new FixedTimingThread(1.0 / 60.0, 1.0 / 25.0);
+//        logicThread = new VariableTimingThread();
 
         logicThread.addSystem(new MovementSystem());
 
         SystemThread renderThread;
-//        renderThread = new FixedTimingThread(1.0 / 30, 1.0 / 25.0);
-        renderThread = new VariableTimingThread();
+        renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);
+//        renderThread = new VariableTimingThread();
 
         renderThread.addSystem(new RenderSystem());
         renderThread.addSystem(new NoClipCameraSystem());

@@ -80,6 +80,7 @@ public class RenderSystem extends AbstractSystem
                 break;
             }
             Display.setFullscreen(true);
+            Display.setVSyncEnabled(true);
             Display.create();   
 
             glClearColor(1, 1, 1, 1);
