@@ -25,6 +25,7 @@ package za.co.sourlemon.acropolis.athens.test;
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
+import javax.swing.JOptionPane;
 import za.co.sourlemon.acropolis.athens.components.View;
 import za.co.sourlemon.acropolis.athens.components.Perspective;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
@@ -72,8 +73,10 @@ public class TestAthens
     final static Engine engine = new Engine();
     public static final Perspective PERSPECTIVE = new Perspective(
                                  45.0f, 0.01f, 200.0f);
-    public static final Viewport LEFT_VIEWPORT = new Viewport(0, 0, 0.5f, 1.0f);
-    public static final Viewport RIGHT_VIEWPORT = new Viewport(0.5f, 0, 0.5f, 1.0f);
+    public static final Viewport LEFT_VIEWPORT_LR = new Viewport(0, 0, 0.5f, 1);
+    public static final Viewport RIGHT_VIEWPORT_LR = new Viewport(0.5f, 0, 0.5f, 1);
+    public static final Viewport LEFT_VIEWPORT_TB = new Viewport(0, 0.5f, 1.0f, 0.5f);
+    public static final Viewport RIGHT_VIEWPORT_TB = new Viewport(0, 0, 1.0f, 0.5f);
     public static final float STEREO_DIST = 1.0f;
 
     public static void main(String[] args)
@@ -85,22 +88,30 @@ public class TestAthens
             @Override
             public void run()
             {
+                
+                int option = JOptionPane.showOptionDialog(null, "Choose stereo type", "3D Options", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                        new String[]{"None","Top-Bottom","Left-Right"}, "None");
+                
+                switch (option)
+                {
+                    default: case 0:
+                        engine.addEntity(createCamera()); break;
+                    case 1:
+                        setupStereo(LEFT_VIEWPORT_TB, RIGHT_VIEWPORT_TB); break;
+                    case 2:
+                        setupStereo(LEFT_VIEWPORT_LR, RIGHT_VIEWPORT_LR); break;
+                        
+                }
+                engine.addEntity(createLand());
+                engine.addEntity(createMonkey(new State()));
+
+                engine.setGlobal(new Sun(SUN_VEC));
+                
                 Window window = engine.getGlobal(Window.class);
                 window.width = 1920;
                 window.height = 1080;
                 
                 setupThreads();
-                
-                Entity leftVP = createStereoViewport(LEFT_VIEWPORT);
-                Entity rightVP = createStereoViewport(RIGHT_VIEWPORT);
-                engine.addEntity(createStereoCamera(leftVP.getComponent(View.class),rightVP.getComponent(View.class)));
-                engine.addEntity(leftVP);
-                engine.addEntity(rightVP);
-//                engine.addEntity(createCamera());
-                engine.addEntity(createLand());
-                engine.addEntity(createMonkey(new State()));
-
-                engine.setGlobal(new Sun(SUN_VEC));
 
                 while (!window.closing)
                 {
@@ -120,6 +131,15 @@ public class TestAthens
         }
 
         engine.shutDown();
+    }
+    
+    private static void setupStereo(Viewport left, Viewport right)
+    {
+        Entity leftVP = createStereoViewport(left);
+        Entity rightVP = createStereoViewport(right);
+        engine.addEntity(createStereoCamera(leftVP.getComponent(View.class),rightVP.getComponent(View.class)));
+        engine.addEntity(leftVP);
+        engine.addEntity(rightVP);
     }
 
     private static Entity createMonkey(State state)

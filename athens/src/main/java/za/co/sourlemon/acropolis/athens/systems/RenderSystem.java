@@ -35,7 +35,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
 import za.co.sourlemon.acropolis.athens.ResourceManager;
-import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
 import za.co.sourlemon.acropolis.athens.components.KeyboardComponent;
@@ -72,8 +71,16 @@ public class RenderSystem extends AbstractSystem
         Window window = engine.getGlobal(Window.class);
         try
         {
-            Display.setDisplayModeAndFullscreen(new DisplayMode(window.width, window.height));
-            Display.create();
+            for (DisplayMode mode : Display.getAvailableDisplayModes())
+            {
+                if (mode.getWidth() == window.width
+                        && mode.getHeight() == window.height
+                        && mode.isFullscreenCapable())
+                    Display.setDisplayMode(mode);
+                break;
+            }
+            Display.setFullscreen(true);
+            Display.create();   
 
             glClearColor(1, 1, 1, 1);
             glEnable(GL_DEPTH_TEST);
