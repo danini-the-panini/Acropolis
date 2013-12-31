@@ -43,6 +43,7 @@ import za.co.sourlemon.acropolis.athens.factories.HeightmapMeshFactoryRequest;
 import za.co.sourlemon.acropolis.athens.factories.RelaxedHeightmapFactory;
 import za.co.sourlemon.acropolis.athens.factories.WavefrontFactory;
 import za.co.sourlemon.acropolis.athens.factories.WavefrontFactoryRequest;
+import za.co.sourlemon.acropolis.athens.systems.ExitOnCloseSystem;
 import za.co.sourlemon.acropolis.athens.systems.NoClipCameraSystem;
 import za.co.sourlemon.acropolis.athens.systems.PerspectiveCameraSystem;
 import za.co.sourlemon.acropolis.athens.systems.RenderSystem;
@@ -52,6 +53,7 @@ import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.FixedTimingThread;
 import za.co.sourlemon.acropolis.ems.SystemThread;
 import za.co.sourlemon.acropolis.ems.VariableTimingThread;
+import za.co.sourlemon.acropolis.ems.components.EngineInfo;
 import za.co.sourlemon.acropolis.tokyo.components.State;
 import za.co.sourlemon.acropolis.tokyo.components.Velocity;
 import za.co.sourlemon.acropolis.tokyo.systems.MovementSystem;
@@ -111,9 +113,11 @@ public class TestAthens
                 window.width = 1920;
                 window.height = 1080;
                 
+                EngineInfo info = engine.getGlobal(EngineInfo.class);
+                
                 setupThreads();
 
-                while (!window.closing)
+                while (!info.shuttingDown)
                 {
                     engine.update();
                 }
@@ -199,18 +203,21 @@ public class TestAthens
 
     private static void setupThreads()
     {
-        SystemThread logicThread = new FixedTimingThread(1.0 / 60.0, 1.0 / 25.0);
+        SystemThread logicThread;
+//        logicThread = new FixedTimingThread(1.0 / 60.0, 1.0 / 25.0);
+        logicThread = new VariableTimingThread();
 
         logicThread.addSystem(new MovementSystem());
 
         SystemThread renderThread;
-        //renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);
+//        renderThread = new FixedTimingThread(1.0 / 30, 1.0 / 25.0);
         renderThread = new VariableTimingThread();
 
         renderThread.addSystem(new RenderSystem());
         renderThread.addSystem(new NoClipCameraSystem());
         renderThread.addSystem(new StereoSystem());
         renderThread.addSystem(new PerspectiveCameraSystem());
+        renderThread.addSystem(new ExitOnCloseSystem());
 
         engine.addThread(logicThread);
         engine.addThread(renderThread);
