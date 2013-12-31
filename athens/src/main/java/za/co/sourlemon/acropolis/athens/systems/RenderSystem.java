@@ -28,6 +28,7 @@ import com.hackoeur.jglm.Vec3;
 import static com.hackoeur.jglm.Matrices.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -71,17 +72,31 @@ public class RenderSystem extends AbstractSystem
         Window window = engine.getGlobal(Window.class);
         try
         {
-            for (DisplayMode mode : Display.getAvailableDisplayModes())
+            DisplayMode[] modes = Display.getAvailableDisplayModes();
+            DisplayMode chosen = modes[0];
+
+            for (DisplayMode mode : modes)
             {
                 if (mode.getWidth() == window.width
                         && mode.getHeight() == window.height
                         && mode.isFullscreenCapable())
-                    Display.setDisplayMode(mode);
+                {
+                    chosen = mode;
+                }
                 break;
             }
+
+            chosen = (DisplayMode) JOptionPane.showInputDialog(null, "Choose display mode",
+                    "Display Mode", JOptionPane.QUESTION_MESSAGE, null,
+                    modes, chosen);
+            if (chosen == null)
+            {
+                return false;
+            }
+            Display.setDisplayMode(chosen);
             Display.setFullscreen(true);
             Display.setVSyncEnabled(true);
-            Display.create();   
+            Display.create();
 
             glClearColor(1, 1, 1, 1);
             glEnable(GL_DEPTH_TEST);
@@ -105,7 +120,7 @@ public class RenderSystem extends AbstractSystem
             window.width = Display.getWidth();
             window.height = Display.getHeight();
         }
-        
+
         KeyboardComponent keyboard = engine.getGlobal(KeyboardComponent.class);
         Keyboard.poll();
         for (int i = 0; i < Keyboard.getKeyCount(); i++)
@@ -120,7 +135,7 @@ public class RenderSystem extends AbstractSystem
             keyboard.pressed[key] = Keyboard.getEventKeyState();
             keyboard.released[key] = !keyboard.pressed[key];
         }
-        
+
         MouseComponent mouse = engine.getGlobal(MouseComponent.class);
         Mouse.poll();
         for (int i = 0; i < Mouse.getButtonCount(); i++)
@@ -138,8 +153,7 @@ public class RenderSystem extends AbstractSystem
             {
                 mouse.pressed[btn] = Mouse.getEventButtonState();
                 mouse.released[btn] = !mouse.pressed[btn];
-            }
-            else
+            } else
             {
                 mouse.dx += Mouse.getEventDX();
                 mouse.dy += Mouse.getEventDY();
@@ -149,21 +163,21 @@ public class RenderSystem extends AbstractSystem
         }
         mouse.nx = normalise(mouse.x, window.width);
         mouse.ny = -normalise(mouse.y, window.height);
-        
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         for (Map m : objects.values())
         {
             m.clear();
         }
-        
+
         // calculate the world matrix of each renderable,
         // and add them to their respective "shader buckets"
         for (RenderNode node : engine.getNodeList(RenderNode.class))
         {
             ID<Entity> id = node.getEntity().getId();
             worlds.put(id, getMatrix(node.state));
-            
+
             Program program = resourceManager.getProgram(node.renderable.shader);
             Map<ID<Entity>, RenderNode> renderables = objects.get(program);
             if (renderables == null)
@@ -173,16 +187,16 @@ public class RenderSystem extends AbstractSystem
             }
             renderables.put(id, node);
         }
-        
+
         for (ViewportNode vpnode : engine.getNodeList(ViewportNode.class))
         {
             Camera camera = vpnode.camera;
             glViewport(
-                    (int)(window.width*vpnode.viewport.x),
-                    (int)(window.height*vpnode.viewport.y),
-                    (int)(window.width*vpnode.viewport.width),
-                    (int)(window.height*vpnode.viewport.height));
-            
+                    (int) (window.width * vpnode.viewport.x),
+                    (int) (window.height * vpnode.viewport.y),
+                    (int) (window.width * vpnode.viewport.width),
+                    (int) (window.height * vpnode.viewport.height));
+
             // for each shader, draw each object that uses that shader
             for (Map.Entry<Program, Map<ID<Entity>, RenderNode>> e : objects.entrySet())
             {
@@ -203,13 +217,13 @@ public class RenderSystem extends AbstractSystem
                 }
             }
         }
-        
+
         Display.update();
     }
-    
+
     private float normalise(int x, int length)
     {
-        return (float)x/(float)length-(float)length*0.5f;
+        return (float) x / (float) length - (float) length * 0.5f;
     }
 
     private Mat4 getMatrix(State state)
