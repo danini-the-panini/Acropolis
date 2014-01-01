@@ -19,13 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package za.co.sourlemon.acropolis.tokyo.systems;
+package za.co.sourlemon.acropolis.tokyo.systems;
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
 import java.util.List;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
+import za.co.sourlemon.acropolis.tokyo.components.Acceleration;
 import za.co.sourlemon.acropolis.tokyo.components.State;
 import za.co.sourlemon.acropolis.tokyo.components.Velocity;
 import za.co.sourlemon.acropolis.tokyo.nodes.MovementNode;
@@ -41,13 +42,15 @@ public class MovementSystem extends AbstractSystem
     public void update(Engine engine, double t, double dt)
     {
         List<MovementNode> nodes = engine.getNodeList(MovementNode.class);
-        
+
         for (MovementNode node : nodes)
         {
             node.state.prevPos = node.state.pos;
             node.state.prevRot = node.state.rot;
             //node.state.prevScale = node.state.scale; // <- NOT NEEDED AS SYSTEM DOES NOT MODIFY SCALE
-            integrate(node.state, node.velocity, (float)dt);
+            integrate(node.state, node.velocity,
+                    node.getEntity().getComponent(Acceleration.class),
+                    (float) dt);
         }
     }
 
@@ -55,18 +58,19 @@ public class MovementSystem extends AbstractSystem
     public void destroy()
     {
     }
-    
+
     // helper "struct" for use in integration
-    private static class Derivative
+    protected static class Derivative
     {
+
         Vec3 dx = Vec3.VEC3_ZERO;
         Vec3 dv = Vec3.VEC3_ZERO;
-        
+
         // angular
         Vec4 dax = Vec4.VEC4_ZERO;
         Vec4 dav = Vec4.VEC4_ZERO;
     }
-    
+
     /**
      * This method performs RK4 integration to approximate the position of an
      * entityState after a time-step. this method takes advantage of the fact
@@ -83,15 +87,16 @@ public class MovementSystem extends AbstractSystem
      *
      * @param state
      * @param velocity
+     * @param acceleration
      * @param dt
      */
-     private static void integrate(State state, final Velocity velocity, final float dt)
+    protected void integrate(final State state, final Velocity velocity, final Acceleration acceleration, final float dt)
     {
-        Derivative a = evaluate(state, velocity, 0.0f, new Derivative());
-        Derivative b = evaluate(state, velocity, dt * 0.5f, a);
-        Derivative c = evaluate(state, velocity, dt * 0.5f, b);
-        Derivative d = evaluate(state, velocity, dt, c);
-        
+        Derivative a = evaluate(state, velocity, acceleration, 0.0f, new Derivative());
+        Derivative b = evaluate(state, velocity, acceleration, dt * 0.5f, a);
+        Derivative c = evaluate(state, velocity, acceleration, dt * 0.5f, b);
+        Derivative d = evaluate(state, velocity, acceleration, dt, c);
+
         state.pos = state.pos.add(d.dx.add(a.dx.add((b.dx.add(c.dx)).multiply(2))).multiply(dt / 6.0f));
         state.rot = state.rot.add(d.dax.add(a.dax.add((b.dax.add(c.dax)).multiply(2))).multiply(dt / 6.0f));
         velocity.velocity = velocity.velocity.add(d.dv.add(a.dv.add((b.dv.add(c.dv)).multiply(2))).multiply(dt / 6.0f));
@@ -105,24 +110,26 @@ public class MovementSystem extends AbstractSystem
      *
      * @param state
      * @param velocity
+     * @param acceleration
      * @param dt <i>time-step length</i>
      * @param derivative
      * @return
      */
-    private static Derivative evaluate(final State state, final Velocity velocity,
+    protected Derivative evaluate(final State state, final Velocity velocity,
+            Acceleration acceleration,
             final float dt, final Derivative derivative)
     {
         //Vec3 pos = state.pos.add(derivative.dx.multiply(dt));
         Vec3 v = velocity.velocity.add(derivative.dv.multiply(dt));
         Vec4 av = velocity.angularVelocity.add(derivative.dav.multiply(dt));
-        
+
         Derivative output = new Derivative();
         output.dx = v;
-        output.dv = velocity.acceleration;
+        output.dv = acceleration == null ? Vec3.VEC3_ZERO : acceleration.a;
         output.dax = av;
-        output.dav = velocity.angularAcceleration;
-        
+        output.dav = acceleration == null ? Vec4.VEC4_ZERO : acceleration.aa;
+
         return output;
     }
-    
+
 }

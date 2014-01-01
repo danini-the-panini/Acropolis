@@ -25,7 +25,6 @@ package za.co.sourlemon.acropolis.athens.systems;
 
 import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec3;
-import static com.hackoeur.jglm.Matrices.*;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -49,7 +48,7 @@ import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.id.ID;
-import za.co.sourlemon.acropolis.tokyo.components.State;
+import za.co.sourlemon.acropolis.tokyo.utils.StateUtils;
 
 /**
  *
@@ -57,11 +56,6 @@ import za.co.sourlemon.acropolis.tokyo.components.State;
  */
 public class RenderSystem extends AbstractSystem
 {
-
-    public static final Vec3 X_AXIS = new Vec3(1, 0, 0);
-    public static final Vec3 Y_AXIS = new Vec3(0, 1, 0);
-    public static final Vec3 Z_AXIS = new Vec3(0, 0, 1);
-
     private final Map<ID<Entity>, Mat4> worlds = new HashMap<>();
     private final Map<Program, Map<ID<Entity>, RenderNode>> objects = new HashMap<>();
     private final ResourceManager resourceManager = new ResourceManager();
@@ -176,7 +170,7 @@ public class RenderSystem extends AbstractSystem
         for (RenderNode node : engine.getNodeList(RenderNode.class))
         {
             ID<Entity> id = node.getEntity().getId();
-            worlds.put(id, getMatrix(node.state));
+            worlds.put(id, StateUtils.getMatrix(node.state));
 
             Program program = resourceManager.getProgram(node.renderable.shader);
             Map<ID<Entity>, RenderNode> renderables = objects.get(program);
@@ -224,23 +218,6 @@ public class RenderSystem extends AbstractSystem
     private float normalise(int x, int length)
     {
         return (float) x / (float) length - (float) length * 0.5f;
-    }
-
-    private Mat4 getMatrix(State state)
-    {
-        Mat4 monkeyWorld = new Mat4(1f);
-
-        monkeyWorld = translate(monkeyWorld, state.pos);
-
-        monkeyWorld = rotate(monkeyWorld, state.rot.getX(), X_AXIS);
-        monkeyWorld = rotate(monkeyWorld, state.rot.getZ(), Z_AXIS);
-        monkeyWorld = rotate(monkeyWorld, state.rot.getY(), Y_AXIS);
-        // don't ask...
-        monkeyWorld = rotate(monkeyWorld, state.rot.getW(), X_AXIS);
-
-        monkeyWorld = scale(monkeyWorld, state.scale);
-
-        return monkeyWorld;
     }
 
     @Override

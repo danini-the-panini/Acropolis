@@ -91,7 +91,10 @@ public class TestAthens
             public void run()
             {
                 
-                int option = JOptionPane.showOptionDialog(null, "Choose stereo type", "3D Options", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                int option = JOptionPane.showOptionDialog(null,
+                        "Choose stereo type", "3D Options",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null,
                         new String[]{"None","Top-Bottom","Left-Right"}, "None");
                 
                 switch (option)
@@ -151,7 +154,7 @@ public class TestAthens
         WavefrontFactory wavefrontFactory = new WavefrontFactory();
         Entity entity = new Entity();
         entity.addComponent(state);
-        entity.addComponent(new Velocity(Vec3.VEC3_ZERO, Vec3.VEC3_ZERO, new Vec4(0, 45, 0, 0), Vec4.VEC4_ZERO));
+        entity.addComponent(new Velocity(Vec3.VEC3_ZERO, new Vec4(0, 45, 0, 0)));
         entity.addComponent(new Renderable("pvlighting", new Vec3(1, 0, 1), 1.0f));
         entity.addComponent(wavefrontFactory.create(new WavefrontFactoryRequest("monkey")));
         return entity;

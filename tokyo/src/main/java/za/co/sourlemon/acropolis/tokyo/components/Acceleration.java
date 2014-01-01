@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2013 Triforce - in association with the University of Pretoria and Epi-Use <Advance/>
- * 
+ * The MIT License
+ *
+ * Copyright 2013 Sour Lemon.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package za.co.sourlemon.acropolis.tokyo.components;
+
+package za.co.sourlemon.acropolis.tokyo.components;
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
@@ -27,22 +30,20 @@ import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
- * @author daniel
+ * @author Daniel Smith <jellymann@gmail.com>
  */
-public class Velocity extends Component
+public class Acceleration extends Component
 {
-    
-    public Vec3 velocity = Vec3.VEC3_ZERO;
-    public Vec4 angularVelocity = Vec4.VEC4_ZERO;
+    public Vec3 a = Vec3.VEC3_ZERO;
+    public Vec4 aa = Vec4.VEC4_ZERO;
 
-    public Velocity()
+    public Acceleration()
     {
     }
     
-    public Velocity(Vec3 velocity, Vec4 angularVelocity)
+    public Acceleration(Vec3 acceleration, Vec4 angularAcceleration)
     {
-        this.velocity = velocity;
-        this.angularVelocity = angularVelocity;
+        this.a = acceleration;
+        this.aa = angularAcceleration;
     }
-    
 }
