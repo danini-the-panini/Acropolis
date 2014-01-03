@@ -24,7 +24,6 @@
 package za.co.sourlemon.acropolis.athens.systems;
 
 import com.hackoeur.jglm.Mat4;
-import com.hackoeur.jglm.Vec3;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -88,7 +87,7 @@ public class RenderSystem extends AbstractSystem
                 return false;
             }
             Display.setDisplayMode(chosen);
-            Display.setFullscreen(true);
+            //Display.setFullscreen(true);
             Display.setVSyncEnabled(true);
             Display.create();
 
@@ -117,7 +116,7 @@ public class RenderSystem extends AbstractSystem
 
         KeyboardComponent keyboard = engine.getGlobal(KeyboardComponent.class);
         Keyboard.poll();
-        for (int i = 0; i < Keyboard.getKeyCount(); i++)
+        for (int i = 0; i < keyboard.down.length; i++)
         {
             keyboard.pressed[i] = false;
             keyboard.released[i] = false;
