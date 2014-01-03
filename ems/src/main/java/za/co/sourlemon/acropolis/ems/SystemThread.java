@@ -25,7 +25,7 @@ package za.co.sourlemon.acropolis.ems;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import za.co.sourlemon.acropolis.ems.id.Identifiable;
@@ -38,7 +38,7 @@ import za.co.sourlemon.acropolis.ems.id.ID;
 public abstract class SystemThread implements Identifiable<ID<Thread>>
 {
 
-    protected final Map<ID<System>, ISystem> systems = new HashMap<>();
+    protected final Map<ID<System>, ISystem> systems = new LinkedHashMap<>();
     private final Collection<ISystem> toAdd = new ArrayList<>();
     private final Collection<ID<System>> toRemove = new ArrayList<>();
     protected final AtomicBoolean updating = new AtomicBoolean(false);

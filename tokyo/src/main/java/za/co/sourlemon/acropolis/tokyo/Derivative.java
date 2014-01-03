@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2013 Triforce - in association with the University of Pretoria and Epi-Use <Advance/>
- * 
+ * The MIT License
+ *
+ * Copyright 2014 Sour Lemon.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,30 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package za.co.sourlemon.acropolis.tokyo.components;
+package za.co.sourlemon.acropolis.tokyo;
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
-import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
- * @author daniel
+ * @author Daniel Smith <jellymann@gmail.com>
  */
-public class Velocity extends Component
+public class Derivative
 {
-    
-    public Vec3 v = Vec3.VEC3_ZERO;
-    public Vec4 av = Vec4.VEC4_ZERO;
 
-    public Velocity()
-    {
-    }
-    
-    public Velocity(Vec3 velocity, Vec4 angularVelocity)
-    {
-        this.v = velocity;
-        this.av = angularVelocity;
-    }
-    
+    protected Vec3 ds = Vec3.VEC3_ZERO;
+    protected Vec3 dv = Vec3.VEC3_ZERO;
+
+    // angular
+    protected Vec4 das = Vec4.VEC4_ZERO;
+    protected Vec4 dav = Vec4.VEC4_ZERO;
 }
