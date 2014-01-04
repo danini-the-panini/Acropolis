@@ -65,9 +65,9 @@ public class RK4Integrator implements Integrator
         Derivative d = evaluate(state, velocity, acceleration, dt, c);
 
         state.pos = state.pos.add(d.ds.add(a.ds.add((b.ds.add(c.ds)).multiply(2))).multiply(dt / 6.0f));
-        state.rot = state.rot.add(d.das.add(a.das.add((b.das.add(c.das)).multiply(2))).multiply(dt / 6.0f));
+        state.rot = state.rot.add(d.das.add(a.das.add((b.das.add(c.das)).scale(2))).scale(dt / 6.0f));
         velocity.v = velocity.v.add(d.dv.add(a.dv.add((b.dv.add(c.dv)).multiply(2))).multiply(dt / 6.0f));
-        velocity.av = velocity.av.add(d.dav.add(a.dav.add((b.dav.add(c.dav)).multiply(2))).multiply(dt / 6.0f));
+        velocity.av = velocity.av.add(d.dav.add(a.dav.add((b.dav.add(c.dav)).scale(2))).scale(dt / 6.0f));
     }
     
     /**
@@ -88,7 +88,7 @@ public class RK4Integrator implements Integrator
     {
         //Vec3 pos = state.pos.add(derivative.dx.multiply(dt));
         Vec3 v = velocity.v.add(derivative.dv.multiply(dt));
-        Quaternion av = velocity.av.add(derivative.dav.multiply(dt));
+        Quaternion av = velocity.av.add(derivative.dav.scale(dt));
 
         Derivative output = new Derivative();
         output.ds = v;
