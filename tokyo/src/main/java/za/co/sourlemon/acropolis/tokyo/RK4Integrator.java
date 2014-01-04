@@ -24,12 +24,11 @@
 
 package za.co.sourlemon.acropolis.tokyo;
 
+import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
 import za.co.sourlemon.acropolis.tokyo.components.Acceleration;
 import za.co.sourlemon.acropolis.tokyo.components.State;
 import za.co.sourlemon.acropolis.tokyo.components.Velocity;
-import za.co.sourlemon.acropolis.tokyo.systems.MovementSystem;
 
 /**
  *
@@ -89,13 +88,13 @@ public class RK4Integrator implements Integrator
     {
         //Vec3 pos = state.pos.add(derivative.dx.multiply(dt));
         Vec3 v = velocity.v.add(derivative.dv.multiply(dt));
-        Vec4 av = velocity.av.add(derivative.dav.multiply(dt));
+        Quaternion av = velocity.av.add(derivative.dav.multiply(dt));
 
         Derivative output = new Derivative();
         output.ds = v;
         output.dv = acceleration == null ? Vec3.VEC3_ZERO : acceleration.a;
         output.das = av;
-        output.dav = acceleration == null ? Vec4.VEC4_ZERO : acceleration.aa;
+        output.dav = acceleration == null ? Quaternion.QUAT_IDENT : acceleration.aa;
 
         return output;
     }

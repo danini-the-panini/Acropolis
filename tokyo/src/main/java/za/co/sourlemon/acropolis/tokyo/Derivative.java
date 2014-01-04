@@ -23,8 +23,8 @@
  */
 package za.co.sourlemon.acropolis.tokyo;
 
+import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
 
 /**
  *
@@ -37,6 +37,6 @@ public class Derivative
     protected Vec3 dv = Vec3.VEC3_ZERO;
 
     // angular
-    protected Vec4 das = Vec4.VEC4_ZERO;
-    protected Vec4 dav = Vec4.VEC4_ZERO;
+    protected Quaternion das = Quaternion.QUAT_IDENT;
+    protected Quaternion dav = Quaternion.QUAT_IDENT;
 }

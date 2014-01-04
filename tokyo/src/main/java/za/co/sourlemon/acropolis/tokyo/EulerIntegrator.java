@@ -41,14 +41,14 @@ public class EulerIntegrator implements Integrator
         if (acceleration != null)
         {
             velocity.v = velocity.v.add(acceleration.a.multiply(dt));
-            velocity.av = velocity.av.add(acceleration.aa.multiply(dt));
+            velocity.av = velocity.av.slerp(acceleration.aa, dt);
         }
         
         state.prevPos = state.pos;
         state.prevRot = state.rot;
         
         state.pos = state.pos.add(velocity.v.multiply(dt));
-        state.rot = state.rot.add(velocity.av.multiply(dt));
+        state.rot = state.rot.slerp(velocity.av.multiply(state.rot), dt);
     }
     
 }

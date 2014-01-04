@@ -21,8 +21,8 @@
  */
  package za.co.sourlemon.acropolis.tokyo.components;
 
+import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
 import za.co.sourlemon.acropolis.ems.Component;
 
 /**
@@ -33,13 +33,13 @@ public class Velocity extends Component
 {
     
     public Vec3 v = Vec3.VEC3_ZERO;
-    public Vec4 av = Vec4.VEC4_ZERO;
+    public Quaternion av = Quaternion.QUAT_IDENT;
 
     public Velocity()
     {
     }
     
-    public Velocity(Vec3 velocity, Vec4 angularVelocity)
+    public Velocity(Vec3 velocity, Quaternion angularVelocity)
     {
         this.v = velocity;
         this.av = angularVelocity;

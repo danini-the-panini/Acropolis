@@ -21,6 +21,7 @@
  */
  package za.co.sourlemon.acropolis.tokyo.components;
 
+import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
 import za.co.sourlemon.acropolis.ems.Component;
@@ -34,18 +35,18 @@ public class State extends Component
 
     /// PREVIOUS STATE ///
     public Vec3 prevPos = Vec3.VEC3_ZERO;
-    public Vec4 prevRot = Vec4.VEC4_ZERO;
+    public Quaternion prevRot = Quaternion.QUAT_IDENT;
     public Vec3 prevScale = new Vec3(1,1,1);
     /// CURRENT STATE ///
     public Vec3 pos = Vec3.VEC3_ZERO;
-    public Vec4 rot = Vec4.VEC4_ZERO;
+    public Quaternion rot = Quaternion.QUAT_IDENT;
     public Vec3 scale = new Vec3(1,1,1);
 
     public State()
     {
     }
 
-    public State(Vec3 pos, Vec4 rot, Vec3 scale)
+    public State(Vec3 pos, Quaternion rot, Vec3 scale)
     {
         this.prevPos = pos;
         this.prevRot = rot;
@@ -55,7 +56,8 @@ public class State extends Component
         this.scale = scale;
     }
 
-    public State(Vec3 prevPos, Vec4 prevRot, Vec3 prevScale, Vec3 pos, Vec4 rot, Vec3 scale)
+    public State(Vec3 prevPos, Quaternion prevRot, Vec3 prevScale,
+            Vec3 pos, Quaternion rot, Vec3 scale)
     {
         this.prevPos = prevPos;
         this.prevRot = prevRot;
