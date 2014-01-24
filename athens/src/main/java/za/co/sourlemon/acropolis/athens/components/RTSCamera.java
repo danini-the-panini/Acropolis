@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013 Daniel Smith <jellymann@gmail.com>.
+ * Copyright 2014 Daniel Smith <jellymann@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,23 +22,13 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.ems;
-
-import za.co.sourlemon.acropolis.ems.id.ID;
-import za.co.sourlemon.acropolis.ems.id.Identifiable;
+package za.co.sourlemon.acropolis.athens.components;
 
 /**
  *
- * @author Daniel
+ * @author Daniel Smith <jellymann@gmail.com>
  */
-public class Component implements Identifiable<ID<Component>>
+public class RTSCamera
 {
-    private final ID<Component> id = new ID<>();
-
-    @Override
-    public ID<Component> getId()
-    {
-        return id;
-    }
     
 }
