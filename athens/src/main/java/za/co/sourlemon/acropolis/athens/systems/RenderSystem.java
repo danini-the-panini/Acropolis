@@ -79,7 +79,7 @@ public class RenderSystem extends AbstractSystem
                 break;
             }
 
-            chosen = (DisplayMode) JOptionPane.showInputDialog(null, "Choose display mode",
+            chosen = (DisplayMode) JOptionPane.showInputDialog(null, "Display Options",
                     "Display Mode", JOptionPane.QUESTION_MESSAGE, null,
                     modes, chosen);
             if (chosen == null)
@@ -87,7 +87,8 @@ public class RenderSystem extends AbstractSystem
                 return false;
             }
             Display.setDisplayMode(chosen);
-            //Display.setFullscreen(true);
+            Display.setFullscreen(JOptionPane.showConfirmDialog(null, "Fullscreen?", "Display Options", JOptionPane.YES_NO_OPTION)
+                == JOptionPane.YES_OPTION);
             Display.setVSyncEnabled(true);
             Display.create();
 
