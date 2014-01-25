@@ -42,15 +42,15 @@ public class HeightmapMeshFactory implements ComponentFactory<MeshComponent, Hei
         MeshComponent mesh = new MeshComponent();
 
         final int w = request.heightmap.heights.length;
-        final int h = request.heightmap.heights[0].length;
+        final int l = request.heightmap.heights[0].length;
 
-        final float xStep = 1.0f / (float) w;
-        final float zStep = 1.0f / (float) h;
+        final float xStep = request.heightmap.xStep();
+        final float zStep = request.heightmap.yStep();
         
         final float[][] hm = request.heightmap.heights;
         
         float x, y, z, u, v;
-        for (int j = 0; j < h; j++)
+        for (int j = 0; j < l; j++)
         {
             for (int i = 0; i < w; i++)
             {
@@ -74,8 +74,8 @@ public class HeightmapMeshFactory implements ComponentFactory<MeshComponent, Hei
                 }
                 Hx /= xStep;
 
-                float Hz = hm[i][j < h - 1 ? j + 1 : j] - hm[i][j > 0 ? j - 1 : j];
-                if (j == 0 || j == h - 1)
+                float Hz = hm[i][j < l - 1 ? j + 1 : j] - hm[i][j > 0 ? j - 1 : j];
+                if (j == 0 || j == l - 1)
                 {
                     Hz *= 2;
                 }
@@ -90,7 +90,7 @@ public class HeightmapMeshFactory implements ComponentFactory<MeshComponent, Hei
             }
         }
         int a, b, c, d;
-        for (int j = 0; j < h - 1; j++)
+        for (int j = 0; j < l - 1; j++)
         {
             for (int i = 0; i < w - 1; i++)
             {

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013 Daniel Smith <jellymann@gmail.com>.
+ * Copyright 2014 Daniel Smith <jellymann@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,25 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.components;
+
+package za.co.sourlemon.acropolis.athens.factories;
 
 import com.hackoeur.jglm.Vec3;
-import org.lwjgl.input.Mouse;
-import za.co.sourlemon.acropolis.ems.Component;
+import za.co.sourlemon.acropolis.ems.FactoryRequest;
 
 /**
  *
- * @author daniel
+ * @author Daniel Smith <jellymann@gmail.com>
  */
-public class MouseComponent extends Component
+public class UnitFactoryRequest implements FactoryRequest
 {
-    public boolean[] pressed = new boolean[Mouse.getButtonCount()];
-    public boolean[] released = new boolean[Mouse.getButtonCount()];
-    public boolean[] down = new boolean[Mouse.getButtonCount()];
+    protected Vec3 position = Vec3.VEC3_ZERO;
+    protected float size;
+    protected String mesh = "";
+
+    public UnitFactoryRequest()
+    {
+    }
+
+    public UnitFactoryRequest(Vec3 position, float size, String mesh)
+    {
+        this.position = position;
+        this.size = size;
+        this.mesh = mesh;
+    }
     
-    public int x = 0, y = 0;
-    public int dx = 0, dy = 0;
-    public float nx = 0, ny = 0;
+    public UnitFactoryRequest atPosition(Vec3 position)
+    {
+        return new UnitFactoryRequest(position, size, mesh);
+    }
     
-    public Vec3 near = Vec3.VEC3_ZERO, far = Vec3.VEC3_ZERO;
+    public UnitFactoryRequest scaled(float scale)
+    {
+        return new UnitFactoryRequest(position, size*scale, mesh);
+    }
+    
+    public UnitFactoryRequest withSize(float size)
+    {
+        return new UnitFactoryRequest(position, size, mesh);
+    }
 }

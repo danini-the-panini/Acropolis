@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013 Daniel Smith <jellymann@gmail.com>.
+ * Copyright 2014 Daniel Smith <jellymann@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,25 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.components;
+package za.co.sourlemon.acropolis.athens.factories;
 
+import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
-import org.lwjgl.input.Mouse;
-import za.co.sourlemon.acropolis.ems.Component;
+import za.co.sourlemon.acropolis.athens.components.Renderable;
+import za.co.sourlemon.acropolis.athens.components.SnapToTerrain;
+import za.co.sourlemon.acropolis.ems.Entity;
+import za.co.sourlemon.acropolis.ems.EntityFactory;
+import za.co.sourlemon.acropolis.tokyo.components.State;
 
 /**
  *
- * @author daniel
+ * @author Daniel Smith <jellymann@gmail.com>
  */
-public class MouseComponent extends Component
+public class UnitFactory implements EntityFactory<UnitFactoryRequest>
 {
-    public boolean[] pressed = new boolean[Mouse.getButtonCount()];
-    public boolean[] released = new boolean[Mouse.getButtonCount()];
-    public boolean[] down = new boolean[Mouse.getButtonCount()];
-    
-    public int x = 0, y = 0;
-    public int dx = 0, dy = 0;
-    public float nx = 0, ny = 0;
-    
-    public Vec3 near = Vec3.VEC3_ZERO, far = Vec3.VEC3_ZERO;
+
+    private final WavefrontFactory factory = new WavefrontFactory();
+
+    @Override
+    public Entity create(UnitFactoryRequest request)
+    {
+        Entity entity = new Entity();
+
+        entity.addComponent(new State(request.position, Quaternion.QUAT_IDENT, new Vec3(request.size, request.size, request.size)));
+        entity.addComponent(new Renderable("pplighting", new Vec3(1,1,1), 1));
+        entity.addComponent(factory.create(new WavefrontFactoryRequest(request.mesh)));
+        entity.addComponent(new SnapToTerrain());
+
+        return entity;
+    }
+
 }

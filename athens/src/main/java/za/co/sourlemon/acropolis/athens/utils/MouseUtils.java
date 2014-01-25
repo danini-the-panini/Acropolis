@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013 Daniel Smith <jellymann@gmail.com>.
+ * Copyright 2014 Daniel Smith <jellymann@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,25 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.components;
 
+package za.co.sourlemon.acropolis.athens.utils;
+
+import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec3;
-import org.lwjgl.input.Mouse;
-import za.co.sourlemon.acropolis.ems.Component;
+import com.hackoeur.jglm.Vec4;
+import za.co.sourlemon.acropolis.athens.components.Camera;
+import za.co.sourlemon.acropolis.athens.components.MouseComponent;
+import za.co.sourlemon.acropolis.athens.components.Window;
 
 /**
  *
- * @author daniel
+ * @author Daniel Smith <jellymann@gmail.com>
  */
-public class MouseComponent extends Component
+public class MouseUtils
 {
-    public boolean[] pressed = new boolean[Mouse.getButtonCount()];
-    public boolean[] released = new boolean[Mouse.getButtonCount()];
-    public boolean[] down = new boolean[Mouse.getButtonCount()];
     
-    public int x = 0, y = 0;
-    public int dx = 0, dy = 0;
-    public float nx = 0, ny = 0;
-    
-    public Vec3 near = Vec3.VEC3_ZERO, far = Vec3.VEC3_ZERO;
+    public static Vec3[] mouseToWorld(Window display, Camera camera, MouseComponent mouse)
+    {
+        Vec3[] mousePoints = new Vec3[2];
+
+        Mat4 camInv = camera.projection.multiply(camera.viewMatrix).getInverse();
+        
+        System.out.println("x: " + mouse.nx + ", y: " + mouse.ny);
+        Vec4 mouseFar4 = camInv.multiply(new Vec4(mouse.nx, mouse.ny, 1, 1));
+        Vec4 mouseNear4 = camInv.multiply(new Vec4(mouse.nx, mouse.ny, -1, 1));
+        
+        mousePoints[0] = mouseNear4.getXYZ().scale(1.0f / mouseNear4.getW());
+        mousePoints[1] = mouseFar4.getXYZ().scale(1.0f / mouseFar4.getW());
+        
+        System.out.println("M3D: " + mousePoints[0]);
+        
+        return mousePoints;
+    }
 }

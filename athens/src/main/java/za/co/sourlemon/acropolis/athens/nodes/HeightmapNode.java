@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013 Daniel Smith <jellymann@gmail.com>.
+ * Copyright 2014 Daniel Smith <jellymann@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,25 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.components;
 
-import com.hackoeur.jglm.Vec3;
-import org.lwjgl.input.Mouse;
-import za.co.sourlemon.acropolis.ems.Component;
+package za.co.sourlemon.acropolis.athens.nodes;
+
+import za.co.sourlemon.acropolis.athens.components.Heightmap;
+import za.co.sourlemon.acropolis.ems.Entity;
+import za.co.sourlemon.acropolis.ems.Node;
+import za.co.sourlemon.acropolis.tokyo.components.State;
 
 /**
  *
- * @author daniel
+ * @author Daniel Smith <jellymann@gmail.com>
  */
-public class MouseComponent extends Component
+public class HeightmapNode extends Node
 {
-    public boolean[] pressed = new boolean[Mouse.getButtonCount()];
-    public boolean[] released = new boolean[Mouse.getButtonCount()];
-    public boolean[] down = new boolean[Mouse.getButtonCount()];
+
+    public HeightmapNode(Entity entity)
+    {
+        super(entity);
+    }
     
-    public int x = 0, y = 0;
-    public int dx = 0, dy = 0;
-    public float nx = 0, ny = 0;
-    
-    public Vec3 near = Vec3.VEC3_ZERO, far = Vec3.VEC3_ZERO;
+    public Heightmap hm;
+    public State state;
 }

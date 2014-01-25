@@ -24,6 +24,7 @@
 package za.co.sourlemon.acropolis.athens.systems;
 
 import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Vec3;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -43,6 +44,7 @@ import za.co.sourlemon.acropolis.athens.mesh.Mesh;
 import za.co.sourlemon.acropolis.athens.nodes.RenderNode;
 import za.co.sourlemon.acropolis.athens.nodes.ViewportNode;
 import za.co.sourlemon.acropolis.athens.shader.Program;
+import za.co.sourlemon.acropolis.athens.utils.MouseUtils;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
@@ -55,6 +57,7 @@ import za.co.sourlemon.acropolis.tokyo.utils.StateUtils;
  */
 public class RenderSystem extends AbstractSystem
 {
+
     private final Map<ID<Entity>, Mat4> worlds = new HashMap<>();
     private final Map<Program, Map<ID<Entity>, RenderNode>> objects = new HashMap<>();
     private final ResourceManager resourceManager = new ResourceManager();
@@ -88,7 +91,7 @@ public class RenderSystem extends AbstractSystem
             }
             Display.setDisplayMode(chosen);
             Display.setFullscreen(JOptionPane.showConfirmDialog(null, "Fullscreen?", "Display Options", JOptionPane.YES_NO_OPTION)
-                == JOptionPane.YES_OPTION);
+                    == JOptionPane.YES_OPTION);
             Display.setVSyncEnabled(true);
             Display.create();
 
@@ -155,8 +158,17 @@ public class RenderSystem extends AbstractSystem
             mouse.x = Mouse.getEventX();
             mouse.y = Mouse.getEventY();
         }
-        mouse.nx = normalise(mouse.x, window.width);
-        mouse.ny = -normalise(mouse.y, window.height);
+        mouse.nx = ((float) mouse.x / (float) window.width) * 2.0f - 1.0f;
+        mouse.ny = ((float) mouse.y / (float) window.height) * 2.0f - 1.0f;
+        
+        Vec3[] mp
+                = MouseUtils.mouseToWorld(
+                        window,
+                        engine.getGlobal(Camera.class),
+                        mouse);
+        
+        mouse.near = mp[0];
+        mouse.far = mp[1];
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -210,6 +222,29 @@ public class RenderSystem extends AbstractSystem
                     mesh.draw();
                 }
             }
+            
+            Program program = resourceManager.getProgram("passthrough");
+            program.setView(camera.viewMatrix);
+            program.setProjection(camera.projection);
+            program.setWorld(Mat4.MAT4_IDENTITY);
+            program.use();
+            
+            glBegin(GL_LINES);
+            {
+                glColor3f(1, 0, 1);
+                glVertex3f(mouse.near.getX()+1f, mouse.near.getY(), mouse.near.getZ());
+                glColor3f(1, 0, 1);
+                glVertex3f(mouse.near.getX()-1f, mouse.near.getY(), mouse.near.getZ());
+                glColor3f(1, 0, 1);
+                glVertex3f(mouse.near.getX(), mouse.near.getY(), mouse.near.getZ());
+                glColor3f(1, 0, 1);
+                glVertex3f(mouse.far.getX(), mouse.far.getY(), mouse.far.getZ());
+                glColor3f(1, 0, 1);
+                glVertex3f(mouse.far.getX()+1f, mouse.far.getY(), mouse.far.getZ());
+                glColor3f(1, 0, 1);
+                glVertex3f(mouse.far.getX()-1f, mouse.far.getY(), mouse.far.getZ());
+            }
+            glEnd();
         }
 
         Display.update();

@@ -42,4 +42,24 @@ public class Heightmap extends Component
     {
         heights = new float[width][length];
     }
+
+    public int getWidth()
+    {
+        return heights.length;
+    }
+    
+    public int getLength()
+    {
+        return heights[0].length;
+    }
+    
+    public float xStep()
+    {
+        return 1.0f / (float) getWidth();
+    }
+    
+    public float yStep()
+    {
+        return 1.0f / (float) getLength();
+    }
 }

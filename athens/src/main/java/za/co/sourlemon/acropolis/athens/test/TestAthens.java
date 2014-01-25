@@ -50,8 +50,10 @@ import za.co.sourlemon.acropolis.athens.systems.NoClipCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.PerspectiveProjectionSystem;
 import za.co.sourlemon.acropolis.athens.systems.RTSCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.RenderSystem;
+import za.co.sourlemon.acropolis.athens.systems.SnapToTerrainSystem;
 import za.co.sourlemon.acropolis.athens.systems.SpinnyCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.StereoSystem;
+import za.co.sourlemon.acropolis.athens.systems.TankMaker;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.FixedTimingThread;
@@ -105,6 +107,8 @@ public class TestAthens
                         JOptionPane.QUESTION_MESSAGE, null,
                         new String[]{"None","Top-Bottom","Left-Right"}, "None");
                 
+                engine.setGlobal(CAMERA);
+                
                 switch (option)
                 {
                     default: case 0:
@@ -115,6 +119,7 @@ public class TestAthens
                         setupStereo(LEFT_VIEWPORT_LR, RIGHT_VIEWPORT_LR); break;
                         
                 }
+                
                 engine.addEntity(createLand());
                 engine.addEntity(createMonkey(new State()));
 
@@ -172,7 +177,7 @@ public class TestAthens
     private static Entity createCamera()
     {
         Entity entity = new Entity();
-        entity.addComponent(new Camera());
+        entity.addComponent(CAMERA);
         entity.addComponent(PERSPECTIVE);
         entity.addComponent(STARTING_VIEW);
         entity.addComponent(new Viewport());
@@ -185,7 +190,7 @@ public class TestAthens
         Entity entity = new Entity();
         entity.addComponent(STARTING_VIEW);
         entity.addComponent(new Stereo(left, right, STEREO_DIST));
-        entity.addComponent(new Camera());
+        entity.addComponent(CAMERA);
         entity.addComponent(RTS_CAM_CONTROL);
         return entity;
     }
@@ -220,6 +225,7 @@ public class TestAthens
 //        logicThread = new VariableTimingThread();
 
         logicThread.addSystem(new MovementSystem(new EulerIntegrator()));
+        logicThread.addSystem(new SnapToTerrainSystem());
 
         SystemThread renderThread;
         renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);
@@ -231,6 +237,7 @@ public class TestAthens
         renderThread.addSystem(new RTSCamControlSystem());
         renderThread.addSystem(new StereoSystem());
         renderThread.addSystem(new PerspectiveProjectionSystem());
+        renderThread.addSystem(new TankMaker());
         renderThread.addSystem(new ExitOnCloseSystem());
 
         engine.addThread(logicThread);
