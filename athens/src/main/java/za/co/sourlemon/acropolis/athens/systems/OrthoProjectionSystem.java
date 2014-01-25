@@ -21,26 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package za.co.sourlemon.acropolis.athens.systems;
 
-package za.co.sourlemon.acropolis.athens.nodes;
-
-import za.co.sourlemon.acropolis.athens.components.SpinnyCamera;
-import za.co.sourlemon.acropolis.athens.components.View;
-import za.co.sourlemon.acropolis.ems.Entity;
-import za.co.sourlemon.acropolis.ems.Node;
+import com.hackoeur.jglm.Matrices;
+import za.co.sourlemon.acropolis.athens.components.Camera;
+import za.co.sourlemon.acropolis.athens.nodes.OrthoProjectionNode;
+import za.co.sourlemon.acropolis.ems.AbstractSystem;
+import za.co.sourlemon.acropolis.ems.Engine;
 
 /**
  *
  * @author Daniel
  */
-public class SpinnyCameraNode extends Node
+public class OrthoProjectionSystem extends AbstractSystem
 {
 
-    public SpinnyCameraNode(Entity entity)
+    @Override
+    public void update(Engine engine, double time, double dt)
     {
-        super(entity);
+        Camera activeCamera = engine.getGlobal(Camera.class);
+
+        for (OrthoProjectionNode node : engine.getNodeList(OrthoProjectionNode.class))
+        {
+            if (node.camera != activeCamera)
+            {
+                continue;
+            }
+            
+//            dir = at.subtract(eye).getUnitVector();
+//            right = dir.cross(up).getUnitVector();
+
+            node.camera.viewMatrix = Matrices.lookAt(node.view.eye, node.view.at,
+                    node.view.up);
+            node.camera.projection = Matrices.ortho(node.projection.xleft,
+                    node.projection.xright, node.projection.ybottom, node.projection.ytop,
+                    node.projection.znear, node.projection.zfar);
+        }
     }
-    
-    public SpinnyCamera camera;
-    public View view;
+
 }

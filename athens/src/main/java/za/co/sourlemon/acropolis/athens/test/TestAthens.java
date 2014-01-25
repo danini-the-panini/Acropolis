@@ -25,16 +25,16 @@ package za.co.sourlemon.acropolis.athens.test;
 
 import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
 import com.hackoeur.jglm.support.FastMath;
 import javax.swing.JOptionPane;
 import za.co.sourlemon.acropolis.athens.components.View;
-import za.co.sourlemon.acropolis.athens.components.Perspective;
+import za.co.sourlemon.acropolis.athens.components.PerspectiveProjection;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Sun;
 import za.co.sourlemon.acropolis.athens.components.Camera;
 import za.co.sourlemon.acropolis.athens.components.Heightmap;
-import za.co.sourlemon.acropolis.athens.components.NoClipCamera;
+import za.co.sourlemon.acropolis.athens.components.NoClipCamControl;
+import za.co.sourlemon.acropolis.athens.components.RTSCamControl;
 import za.co.sourlemon.acropolis.athens.components.Stereo;
 import za.co.sourlemon.acropolis.athens.components.Viewport;
 import za.co.sourlemon.acropolis.athens.components.Window;
@@ -46,9 +46,11 @@ import za.co.sourlemon.acropolis.athens.factories.RelaxedHeightmapFactory;
 import za.co.sourlemon.acropolis.athens.factories.WavefrontFactory;
 import za.co.sourlemon.acropolis.athens.factories.WavefrontFactoryRequest;
 import za.co.sourlemon.acropolis.athens.systems.ExitOnCloseSystem;
-import za.co.sourlemon.acropolis.athens.systems.NoClipCameraSystem;
-import za.co.sourlemon.acropolis.athens.systems.PerspectiveCameraSystem;
+import za.co.sourlemon.acropolis.athens.systems.NoClipCamControlSystem;
+import za.co.sourlemon.acropolis.athens.systems.PerspectiveProjectionSystem;
+import za.co.sourlemon.acropolis.athens.systems.RTSCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.RenderSystem;
+import za.co.sourlemon.acropolis.athens.systems.SpinnyCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.StereoSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
@@ -71,19 +73,21 @@ public class TestAthens
 
     public static final Vec3 SUN_VEC = new Vec3(-2.47511f, 3.87557f, 3.17864f);
     public static final View STARTING_VIEW = new View(
-            new Vec3(3, 3, 2), // eye
+            new Vec3(0, 6, -10), // eye
             new Vec3(0f, 0, 0f), // at
             new Vec3(0f, 1f, 0f) // up
     );
     public static final Camera CAMERA = new Camera();
     final static Engine engine = new Engine();
-    public static final Perspective PERSPECTIVE = new Perspective(
+    public static final PerspectiveProjection PERSPECTIVE = new PerspectiveProjection(
                                  45.0f, 0.01f, 200.0f);
     public static final Viewport LEFT_VIEWPORT_LR = new Viewport(0, 0, 0.5f, 1);
     public static final Viewport RIGHT_VIEWPORT_LR = new Viewport(0.5f, 0, 0.5f, 1);
     public static final Viewport LEFT_VIEWPORT_TB = new Viewport(0, 0.5f, 1.0f, 0.5f);
     public static final Viewport RIGHT_VIEWPORT_TB = new Viewport(0, 0, 1.0f, 0.5f);
     public static final float STEREO_DIST = 1.0f;
+    public static final NoClipCamControl NO_CLIP_CAM_CONTROL = new NoClipCamControl(5, 25, 0.1f);
+    public static final RTSCamControl RTS_CAM_CONTROL = new RTSCamControl(0, 45, 1, Vec3.VEC3_ZERO, 1);
 
     public static void main(String[] args)
     {
@@ -172,7 +176,7 @@ public class TestAthens
         entity.addComponent(PERSPECTIVE);
         entity.addComponent(STARTING_VIEW);
         entity.addComponent(new Viewport());
-        entity.addComponent(new NoClipCamera(5, 25, 0.1f));
+        entity.addComponent(RTS_CAM_CONTROL);
         return entity;
     }
     
@@ -182,7 +186,7 @@ public class TestAthens
         entity.addComponent(STARTING_VIEW);
         entity.addComponent(new Stereo(left, right, STEREO_DIST));
         entity.addComponent(new Camera());
-        entity.addComponent(new NoClipCamera(5, 25, 0.1f));
+        entity.addComponent(RTS_CAM_CONTROL);
         return entity;
     }
     
@@ -222,9 +226,11 @@ public class TestAthens
 //        renderThread = new VariableTimingThread();
 
         renderThread.addSystem(new RenderSystem());
-        renderThread.addSystem(new NoClipCameraSystem());
+        renderThread.addSystem(new NoClipCamControlSystem());
+        renderThread.addSystem(new SpinnyCamControlSystem());
+        renderThread.addSystem(new RTSCamControlSystem());
         renderThread.addSystem(new StereoSystem());
-        renderThread.addSystem(new PerspectiveCameraSystem());
+        renderThread.addSystem(new PerspectiveProjectionSystem());
         renderThread.addSystem(new ExitOnCloseSystem());
 
         engine.addThread(logicThread);

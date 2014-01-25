@@ -21,42 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.systems;
 
-import com.hackoeur.jglm.Matrices;
-import za.co.sourlemon.acropolis.athens.components.Camera;
-import za.co.sourlemon.acropolis.athens.nodes.OrthoCameraNode;
-import za.co.sourlemon.acropolis.ems.AbstractSystem;
-import za.co.sourlemon.acropolis.ems.Engine;
+package za.co.sourlemon.acropolis.athens.components;
+
+import com.hackoeur.jglm.Vec3;
+import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
  * @author Daniel
  */
-public class OrthoCameraSystem extends AbstractSystem
+public class PerspectiveProjection extends Component
 {
+    /** Vertical field-of-view. */
+    public float fovY = 45;
+    /** Near clipping plane. */
+    public float near = 1;
+    /** Far clipping plane. */
+    public float far = 100;
 
-    @Override
-    public void update(Engine engine, double time, double dt)
+    public PerspectiveProjection()
     {
-        Camera activeCamera = engine.getGlobal(Camera.class);
-
-        for (OrthoCameraNode node : engine.getNodeList(OrthoCameraNode.class))
-        {
-            if (node.camera != activeCamera)
-            {
-                continue;
-            }
-            
-//            dir = at.subtract(eye).getUnitVector();
-//            right = dir.cross(up).getUnitVector();
-
-            node.camera.viewMatrix = Matrices.lookAt(node.view.eye, node.view.at,
-                    node.view.up);
-            node.camera.projection = Matrices.ortho(node.projection.xleft,
-                    node.projection.xright, node.projection.ybottom, node.projection.ytop,
-                    node.projection.znear, node.projection.zfar);
-        }
     }
 
+    public PerspectiveProjection(float fovY, float near, float far)
+    {
+        this.fovY = fovY;
+        this.near = near;
+        this.far = far;
+    }
+    
+    
 }

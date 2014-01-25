@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013 Daniel Smith <jellymann@gmail.com>.
+ * Copyright 2014 Daniel Smith <jellymann@gmail.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,33 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.athens.nodes;
+package za.co.sourlemon.acropolis.athens.components;
 
-import za.co.sourlemon.acropolis.athens.components.View;
-import za.co.sourlemon.acropolis.athens.components.Perspective;
-import za.co.sourlemon.acropolis.athens.components.Camera;
-import za.co.sourlemon.acropolis.ems.Entity;
-import za.co.sourlemon.acropolis.ems.Node;
+import com.hackoeur.jglm.Vec3;
+import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
- * @author Daniel
+ * @author Daniel Smith <jellymann@gmail.com>
  */
-public class PerspectiveCameraNode extends Node
+public class RTSCamControl extends Component
 {
+    public float angle = 0;
+    public float pitch = 0;
+    public float distance = 0;
+    public Vec3 target = Vec3.VEC3_ZERO;
+    public float speed = 0;
 
-    public PerspectiveCameraNode(Entity entity)
+    public RTSCamControl()
     {
-        super(entity);
     }
     
-    public Camera camera;
-    public Perspective projection;
-    public View view;
+    public RTSCamControl(float angle, float pitch, float distance, Vec3 target, float speed)
+    {
+        this.angle = angle;
+        this.pitch = pitch;
+        this.distance = distance;
+        this.target = target;
+        this.speed = speed;
+    }
 }

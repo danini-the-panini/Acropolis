@@ -22,25 +22,32 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.athens.nodes;
+package za.co.sourlemon.acropolis.athens.components;
 
-import za.co.sourlemon.acropolis.athens.components.NoClipCamera;
-import za.co.sourlemon.acropolis.athens.components.View;
-import za.co.sourlemon.acropolis.ems.Entity;
-import za.co.sourlemon.acropolis.ems.Node;
+import com.hackoeur.jglm.Vec3;
+import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
  * @author Daniel
  */
-public class NoClipCameraNode extends Node
+public class OrthoProjection extends Component
 {
+    public float ytop = 1, ybottom = -1, xleft = -1, xright = 1, znear = 1, zfar = -1;
 
-    public NoClipCameraNode(Entity entity)
+    public OrthoProjection()
     {
-        super(entity);
+    }
+
+    public OrthoProjection(float ytop, float ybottom, float xleft, float xright, float znear, float zfar)
+    {
+        this.ytop = ytop;
+        this.ybottom = ybottom;
+        this.xleft = xleft;
+        this.xright = xright;
+        this.znear = znear;
+        this.zfar = zfar;
     }
     
-    public NoClipCamera camera;
-    public View view;
+    
 }

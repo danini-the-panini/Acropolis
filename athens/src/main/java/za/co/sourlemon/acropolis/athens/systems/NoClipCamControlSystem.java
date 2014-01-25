@@ -29,7 +29,7 @@ import org.lwjgl.input.Keyboard;
 import za.co.sourlemon.acropolis.athens.components.KeyboardComponent;
 import za.co.sourlemon.acropolis.athens.components.MouseComponent;
 import za.co.sourlemon.acropolis.athens.components.View;
-import za.co.sourlemon.acropolis.athens.nodes.NoClipCameraNode;
+import za.co.sourlemon.acropolis.athens.nodes.NoClipCamControlNode;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 
@@ -37,7 +37,7 @@ import za.co.sourlemon.acropolis.ems.Engine;
  *
  * @author Daniel
  */
-public class NoClipCameraSystem extends AbstractSystem
+public class NoClipCamControlSystem extends AbstractSystem
 {
     @Override
     public void update(Engine engine, double t, double dt)
@@ -45,7 +45,7 @@ public class NoClipCameraSystem extends AbstractSystem
         MouseComponent mouse = engine.getGlobal(MouseComponent.class);
         KeyboardComponent keyboard = engine.getGlobal(KeyboardComponent.class);
         
-        for (NoClipCameraNode node : engine.getNodeList(NoClipCameraNode.class))
+        for (NoClipCamControlNode node : engine.getNodeList(NoClipCamControlNode.class))
         {
             Vec3 dir = node.view.at.subtract(node.view.eye).getUnitVector();
             Vec3 right = dir.cross(node.view.up).getUnitVector();

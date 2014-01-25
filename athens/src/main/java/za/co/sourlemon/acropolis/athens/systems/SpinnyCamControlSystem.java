@@ -23,7 +23,7 @@
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.support.FastMath;
-import za.co.sourlemon.acropolis.athens.nodes.SpinnyCameraNode;
+import za.co.sourlemon.acropolis.athens.nodes.SpinnyCamControlNode;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 
@@ -31,14 +31,14 @@ import za.co.sourlemon.acropolis.ems.Engine;
  *
  * @author Daniel
  */
-public class SpinnyCameraSystem extends AbstractSystem
+public class SpinnyCamControlSystem extends AbstractSystem
 {
 
     @Override
     public void update(Engine engine, double t, double dt)
     {
 
-        for (SpinnyCameraNode node : engine.getNodeList(SpinnyCameraNode.class))
+        for (SpinnyCamControlNode node : engine.getNodeList(SpinnyCamControlNode.class))
         {
             final float angleRad = (float) FastMath.toRadians(node.camera.angle);
             final float pitchRad = (float) FastMath.toRadians(node.camera.pitch);

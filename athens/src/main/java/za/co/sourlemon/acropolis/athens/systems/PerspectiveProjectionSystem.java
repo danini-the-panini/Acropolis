@@ -21,28 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package za.co.sourlemon.acropolis.athens.systems;
 
-package za.co.sourlemon.acropolis.athens.nodes;
-
-import za.co.sourlemon.acropolis.athens.components.View;
-import za.co.sourlemon.acropolis.athens.components.Orthographic;
+import com.hackoeur.jglm.Matrices;
 import za.co.sourlemon.acropolis.athens.components.Camera;
-import za.co.sourlemon.acropolis.ems.Entity;
-import za.co.sourlemon.acropolis.ems.Node;
+import za.co.sourlemon.acropolis.athens.components.Window;
+import za.co.sourlemon.acropolis.athens.nodes.PerspectiveProjectionNode;
+import za.co.sourlemon.acropolis.ems.AbstractSystem;
+import za.co.sourlemon.acropolis.ems.Engine;
 
 /**
  *
  * @author Daniel
  */
-public class OrthoCameraNode extends Node
+public class PerspectiveProjectionSystem extends AbstractSystem
 {
 
-    public OrthoCameraNode(Entity entity)
+    @Override
+    public void update(Engine engine, double time, double dt)
     {
-        super(entity);
+        Window window = engine.getGlobal(Window.class);
+
+        for (PerspectiveProjectionNode node : engine.getNodeList(PerspectiveProjectionNode.class))
+        {
+
+//            dir = at.subtract(eye).getUnitVector();
+//            right = dir.cross(up).getUnitVector();
+
+            node.camera.viewMatrix = Matrices.lookAt(node.view.eye, node.view.at,
+                    node.view.up);
+            float aspect = (float)window.width/(float)window.height;
+            node.camera.projection = Matrices.perspective(node.projection.fovY,
+                    aspect, node.projection.near, node.projection.far);
+
+            node.camera.eye = node.view.eye;
+        }
     }
-    
-    public Camera camera;
-    public Orthographic projection;
-    public View view;
+
 }

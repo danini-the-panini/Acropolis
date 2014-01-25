@@ -22,34 +22,25 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.athens.components;
+package za.co.sourlemon.acropolis.athens.nodes;
 
-import com.hackoeur.jglm.Vec3;
-import za.co.sourlemon.acropolis.ems.Component;
+import za.co.sourlemon.acropolis.athens.components.NoClipCamControl;
+import za.co.sourlemon.acropolis.athens.components.View;
+import za.co.sourlemon.acropolis.ems.Entity;
+import za.co.sourlemon.acropolis.ems.Node;
 
 /**
  *
  * @author Daniel
  */
-public class Perspective extends Component
+public class NoClipCamControlNode extends Node
 {
-    /** Vertical field-of-view. */
-    public float fovY = 45;
-    /** Near clipping plane. */
-    public float near = 1;
-    /** Far clipping plane. */
-    public float far = 100;
 
-    public Perspective()
+    public NoClipCamControlNode(Entity entity)
     {
-    }
-
-    public Perspective(float fovY, float near, float far)
-    {
-        this.fovY = fovY;
-        this.near = near;
-        this.far = far;
+        super(entity);
     }
     
-    
+    public NoClipCamControl camera;
+    public View view;
 }
