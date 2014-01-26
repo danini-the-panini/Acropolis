@@ -50,10 +50,12 @@ import za.co.sourlemon.acropolis.athens.systems.NoClipCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.PerspectiveProjectionSystem;
 import za.co.sourlemon.acropolis.athens.systems.RTSCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.RenderSystem;
+import za.co.sourlemon.acropolis.athens.systems.SelectionSystem;
 import za.co.sourlemon.acropolis.athens.systems.SnapToTerrainSystem;
 import za.co.sourlemon.acropolis.athens.systems.SpinnyCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.StereoSystem;
 import za.co.sourlemon.acropolis.athens.systems.TankMaker;
+import za.co.sourlemon.acropolis.athens.systems.VisibleSelectionSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.FixedTimingThread;
@@ -234,12 +236,19 @@ public class TestAthens
 //        renderThread = new VariableTimingThread();
 
         renderThread.addSystem(new RenderSystem());
+        
+        /// CAMERA SYSTEMS
         renderThread.addSystem(new NoClipCamControlSystem());
         renderThread.addSystem(new SpinnyCamControlSystem());
         renderThread.addSystem(new RTSCamControlSystem());
         renderThread.addSystem(new StereoSystem());
         renderThread.addSystem(new PerspectiveProjectionSystem());
+        ///
+        
         renderThread.addSystem(new TankMaker());
+        renderThread.addSystem(new SelectionSystem());
+        renderThread.addSystem(new VisibleSelectionSystem());
+        
         renderThread.addSystem(new ExitOnCloseSystem());
 
         engine.addThread(logicThread);

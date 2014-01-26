@@ -102,7 +102,7 @@ public class BBox extends Component
     public boolean isPointInBox(final Vec3 inP)
     {
         // Rotate the point into the box's coordinates
-        Vec4 p = matrix.getInverseSimple().multiply(inP.toPoint());
+        Vec4 p = matrix.getInverse().multiply(inP.toPoint());
 
         // Now just use an axis-aligned check
         if (abs(p.getX()) < extents.getX()
@@ -126,7 +126,7 @@ public class BBox extends Component
     {
         float fDist;
         float fDistSq = 0;
-        Vec4 p = matrix.getInverseSimple().multiply(inP.toPoint());
+        Vec4 p = matrix.getInverse().multiply(inP.toPoint());
 
         // Add distance squared from sphere centerpoint to box for each axis
         for (int i = 0; i < 3; i++)
@@ -153,7 +153,7 @@ public class BBox extends Component
     public boolean boxOutsidePlane(final Vec3 inNorm, final Vec3 inP)
     {
         // Plane Normal in Box Space
-        Vec3 norm = matrix.getInverseSimple().rotateVector(inNorm); // roatateVector only uses rotation portion of matrix
+        Vec3 norm = matrix.getInverse().rotateVector(inNorm); // roatateVector only uses rotation portion of matrix
         norm = new Vec3(abs(norm.getX()), abs(norm.getY()), abs(norm.getZ()));
 
         float extent = norm.dot(extents); // Box Extent along the plane normal
@@ -172,7 +172,7 @@ public class BBox extends Component
     public boolean isLineInBox(final Vec3 l1, final Vec3 l2)
     {
         // Put line in box space
-        Mat4 mInv = matrix.getInverseSimple();
+        Mat4 mInv = matrix.getInverse();
         Vec4 lb1 = mInv.multiply(l1.toPoint());
         Vec4 lb2 = mInv.multiply(l2.toPoint());
 
@@ -334,7 +334,7 @@ public class BBox extends Component
     public List<Vec3> getIntersectionPoints(Vec3 org, Vec3 ray)
     {
         // Put ray in box space
-        Mat4 mInv = matrix.getInverseSimple();
+        Mat4 mInv = matrix.getInverse();
         ray = mInv.multiply(ray.toDirection()).getXYZ();
         org = mInv.multiply(org.toPoint()).getXYZ();
 
@@ -369,7 +369,7 @@ public class BBox extends Component
         int yi = (xi + 2) % 3;
         int zi = (xi + 1) % 3;
 
-        final float JZERO = 0.00000000001f;
+        final float JZERO = Float.MIN_VALUE;
 
         float t0 = (lext.get(xi) - org.get(xi))
                 / (ray.get(xi) == 0 ? JZERO : ray.get(xi));

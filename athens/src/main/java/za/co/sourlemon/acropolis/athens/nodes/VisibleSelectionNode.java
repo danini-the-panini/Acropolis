@@ -21,43 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package za.co.sourlemon.acropolis.athens.factories;
 
-import com.hackoeur.jglm.Quaternion;
-import com.hackoeur.jglm.Vec3;
-import za.co.sourlemon.acropolis.athens.components.MeshComponent;
+package za.co.sourlemon.acropolis.athens.nodes;
+
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Selectable;
-import za.co.sourlemon.acropolis.athens.components.SnapToTerrain;
 import za.co.sourlemon.acropolis.ems.Entity;
-import za.co.sourlemon.acropolis.ems.EntityFactory;
-import za.co.sourlemon.acropolis.tokyo.components.BBox;
-import za.co.sourlemon.acropolis.tokyo.components.State;
+import za.co.sourlemon.acropolis.ems.Node;
 
 /**
  *
  * @author Daniel Smith <jellymann@gmail.com>
  */
-public class UnitFactory implements EntityFactory<UnitFactoryRequest>
+public class VisibleSelectionNode extends Node
 {
 
-    private final WavefrontFactory factory = new WavefrontFactory();
-
-    @Override
-    public Entity create(UnitFactoryRequest request)
+    public VisibleSelectionNode(Entity entity)
     {
-        Entity entity = new Entity();
-
-        State state = new State(request.position, Quaternion.QUAT_IDENT, new Vec3(request.size, request.size, request.size));
-        entity.addComponent(state);
-        entity.addComponent(new Renderable("pplighting", new Vec3(1, 1, 1), 1));
-        MeshComponent mesh = factory.create(new WavefrontFactoryRequest(request.mesh));
-        entity.addComponent(mesh);
-        entity.addComponent(new SnapToTerrain());
-        entity.addComponent(new BBox(state, mesh.getExtents(), mesh.getCenter()));
-        entity.addComponent(new Selectable());
-
-        return entity;
+        super(entity);
     }
-
+    
+    public Renderable renderable;
+    public Selectable selectable;
 }
