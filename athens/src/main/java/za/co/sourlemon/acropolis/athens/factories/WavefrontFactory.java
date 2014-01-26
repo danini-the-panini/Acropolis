@@ -28,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import za.co.sourlemon.acropolis.athens.components.MeshComponent;
 import za.co.sourlemon.acropolis.ems.ComponentFactory;
 
@@ -37,17 +38,21 @@ import za.co.sourlemon.acropolis.ems.ComponentFactory;
  */
 public class WavefrontFactory implements ComponentFactory<MeshComponent, WavefrontFactoryRequest>
 {
+
     public static final String MESH_DIR = "meshes";
     public static final String MESH_EXT = "obj";
 
     @Override
     public MeshComponent create(WavefrontFactoryRequest request)
     {
-        MeshComponent comp = new MeshComponent();
+        ArrayList<Vec3> vertices = new ArrayList<>();
+        ArrayList<float[]> texcoords = new ArrayList<>();
+        ArrayList<Vec3> normals = new ArrayList<>();
+        ArrayList<int[][]> indices = new ArrayList<>();
 
         try
         {
-            try (BufferedReader br = new BufferedReader(new FileReader(new File(MESH_DIR+"/"+request.mesh+"."+MESH_EXT))))
+            try (BufferedReader br = new BufferedReader(new FileReader(new File(MESH_DIR + "/" + request.mesh + "." + MESH_EXT))))
             {
                 String line;
                 String[] list;
@@ -57,17 +62,16 @@ public class WavefrontFactory implements ComponentFactory<MeshComponent, Wavefro
                     {
                         list = line.split(" ");
                         // read X Y Z into vertex array
-                        comp.pos.add(new float[]
-                        {
-                            Float.parseFloat(list[1]),
-                            Float.parseFloat(list[2]),
-                            Float.parseFloat(list[3])
-                        });
+                        vertices.add(new Vec3(
+                                Float.parseFloat(list[1]),
+                                Float.parseFloat(list[2]),
+                                Float.parseFloat(list[3])
+                        ));
                     } else if (line.startsWith("vt "))
                     {
                         list = line.split(" ");
                         // Read X Y Z into normal array
-                        comp.tex.add(new float[]
+                        texcoords.add(new float[]
                         {
                             Float.parseFloat(list[1]),
                             Float.parseFloat(list[2])
@@ -81,12 +85,11 @@ public class WavefrontFactory implements ComponentFactory<MeshComponent, Wavefro
                                 Float.parseFloat(list[2]),
                                 Float.parseFloat(list[3])
                         ).getUnitVector();
-                        comp.norm.add(new float[]
-                        {
-                            normal.getX(),
-                            normal.getY(),
-                            normal.getZ()
-                        });
+                        normals.add(new Vec3(
+                                normal.getX(),
+                                normal.getY(),
+                                normal.getZ()
+                        ));
                     } else if (line.startsWith("f "))
                     {
                         list = line.split(" ");
@@ -98,7 +101,7 @@ public class WavefrontFactory implements ComponentFactory<MeshComponent, Wavefro
                             primitive[i - 1] = parseVertex(list[i].trim());
                         }
 
-                        comp.inds.add(primitive);
+                        indices.add(primitive);
                     }
                 }
             }
@@ -106,8 +109,8 @@ public class WavefrontFactory implements ComponentFactory<MeshComponent, Wavefro
         {
             throw new RuntimeException(ex);
         }
-        
-        return comp;
+
+        return new MeshComponent(vertices, texcoords, normals, indices);
     }
 
     /**
@@ -148,7 +151,7 @@ public class WavefrontFactory implements ComponentFactory<MeshComponent, Wavefro
 
         return new int[]
         {
-            v-1, vt-1, vn-1
+            v - 1, vt - 1, vn - 1
         };
     }
 

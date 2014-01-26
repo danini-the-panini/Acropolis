@@ -49,6 +49,7 @@ import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.id.ID;
+import za.co.sourlemon.acropolis.tokyo.nodes.BBoxNode;
 import za.co.sourlemon.acropolis.tokyo.utils.StateUtils;
 
 /**
@@ -223,36 +224,67 @@ public class RenderSystem extends AbstractSystem
                 }
             }
             
+            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+            glDisable(GL_CULL_FACE);
+            
             Program program = resourceManager.getProgram("passthrough");
+            program.use();
             program.setView(camera.viewMatrix);
             program.setProjection(camera.projection);
-            program.setWorld(Mat4.MAT4_IDENTITY);
-            program.use();
-            
-            glBegin(GL_LINES);
+            for (BBoxNode node : engine.getNodeList(BBoxNode.class))
             {
-                glColor3f(1, 0, 1);
-                glVertex3f(mouse.near.getX()+1f, mouse.near.getY(), mouse.near.getZ());
-                glColor3f(1, 0, 1);
-                glVertex3f(mouse.near.getX()-1f, mouse.near.getY(), mouse.near.getZ());
-                glColor3f(1, 0, 1);
-                glVertex3f(mouse.near.getX(), mouse.near.getY(), mouse.near.getZ());
-                glColor3f(1, 0, 1);
-                glVertex3f(mouse.far.getX(), mouse.far.getY(), mouse.far.getZ());
-                glColor3f(1, 0, 1);
-                glVertex3f(mouse.far.getX()+1f, mouse.far.getY(), mouse.far.getZ());
-                glColor3f(1, 0, 1);
-                glVertex3f(mouse.far.getX()-1f, mouse.far.getY(), mouse.far.getZ());
+                program.setWorld(node.bbox.getMatrix());
+                
+                Vec3 e = node.bbox.getExtents();
+                
+                glBegin(GL_QUADS);
+                {
+                    glColor3f(1, 0, 1);
+                    glVertex3f(e.getX(), e.getY(), e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(-e.getX(), e.getY(), e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(-e.getX(), e.getY(), -e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(e.getX(), e.getY(), -e.getZ());
+                    
+                    glColor3f(1, 0, 1);
+                    glVertex3f(e.getX(), -e.getY(), e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(-e.getX(), -e.getY(), e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(-e.getX(), -e.getY(), -e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(e.getX(), -e.getY(), -e.getZ());
+                    
+                    glColor3f(1, 0, 1);
+                    glVertex3f(e.getX(), e.getY(), e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(e.getX(), -e.getY(), e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(e.getX(), -e.getY(), -e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(e.getX(), e.getY(), -e.getZ());
+                    
+                    glColor3f(1, 0, 1);
+                    glVertex3f(-e.getX(), e.getY(), e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(-e.getX(), -e.getY(), e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(-e.getX(), -e.getY(), -e.getZ());
+                    glColor3f(1, 0, 1);
+                    glVertex3f(-e.getX(), e.getY(), -e.getZ());
+                    
+                }
+                glEnd();
+                
             }
-            glEnd();
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+            glEnable(GL_CULL_FACE);
+            
         }
 
         Display.update();
-    }
-
-    private float normalise(int x, int length)
-    {
-        return (float) x / (float) length - (float) length * 0.5f;
     }
 
     @Override

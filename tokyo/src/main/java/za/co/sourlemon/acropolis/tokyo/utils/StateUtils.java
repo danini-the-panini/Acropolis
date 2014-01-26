@@ -29,6 +29,7 @@ import static com.hackoeur.jglm.Matrices.rotate;
 import static com.hackoeur.jglm.Matrices.scale;
 import static com.hackoeur.jglm.Matrices.translate;
 import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.Vec4;
 import za.co.sourlemon.acropolis.tokyo.components.State;
 
 /**
@@ -62,5 +63,19 @@ public final class StateUtils
     public static Mat4 getRotMatrix(State state)
     {
         return state.rot.toMat4();
+    }
+    
+    public static Mat4 getBBoxMatrix(State state, Vec3 offset)
+    {
+        Mat4 monkeyWorld = new Mat4(1f);
+        
+        Mat4 rotMatrix = state.rot.toMat4();
+        offset = rotMatrix.multiply(new Vec4(offset, 1)).getXYZ();
+
+        monkeyWorld = translate(monkeyWorld, state.pos.add(offset));
+        
+        monkeyWorld = monkeyWorld.multiply(rotMatrix);
+
+        return monkeyWorld;
     }
 }

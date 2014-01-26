@@ -64,6 +64,7 @@ import za.co.sourlemon.acropolis.tokyo.EulerIntegrator;
 import za.co.sourlemon.acropolis.tokyo.RK4Integrator;
 import za.co.sourlemon.acropolis.tokyo.components.State;
 import za.co.sourlemon.acropolis.tokyo.components.Velocity;
+import za.co.sourlemon.acropolis.tokyo.systems.BBoxSystem;
 import za.co.sourlemon.acropolis.tokyo.systems.MovementSystem;
 
 /**
@@ -226,6 +227,7 @@ public class TestAthens
 
         logicThread.addSystem(new MovementSystem(new EulerIntegrator()));
         logicThread.addSystem(new SnapToTerrainSystem());
+        logicThread.addSystem(new BBoxSystem());
 
         SystemThread renderThread;
         renderThread = new FixedTimingThread(1.0 / 60, 1.0 / 25.0);

@@ -23,6 +23,7 @@
  */
 package za.co.sourlemon.acropolis.athens.mesh;
 
+import com.hackoeur.jglm.Vec3;
 import java.io.IOException;
 import static org.lwjgl.opengl.GL11.*;
 import za.co.sourlemon.acropolis.athens.components.MeshComponent;
@@ -48,25 +49,24 @@ public class DisplaylistMesh implements Mesh
 
         glNewList(handle, GL_COMPILE);
         {
-            for (int[][] v : mesh.inds)
+            for (int[][] v : mesh.getIndices())
             {
                 glBegin(v.length == 3 ? GL_TRIANGLES : GL_QUADS);
                 {
                     for (int[] v1 : v)
                     {
-                        float[] p;
                         if (v1[1] != -1)
                         {
-                            p = mesh.tex.get(v1[1]);
+                            float[] p = mesh.getTexcoords().get(v1[1]);
                             glTexCoord2f(p[0], p[1]);
                         }
                         if (v1[2] != -1)
                         {
-                            p = mesh.norm.get(v1[2]);
-                            glNormal3f(p[0], p[1], p[2]);
+                            Vec3 p = mesh.getNormals().get(v1[2]);
+                            glNormal3f(p.getX(), p.getY(), p.getZ());
                         }
-                        p = mesh.pos.get(v1[0]);
-                        glVertex3f(p[0], p[1], p[2]); // emit vertex and all attributes
+                        Vec3 p = mesh.getVertices().get(v1[0]);
+                        glVertex3f(p.getX(), p.getY(), p.getZ()); // emit vertex and all attributes
                     }
                 }
                 glEnd();

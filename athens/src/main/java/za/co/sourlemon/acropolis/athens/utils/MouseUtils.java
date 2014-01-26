@@ -44,14 +44,11 @@ public class MouseUtils
 
         Mat4 camInv = camera.projection.multiply(camera.viewMatrix).getInverse();
         
-        System.out.println("x: " + mouse.nx + ", y: " + mouse.ny);
         Vec4 mouseFar4 = camInv.multiply(new Vec4(mouse.nx, mouse.ny, 1, 1));
         Vec4 mouseNear4 = camInv.multiply(new Vec4(mouse.nx, mouse.ny, -1, 1));
         
         mousePoints[0] = mouseNear4.getXYZ().scale(1.0f / mouseNear4.getW());
         mousePoints[1] = mouseFar4.getXYZ().scale(1.0f / mouseFar4.getW());
-        
-        System.out.println("M3D: " + mousePoints[0]);
         
         return mousePoints;
     }

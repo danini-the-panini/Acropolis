@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package za.co.sourlemon.acropolis.athens.components;
 
+import com.hackoeur.jglm.Vec3;
 import java.util.ArrayList;
 import za.co.sourlemon.acropolis.ems.Component;
 
@@ -33,8 +33,78 @@ import za.co.sourlemon.acropolis.ems.Component;
  */
 public class MeshComponent extends Component
 {
-    public ArrayList<float[]> pos = new ArrayList<>(); // vertices
-    public ArrayList<float[]> tex = new ArrayList<>(); // texcoords
-    public ArrayList<float[]> norm = new ArrayList<>(); // normals. NOTE: these do not match 1:1 to vertices.
-    public ArrayList<int[][]> inds = new ArrayList<>(); // indices
+
+    private ArrayList<Vec3> vertices = new ArrayList<>();
+    private ArrayList<float[]> texcoords = new ArrayList<>();
+    private ArrayList<Vec3> normals = new ArrayList<>(); // NOTE: these do not necessarily match 1:1 to vertices.
+    private ArrayList<int[][]> indices = new ArrayList<>();
+
+    private Vec3 extents = Vec3.VEC3_ZERO, center = Vec3.VEC3_ZERO;
+
+    public MeshComponent()
+    {
+    }
+
+    public MeshComponent(ArrayList<Vec3> vertices, ArrayList<float[]> texcoords, ArrayList<Vec3> normals, ArrayList<int[][]> indices)
+    {
+        this.vertices = vertices;
+        this.texcoords = texcoords;
+        this.normals = normals;
+        this.indices = indices;
+
+        float minX = 0, maxX = 0, minY = 0, maxY = 0, minZ = 0, maxZ = 0;
+
+        for (Vec3 v : vertices)
+        {
+            minX = minX < v.getX() ? minX : v.getX();
+            minY = minY < v.getY() ? minY : v.getY();
+            minZ = minZ < v.getZ() ? minZ : v.getZ();
+
+            maxX = maxX > v.getX() ? maxX : v.getX();
+            maxY = maxY > v.getY() ? maxY : v.getY();
+            maxZ = maxZ > v.getZ() ? maxZ : v.getZ();
+        }
+
+        extents = new Vec3(
+                (maxX - minX) * 0.5f,
+                (maxY - minY) * 0.5f,
+                (maxZ - minZ) * 0.5f
+        );
+        center = new Vec3(
+                (minX + maxX) * 0.5f,
+                (minY + maxY) * 0.5f,
+                (minZ + maxZ) * 0.5f
+        );
+    }
+
+    public ArrayList<int[][]> getIndices()
+    {
+        return indices;
+    }
+
+    public ArrayList<Vec3> getVertices()
+    {
+        return vertices;
+    }
+
+    public ArrayList<Vec3> getNormals()
+    {
+        return normals;
+    }
+
+    public ArrayList<float[]> getTexcoords()
+    {
+        return texcoords;
+    }
+
+    public Vec3 getCenter()
+    {
+        return center;
+    }
+
+    public Vec3 getExtents()
+    {
+        return extents;
+    }
+
 }
