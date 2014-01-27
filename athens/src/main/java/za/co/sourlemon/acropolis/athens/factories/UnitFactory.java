@@ -25,14 +25,17 @@ package za.co.sourlemon.acropolis.athens.factories;
 
 import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.support.FastMath;
 import za.co.sourlemon.acropolis.athens.components.MeshComponent;
 import za.co.sourlemon.acropolis.athens.components.Renderable;
 import za.co.sourlemon.acropolis.athens.components.Selectable;
 import za.co.sourlemon.acropolis.athens.components.SnapToTerrain;
+import za.co.sourlemon.acropolis.athens.components.UnitMovement;
 import za.co.sourlemon.acropolis.ems.Entity;
 import za.co.sourlemon.acropolis.ems.EntityFactory;
 import za.co.sourlemon.acropolis.tokyo.components.BBox;
 import za.co.sourlemon.acropolis.tokyo.components.State;
+import za.co.sourlemon.acropolis.tokyo.components.Velocity;
 
 /**
  *
@@ -56,6 +59,8 @@ public class UnitFactory implements EntityFactory<UnitFactoryRequest>
         entity.addComponent(new SnapToTerrain());
         entity.addComponent(new BBox(state, mesh.getExtents(), mesh.getCenter()));
         entity.addComponent(new Selectable());
+        entity.addComponent(new UnitMovement(request.speed, request.angularSpeed));
+        entity.addComponent(new Velocity());
 
         return entity;
     }

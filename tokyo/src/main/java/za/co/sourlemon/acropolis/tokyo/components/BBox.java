@@ -153,7 +153,7 @@ public class BBox extends Component
     public boolean boxOutsidePlane(final Vec3 inNorm, final Vec3 inP)
     {
         // Plane Normal in Box Space
-        Vec3 norm = matrix.getInverse().rotateVector(inNorm); // roatateVector only uses rotation portion of matrix
+        Vec3 norm = matrix.getInverse().rotateVec3(inNorm); // roatateVector only uses rotation portion of matrix
         norm = new Vec3(abs(norm.getX()), abs(norm.getY()), abs(norm.getZ()));
 
         float extent = norm.dot(extents); // Box Extent along the plane normal

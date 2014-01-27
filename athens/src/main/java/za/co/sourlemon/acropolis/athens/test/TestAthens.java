@@ -55,6 +55,8 @@ import za.co.sourlemon.acropolis.athens.systems.SnapToTerrainSystem;
 import za.co.sourlemon.acropolis.athens.systems.SpinnyCamControlSystem;
 import za.co.sourlemon.acropolis.athens.systems.StereoSystem;
 import za.co.sourlemon.acropolis.athens.systems.TankMaker;
+import za.co.sourlemon.acropolis.athens.systems.UnitCommandSystem;
+import za.co.sourlemon.acropolis.athens.systems.UnitMovementSystem;
 import za.co.sourlemon.acropolis.athens.systems.VisibleSelectionSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.ems.Entity;
@@ -227,6 +229,7 @@ public class TestAthens
         logicThread = new FixedTimingThread(1.0 / 60.0, 1.0 / 25.0);
 //        logicThread = new VariableTimingThread();
 
+        logicThread.addSystem(new UnitMovementSystem());
         logicThread.addSystem(new MovementSystem(new EulerIntegrator()));
         logicThread.addSystem(new SnapToTerrainSystem());
         logicThread.addSystem(new BBoxSystem());
@@ -247,6 +250,7 @@ public class TestAthens
         
         renderThread.addSystem(new TankMaker());
         renderThread.addSystem(new SelectionSystem());
+        renderThread.addSystem(new UnitCommandSystem());
         renderThread.addSystem(new VisibleSelectionSystem());
         
         renderThread.addSystem(new ExitOnCloseSystem());

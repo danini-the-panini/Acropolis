@@ -23,43 +23,52 @@
  */
 package za.co.sourlemon.acropolis.athens.systems;
 
+import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.support.Compare;
 import com.hackoeur.jglm.support.FastMath;
-import za.co.sourlemon.acropolis.athens.components.MouseComponent;
-import za.co.sourlemon.acropolis.athens.factories.UnitFactory;
-import za.co.sourlemon.acropolis.athens.factories.UnitFactoryRequest;
-import za.co.sourlemon.acropolis.athens.nodes.HeightmapNode;
-import za.co.sourlemon.acropolis.athens.utils.HeightmapUtils;
+import za.co.sourlemon.acropolis.athens.components.MoveCommand;
+import za.co.sourlemon.acropolis.athens.nodes.MoveCommandNode;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
+import za.co.sourlemon.acropolis.tokyo.utils.StateUtils;
 
 /**
  *
  * @author Daniel Smith <jellymann@gmail.com>
  */
-public class TankMaker extends AbstractSystem
+public class UnitMovementSystem extends AbstractSystem
 {
 
     @Override
     public void update(Engine engine, double time, double dt)
     {
-        UnitFactory factory = new UnitFactory();
-        UnitFactoryRequest request = new UnitFactoryRequest(Vec3.VEC3_ZERO, 0.3f, 1f, (float)FastMath.toRadians(45), "tank");
-
-        MouseComponent mouse = engine.getGlobal(MouseComponent.class);
-
-        for (HeightmapNode node : engine.getNodeList(HeightmapNode.class))
+        for (MoveCommandNode node : engine.getNodeList(MoveCommandNode.class))
         {
-            if (mouse.pressed[2])
+            Mat4 rot = StateUtils.getRotMatrix(node.state);
+            Vec3 forward = rot.rotateVec3(StateUtils.Z_AXIS);
+
+            Vec3 command = node.command.position.subtract(node.state.pos);
+
+            if (command.getLengthSquared() < 0.1f)
             {
+                node.getEntity().removeComponent(MoveCommand.class);
+                node.velocity.av = Quaternion.QUAT_IDENT;
+                node.velocity.v = Vec3.VEC3_ZERO;
 
-                Vec3 p = HeightmapUtils.getIntersection(mouse.near, mouse.far, 0.1f, node);
-
-                if (p != null)
-                {
-                    engine.addEntity(factory.create(request.atPosition(p)));
-                }
+                continue;
             }
+
+            float speed = node.movement.speed;
+
+            if (command.getLengthSquared() < speed * speed)
+            {
+                speed = command.getLength();
+            }
+
+            node.velocity.av = forward.quaterntionTo(command).getNormalised();
+            node.velocity.v = forward.scale(speed);
         }
     }
 

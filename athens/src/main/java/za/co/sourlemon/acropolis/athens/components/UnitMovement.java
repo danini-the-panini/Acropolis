@@ -22,47 +22,27 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.athens.factories;
+package za.co.sourlemon.acropolis.athens.components;
 
-import com.hackoeur.jglm.Vec3;
-import za.co.sourlemon.acropolis.ems.FactoryRequest;
+import za.co.sourlemon.acropolis.ems.Component;
 
 /**
  *
  * @author Daniel Smith <jellymann@gmail.com>
  */
-public class UnitFactoryRequest implements FactoryRequest
+public class UnitMovement extends Component
 {
-    protected Vec3 position = Vec3.VEC3_ZERO;
-    protected float size;
-    protected String mesh = "";
-    protected float speed, angularSpeed;
+    public float speed = 0;
+    public float angularSpeed = 0;
 
-    public UnitFactoryRequest()
+    public UnitMovement()
     {
     }
 
-    public UnitFactoryRequest(Vec3 position, float size, float speed, float angularSpeed, String mesh)
+    public UnitMovement(float speed, float angularSpeed)
     {
-        this.position = position;
-        this.size = size;
-        this.mesh = mesh;
         this.speed = speed;
         this.angularSpeed = angularSpeed;
     }
     
-    public UnitFactoryRequest atPosition(Vec3 position)
-    {
-        return new UnitFactoryRequest(position, size, speed, angularSpeed, mesh);
-    }
-    
-    public UnitFactoryRequest scaled(float scale)
-    {
-        return new UnitFactoryRequest(position, size*scale, speed, angularSpeed, mesh);
-    }
-    
-    public UnitFactoryRequest withSize(float size)
-    {
-        return new UnitFactoryRequest(position, size, speed, angularSpeed, mesh);
-    }
 }

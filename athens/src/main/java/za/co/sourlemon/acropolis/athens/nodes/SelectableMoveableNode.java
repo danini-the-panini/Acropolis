@@ -22,47 +22,25 @@
  * THE SOFTWARE.
  */
 
-package za.co.sourlemon.acropolis.athens.factories;
+package za.co.sourlemon.acropolis.athens.nodes;
 
-import com.hackoeur.jglm.Vec3;
-import za.co.sourlemon.acropolis.ems.FactoryRequest;
+import za.co.sourlemon.acropolis.athens.components.Selectable;
+import za.co.sourlemon.acropolis.athens.components.UnitMovement;
+import za.co.sourlemon.acropolis.ems.Entity;
+import za.co.sourlemon.acropolis.ems.Node;
 
 /**
  *
  * @author Daniel Smith <jellymann@gmail.com>
  */
-public class UnitFactoryRequest implements FactoryRequest
+public class SelectableMoveableNode extends Node
 {
-    protected Vec3 position = Vec3.VEC3_ZERO;
-    protected float size;
-    protected String mesh = "";
-    protected float speed, angularSpeed;
 
-    public UnitFactoryRequest()
+    public SelectableMoveableNode(Entity entity)
     {
-    }
-
-    public UnitFactoryRequest(Vec3 position, float size, float speed, float angularSpeed, String mesh)
-    {
-        this.position = position;
-        this.size = size;
-        this.mesh = mesh;
-        this.speed = speed;
-        this.angularSpeed = angularSpeed;
+        super(entity);
     }
     
-    public UnitFactoryRequest atPosition(Vec3 position)
-    {
-        return new UnitFactoryRequest(position, size, speed, angularSpeed, mesh);
-    }
-    
-    public UnitFactoryRequest scaled(float scale)
-    {
-        return new UnitFactoryRequest(position, size*scale, speed, angularSpeed, mesh);
-    }
-    
-    public UnitFactoryRequest withSize(float size)
-    {
-        return new UnitFactoryRequest(position, size, speed, angularSpeed, mesh);
-    }
+    public Selectable selectable;
+    public UnitMovement movement;
 }

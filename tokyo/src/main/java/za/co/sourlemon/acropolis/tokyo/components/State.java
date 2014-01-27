@@ -23,7 +23,6 @@
 
 import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
 import za.co.sourlemon.acropolis.ems.Component;
 
 /**

@@ -19,10 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package za.co.sourlemon.acropolis.athens.systems;
+package za.co.sourlemon.acropolis.athens.systems;
 
 import com.hackoeur.jglm.Quaternion;
 import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.support.Compare;
 import com.hackoeur.jglm.support.FastMath;
 import za.co.sourlemon.acropolis.athens.components.Heightmap;
 import za.co.sourlemon.acropolis.athens.nodes.HeightmapNode;
@@ -53,15 +54,15 @@ public class SnapToTerrainSystem extends AbstractSystem
                 float y = getHeight(x, z, hnode);
                 node.state.pos = new Vec3(x, y, z);
 
-                Vec3 normal = getNormal(x, z, hnode).multiply(0.5f);
-                Vec3 tankNX = new Vec3(normal.getX(),normal.getY(),0.0f).getUnitVector();
-                Vec3 tankNZ = new Vec3(0.0f,normal.getY(),normal.getZ()).getUnitVector();
+                Vec3 normal = StateUtils.getRotMatrix(node.state).getInverse().rotateVec3(getNormal(x, z, hnode));
+                Vec3 tankNX = new Vec3(normal.getX(), normal.getY(), 0.0f).getUnitVector();
+                Vec3 tankNZ = new Vec3(0.0f, normal.getY(), normal.getZ()).getUnitVector();
 
-                float xRot = (float)(Math.asin(tankNZ.getZ()));
-                float zRot = -(float)(Math.asin(tankNX.getX()));
+                float xRot = (float) (Math.asin(tankNZ.getZ()));
+                float zRot = -(float) (Math.asin(tankNX.getX()));
 
-                node.state.rot = Quaternion.createFromAxisAngle(StateUtils.X_AXIS, xRot)
-                        .multiply(Quaternion.createFromAxisAngle(StateUtils.Z_AXIS, zRot));
+                node.state.rot = node.state.rot.multiply(Quaternion.createFromAxisAngle(StateUtils.X_AXIS, xRot)
+                        .multiply(Quaternion.createFromAxisAngle(StateUtils.Z_AXIS, zRot)));
             }
         }
     }

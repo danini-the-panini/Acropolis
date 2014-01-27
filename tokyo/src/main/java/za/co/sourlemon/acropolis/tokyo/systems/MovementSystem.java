@@ -21,15 +21,11 @@
  */
 package za.co.sourlemon.acropolis.tokyo.systems;
 
-import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
 import java.util.List;
 import za.co.sourlemon.acropolis.ems.AbstractSystem;
 import za.co.sourlemon.acropolis.ems.Engine;
 import za.co.sourlemon.acropolis.tokyo.Integrator;
 import za.co.sourlemon.acropolis.tokyo.components.Acceleration;
-import za.co.sourlemon.acropolis.tokyo.components.State;
-import za.co.sourlemon.acropolis.tokyo.components.Velocity;
 import za.co.sourlemon.acropolis.tokyo.nodes.MovementNode;
 
 /**
@@ -38,7 +34,7 @@ import za.co.sourlemon.acropolis.tokyo.nodes.MovementNode;
  */
 public class MovementSystem extends AbstractSystem
 {
-    private Integrator integrator;
+    private final Integrator integrator;
 
     public MovementSystem(Integrator integrator)
     {
